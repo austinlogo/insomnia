@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/item_new_task_title"
+        android:hint="@string/add_task"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <DatePicker
+        android:id="@+id/item_new_task_date"
+        android:datePickerMode="calendar"
+        android:minDate="today"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <Spinner
+        android:id="@+id/item_new_task_success_criteria"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

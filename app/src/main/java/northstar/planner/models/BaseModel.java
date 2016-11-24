@@ -1,0 +1,56 @@
+package northstar.planner.models;
+
+import android.database.Cursor;
+
+import java.util.Date;
+
+import northstar.planner.models.tables.BaseTable;
+
+public abstract class BaseModel {
+    protected long _id;
+    public static final long NEW_ID = -1;
+
+    public BaseModel() {
+    }
+
+    public BaseModel(Cursor c) {
+        _id = getColumnLong(c, BaseTable._ID);
+    }
+
+    public long getId() {
+        return _id;
+    }
+
+    protected long getColumnLong(Cursor cursor, String columnName) {
+        return cursor.getLong(cursor.getColumnIndexOrThrow(columnName));
+    }
+
+    protected String getColumnString(Cursor cursor, String columnName) {
+        return cursor.getString(cursor.getColumnIndexOrThrow(columnName));
+    }
+
+    protected int getColumnInt(Cursor cursor, String columnName) {
+        try {
+            return cursor.getInt(cursor.getColumnIndexOrThrow(columnName));
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    protected double getColumnDouble(Cursor cursor, String columnName) {
+        return cursor.getDouble(cursor.getColumnIndexOrThrow(columnName));
+    }
+
+    protected Date getColumnDate(Cursor cursor, String columnName) {
+        int date = cursor.getInt(cursor.getColumnIndexOrThrow(columnName));
+        return new Date(date);
+    }
+
+    public boolean isNew() {
+        return _id == NEW_ID;
+    }
+
+    public boolean equals(BaseModel model) {
+        return model._id == this._id;
+    }
+}

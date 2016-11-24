@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:padding="@dimen/standardSpace"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageButton
+            android:id="@+id/fragment_goal_delete"
+            android:src="@drawable/ic_delete_black_36dp"
+            android:scaleType="fitCenter"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:background="?android:selectableItemBackground"
+            android:layout_height="match_parent"/>
+
+        <ImageButton
+            android:id="@+id/fragment_goal_edit"
+            android:src="@drawable/ic_mode_edit_black_36dp"
+            android:scaleType="fitCenter"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:background="?android:selectableItemBackground"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/fragment_goal_title"
+        style="@style/AppTheme.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/fragment_goal_description"
+        style="@style/AppTheme.EditText"
+        android:layout_width="match_parent"
+        android:gravity="top|start"
+        android:minHeight="50dp"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/standardSpace"
+        android:paddingEnd="@dimen/standardSpace"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/fragment_goal_new_success_criteria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:paddingEnd="@dimen/standardSpace"
+                android:src="@drawable/ic_add_circle_black_24dp"/>
+
+            <EditText
+                android:id="@+id/fragment_goal_new_success_criteria_title"
+                android:hint="@string/new_success_criteria"
+                android:layout_width="match_parent"
+                android:layout_weight="2"
+                android:textSize="15sp"
+                android:inputType="text"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:imeOptions="actionNext"
+                android:text=""/>
+
+            <EditText
+                android:id="@+id/fragment_goal_new_success_criteria_committed"
+                android:hint="@string/success_criteria_commited_hint"
+                android:layout_width="match_parent"
+                android:layout_weight="5"
+                android:textSize="15sp"
+                android:textAlignment="viewEnd"
+                android:inputType="number"
+                android:layout_height="match_parent"
+                android:imeOptions="actionDone"
+                android:text=""/>
+        </LinearLayout>
+    </LinearLayout>
+    <ListView
+        android:id="@+id/fragment_goal_success_criteria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/standardSpace"
+        android:paddingEnd="@dimen/standardSpace"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/fragment_goal_new_task"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:paddingEnd="@dimen/standardSpace"
+                android:src="@drawable/ic_add_circle_black_24dp"/>
+
+            <EditText
+                android:id="@+id/fragment_goal_new_task_text"
+                android:hint="@string/new_task"
+                android:textColorHint="#999"
+                android:inputType="text"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text=""/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <ListView
+            android:id="@+id/fragment_goal_tasks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/fragment_goal_success_criteria_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</LinearLayout>
