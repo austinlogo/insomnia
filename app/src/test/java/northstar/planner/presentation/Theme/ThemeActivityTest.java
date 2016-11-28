@@ -11,7 +11,7 @@ import northstar.planner.BuildConfig;
 import northstar.planner.models.Theme;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -32,6 +32,6 @@ public class ThemeActivityTest {
 
     @Test
     public void testStartThemeEdit() {
-        themeActivity.startThemeEdit(new Theme(0, "test_1", "test_2"));
+        themeActivity.openGoal(new Theme(1, "TITLE_TEXT", "DESCRIPTION_TEXT"));
     }
 }

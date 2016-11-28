@@ -20,7 +20,7 @@ import org.robolectric.util.FragmentTestUtil;
 import northstar.planner.BuildConfig;
 import northstar.planner.models.Theme;
 import northstar.planner.models.tables.ThemeTable;
-import northstar.planner.presentation.Theme.shell.BlankThemeActivity;
+import northstar.planner.presentation.Theme.shell.BlankThemeActivityListener;
 
 
 import static org.junit.Assert.*;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 18)
-public class ThemeEditFragmentTest {
+public class ThemeFragmentListenerTest {
 
 //    @Mock
 //    EditText editTitle;
@@ -46,10 +46,10 @@ public class ThemeEditFragmentTest {
     Theme currentTheme;
 
     @Mock
-    private ThemeEditFragment.ThemeEditFragmentListener activityListener;
+    private ThemeFragment.ThemeFragmentListener activityListener;
 
     @InjectMocks
-    ThemeEditFragment fragment;
+    ThemeFragment fragment;
 
     @Before
     public void setUp() {
@@ -57,8 +57,8 @@ public class ThemeEditFragmentTest {
         b.putString(ThemeTable.TITLE_COLUMN, "TEST_TITLE");
         b.putString(ThemeTable.DESCRIPTION_COLUMN, "TEST_DESCRIPTION");
 
-        fragment = ThemeEditFragment.newInstance(b);
-        FragmentTestUtil.startFragment(fragment, BlankThemeActivity.class);
+        fragment = ThemeFragment.newInstance(b);
+        FragmentTestUtil.startFragment(fragment, BlankThemeActivityListener.class);
 
         MockitoAnnotations.initMocks(this);
 //        currentTheme = (Theme) Whitebox.getInternalState(fragment, "currentTheme");

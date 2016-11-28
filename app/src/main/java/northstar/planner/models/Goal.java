@@ -30,9 +30,10 @@ public class Goal extends BaseModel {
         initLists();
     }
 
-    public Goal(long themeId, String title) {
+    public Goal(long themeId, String title, String description) {
         theme = themeId;
         this.title = title;
+        this.description = description;
         initLists();
     }
 
@@ -41,9 +42,9 @@ public class Goal extends BaseModel {
         tasks = new ArrayList<>();
     }
 
-    public void updateGoal(String title, String description) {
-        this.title = title;
-        this.description = description;
+    public void updateGoal(Goal newGoalValues) {
+        this.title = newGoalValues.getTitle();
+        this.description = newGoalValues.getDescription();
     }
 
     public long getTheme() {

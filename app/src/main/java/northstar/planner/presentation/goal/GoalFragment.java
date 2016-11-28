@@ -1,6 +1,8 @@
 package northstar.planner.presentation.goal;
 
-import android.app.Fragment;
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
@@ -9,35 +11,47 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemClick;
+import butterknife.OnItemSelected;
 import northstar.planner.R;
+import northstar.planner.models.BaseModel;
 import northstar.planner.models.Goal;
 import northstar.planner.models.SuccessCriteria;
-import northstar.planner.models.Theme;
+import northstar.planner.models.Task;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.persistence.PlannerSqliteDAO;
+import northstar.planner.presentation.BaseFragment;
 import northstar.planner.presentation.adapter.SuccessCriteriaListAdapter;
 import northstar.planner.presentation.adapter.SuccessCriteriaSpinnerAdapter;
+import northstar.planner.presentation.adapter.TaskListAdapter;
+import northstar.planner.presentation.task.NewTaskDialog;
+import northstar.planner.utils.DateUtils;
+import northstar.planner.utils.StringUtils;
+import northstar.planner.utils.ViewAnimationUtils;
 
 public class GoalFragment
-        extends Fragment implements View.OnKeyListener, TextView.OnEditorActionListener {
+        extends BaseFragment
+        implements TextView.OnEditorActionListener {
 
     @BindView(R.id.fragment_goal_title)
     EditText editTitle;
 
     @BindView(R.id.fragment_goal_description)
     EditText editDescription;
-
-    @BindView(R.id.fragment_goal_edit)
-    ImageButton editButton;
 
     @BindView(R.id.fragment_goal_success_criteria)
     ListView successCriteria;
@@ -51,16 +65,18 @@ public class GoalFragment
     @BindView(R.id.fragment_goal_new_success_criteria_committed)
     EditText successCriteriaCommittedValue;
 
-    @BindView(R.id.fragment_goal_success_criteria_spinner)
-    Spinner scSpinner;
+    @BindView(R.id.item_new_task_title)
+    EditText newTaskTitle;
 
-    private long parentTheme;
-    private Goal currentGoal;
-    private PlannerSqliteDAO dao;
     private SuccessCriteriaListAdapter successCriteriasAdapter;
+    private TaskListAdapter taskListAdapter;
+    private SuccessCriteriaSpinnerAdapter scAdpater;
+    GoalFragmentListener activityListener;
 
-    public static GoalFragment newInstance(Bundle b) {
+    public static GoalFragment newInstance(Goal currentGoal) {
         GoalFragment newFragment = new GoalFragment();
+        Bundle b = new Bundle();
+        b.putSerializable(GoalTable.TABLE_NAME, currentGoal);
         newFragment.setArguments(b);
 
         return newFragment;
@@ -69,114 +85,83 @@ public class GoalFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        dao = new PlannerSqliteDAO();
-
-        parentTheme = getArguments().getLong(GoalTable.THEME_COLUMN);
-        currentGoal = dao.getGoal(getArguments().getLong(GoalTable._ID));
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        Goal currentGoal = (Goal) getArguments().get(GoalTable.TABLE_NAME);
         View v = inflater.inflate(R.layout.fragment_goal, container, false);
         ButterKnife.bind(this, v);
 
-        initListeners();
-
-        successCriteriasAdapter = new SuccessCriteriaListAdapter(getActivity().getApplicationContext(), currentGoal.getSuccessCriterias());
-        successCriteria.setAdapter(successCriteriasAdapter);
-
-        scSpinner.setAdapter(new SuccessCriteriaSpinnerAdapter(getActivity().getApplicationContext(), currentGoal.getSuccessCriterias()));
-
         return v;
-    }
-
-    private void initListeners() {
-        successCriteriaTitle.setOnKeyListener(this);
-        successCriteriaCommittedValue.setOnEditorActionListener(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        currentGoal = dao.getGoal(currentGoal.getId());
-        initViews();
+        initListeners();
     }
 
-    public void initViews() {
+    public void initViews(Goal currentGoal) {
         editTitle.setText(currentGoal.getTitle());
         editDescription.setText(currentGoal.getDescription());
+
+        successCriteriasAdapter = new SuccessCriteriaListAdapter(getActivity(), currentGoal.getSuccessCriterias());
+        successCriteria.setAdapter(successCriteriasAdapter);
+
+        taskListAdapter = new TaskListAdapter(getActivity(), currentGoal.getTasks());
+        successTasks.setAdapter(taskListAdapter);
+
+        scAdpater = new SuccessCriteriaSpinnerAdapter(getActivity(), currentGoal.getSuccessCriterias());
+    }
+
+    private void initListeners() {
+        successCriteriaCommittedValue.setOnEditorActionListener(this);
+        newTaskTitle.setOnEditorActionListener(this);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        activityListener = (GoalFragmentListener) activity;
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
-        currentGoal.updateGoal(editTitle.getText().toString(), editDescription.getText().toString());
-        dao.updateGoal(currentGoal);
-    }
-
-    @OnClick(R.id.fragment_goal_edit)
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.fragment_goal_edit:
-                setEditable(!isEditing());
-                break;
-            case R.id.fragment_goal_delete:
-
-        }
-    }
-
-    @OnClick(R.id.fragment_goal_new_task)
-    public void newGoal(View v) {
-
-    }
-
-    private void setEditable(boolean isEditable) {
-
-        if (isEditable) {
-            editButton.setImageResource(R.drawable.ic_done_black_36dp);
-
-            editTitle.setInputType(InputType.TYPE_CLASS_TEXT);
-            editDescription.setInputType(InputType.TYPE_CLASS_TEXT);
-        } else {
-            editButton.setImageResource(R.drawable.ic_mode_edit_black_36dp);
-
-            editTitle.setKeyListener(null);
-            editDescription.setKeyListener(null);
-
-        }
-    }
-
-    private boolean isEditing() {
-        return editTitle.getKeyListener() != null;
     }
 
     @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+    public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
-            return addSuccessCriteria();
-        }
 
+            switch (v.getId()) {
+                case R.id.fragment_goal_new_success_criteria_committed:
+                    return addSuccessCriteria();
+                case R.id.item_new_task_title:
+                    return createNewTask();
+
+            }
+        }
         return false;
     }
 
-    @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER)) {
-
-            return addSuccessCriteria();
+    private boolean createNewTask() {
+        if (!newTaskTitle.getText().toString().isEmpty()) {
+            NewTaskDialog dialog = NewTaskDialog.newinstance(newTaskTitle, successCriteriasAdapter);
+            dialog.show(getFragmentManager(), "new task");
+            newTaskTitle.setText("");
+            return true;
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.task_title_empty), Toast.LENGTH_SHORT).show();
+            return true;
         }
-
-        return false;
     }
 
     public boolean addSuccessCriteria() {
         String newSuccessCriteriaTitle = successCriteriaTitle.getText().toString();
-        int newSuccessCriteriaCommitted = convertSuccessCriteriaCommittedValueToInt();
+        int newSuccessCriteriaCommitted = StringUtils.getIntFromEditText(successCriteriaCommittedValue);
 
         if (newSuccessCriteriaCommitted == 0 || newSuccessCriteriaTitle.isEmpty()) {
             return false;
@@ -186,23 +171,48 @@ public class GoalFragment
         return true;
     }
 
-    private int convertSuccessCriteriaCommittedValueToInt() {
-        try {
-            return Integer.parseInt(successCriteriaCommittedValue.getText().toString());
-        } catch (NumberFormatException e) {
-            return 0;
-        }
+    @OnItemClick(R.id.fragment_goal_tasks)
+    public void onTaskItemSelected(int position) {
+        activityListener.openTask( taskListAdapter.getItem(position));
     }
 
     private void storeAndPropagateNewSuccessCriteria(String newSuccessCriteriaTitle, int newSuccessCriteriaCommitted) {
-        SuccessCriteria sc = new SuccessCriteria(currentGoal, newSuccessCriteriaTitle, newSuccessCriteriaCommitted);
-        sc = dao.addSuccessCriteria(sc);
+        SuccessCriteria sc = new SuccessCriteria(newSuccessCriteriaTitle, newSuccessCriteriaCommitted);
+        sc = activityListener.addSuccessCriteria(sc);
         successCriteriasAdapter.add(sc);
-        currentGoal.addSuccessCriteria(sc);
+    }
 
+    public Goal getNewGoalValues() {
+        return new Goal(BaseModel.NEW_ID, editTitle.getText().toString(), editDescription.getText().toString());
+    }
+
+    public void toggleEditing() {
+        boolean isEditable = editTitle.getVisibility() != View.VISIBLE;
+
+        int inputType = isEditable
+                ? InputType.TYPE_CLASS_TEXT
+                : InputType.TYPE_NULL;
+
+        int visibility = isEditable
+                ? View.VISIBLE
+                : View.GONE;
+
+        editTitle.setInputType(inputType);
+        editTitle.setFocusable(isEditable);
+        editTitle.setFocusableInTouchMode(isEditable);
+        editTitle.setVisibility(visibility);
+
+        editDescription.setInputType(inputType);
+        editDescription.setFocusable(isEditable);
+        editDescription.setFocusableInTouchMode(isEditable);
+
+        if (isEditable) {
+            editTitle.requestFocus();
+        }
     }
 
     public interface GoalFragmentListener {
-        String setTitle();
+        SuccessCriteria addSuccessCriteria(SuccessCriteria sc);
+        void openTask(Task t);
     }
 }

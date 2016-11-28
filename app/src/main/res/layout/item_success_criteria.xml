@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:padding="@dimen/smallSpace"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:padding="@dimen/smallSpace"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/item_success_criteria_test"
         android:layout_width="match_parent"
-        android:layout_weight="3"
+        android:layout_alignParentStart="true"
         android:textColor="#000"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:paddingStart="@dimen/standardSpace"
         android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/item_success_criteria_progress"
         android:layout_width="match_parent"
-        android:layout_weight="5"
+        android:layout_alignParentEnd="true"
         android:textColor="#000"
-        android:padding="@dimen/standardSpace"
         android:textAlignment="viewEnd"
-        android:paddingStart="@dimen/standardSpace"
         android:layout_height="wrap_content" />
-</LinearLayout>
+</RelativeLayout>

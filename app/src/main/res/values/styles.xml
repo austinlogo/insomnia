@@ -18,17 +18,29 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
     <style name="AppTheme.Fragment">
-        <item name="android:paddingTop">@dimen/standardSpace</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:animateLayoutChanges">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="AppTheme.addItem">
+        <item name="android:padding">@dimen/standardSpace</item>
     </style>
 
     <style name="AppTheme.EditText">
         <item name="android:padding">@dimen/standardSpace</item>
-        <item name="android:layout_margin">@dimen/standardSpace</item>
+        <item name="android:layout_marginBottom">@dimen/standardSpace</item>
         <item name="android:background">@color/lightGrey</item>
     </style>
 
+    <style name="AppTheme.EditText.NoMargin" parent="AppTheme.EditText">
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
     <style name="AppTheme.Button">
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">?selectableItemBackground</item>
         <item name="android:padding">@dimen/smallSpace</item>
         <item name="android:layout_margin">@dimen/standardSpace</item>
     </style>

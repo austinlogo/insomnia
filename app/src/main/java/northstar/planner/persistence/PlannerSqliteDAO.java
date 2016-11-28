@@ -72,6 +72,10 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
 
         newValues.put(TaskTable.TITLE_COLUMN, task.getTitle());
         newValues.put(TaskTable.GOAL_COLUMN, task.getGoal());
+        newValues.put(TaskTable.DUE_COLUMN, task.getDue().getTime());
+        newValues.put(TaskTable.COMPLETES_COLUMN, task.getCompletes());
+        newValues.put(TaskTable.TASK_COMMITMENT_COLUMN, task.getTaskCommitment());
+        newValues.put(TaskTable.STATUS_COLUMN, task.getStatus().toString());
 
         long result = db.insert(TaskTable.TABLE_NAME, null, newValues);
         task.setId(result);
@@ -85,6 +89,7 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
         Cursor c = db.query(ThemeTable.TABLE_NAME, ThemeTable.projection, selection, selectionArgs, null, null, null);
         c.moveToFirst();
         Theme result = new Theme(c);
+        c.close();
         result.setGoals(getGoalsByThemeId(themeId));
         return result;
     }
@@ -97,7 +102,19 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
         c.moveToFirst();
         Goal result = new Goal(c);
         result.setSuccessCriterias(getSuccessCriterias(result.getId()));
-        result.setTasks(getTasks(result.getId()));
+        result.setTasks(getTasksByGoalId(result.getId()));
+        c.close();
+        return result;
+    }
+
+    public Task getTask(long taskId) {
+        String selection = TaskTable._ID + EQUALSQ;
+        String[] selectionArgs = { Long.toString(taskId) };
+
+        Cursor c = db.query(TaskTable.TABLE_NAME, TaskTable.projection, selection, selectionArgs, null, null, null);
+        c.moveToFirst();
+        Task result = new Task(c);
+        c.close();
         return result;
     }
 
@@ -113,10 +130,11 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
             result.add(new SuccessCriteria(c));
             c.moveToNext();
         }
+        c.close();
         return result;
     }
 
-    public List<Task> getTasks(long goalId) {
+    public List<Task> getTasksByGoalId(long goalId) {
         String selection = TaskTable.GOAL_COLUMN + EQUALSQ;
         String[] selectionArgs = { Long.toString(goalId) };
 
@@ -126,6 +144,7 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
         List<Task> result = new ArrayList<>();
         while(!c.isAfterLast()) {
             result.add(new Task(c));
+            c.moveToNext();
         }
         return result;
     }
@@ -133,8 +152,12 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
     public boolean removeTheme(long themeId) {
         String whereClause = ThemeTable._ID + EQUALSQ;
         String[] whereArgs = { Long.toString(themeId) };
-
+        List<Goal> themeGoals = getGoalsByThemeId(themeId);
+        
         int i = db.delete(ThemeTable.TABLE_NAME, whereClause, whereArgs);
+        for (Goal g : themeGoals) {
+            removeGoal(g.getId());
+        }
         return i == 1;
     }
 
@@ -149,8 +172,21 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
     public boolean removeGoal(long goalId) {
         String whereClause = GoalTable._ID + EQUALSQ;
         String[] whereArgs = { Long.toString(goalId) };
+        List<Task> goalTask = getTasksByGoalId(goalId);
 
         int i = db.delete(GoalTable.TABLE_NAME, whereClause, whereArgs);
+        for (Task task : goalTask) {
+            removeTask(task.getId());
+        }
+        return i == 1;
+    }
+    
+
+    public boolean removeTask(long taskId) {
+        String whereClause = TaskTable._ID + EQUALSQ;
+        String[] whereArgs = { Long.toString(taskId) };
+
+        int i = db.delete(TaskTable.TABLE_NAME, whereClause, whereArgs);
         return i == 1;
     }
 

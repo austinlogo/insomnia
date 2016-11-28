@@ -2,11 +2,12 @@ package northstar.planner.models;
 
 import android.database.Cursor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import northstar.planner.models.tables.BaseTable;
 
-public abstract class BaseModel {
+public abstract class BaseModel implements Serializable {
     protected long _id;
     public static final long NEW_ID = -1;
 
@@ -42,7 +43,7 @@ public abstract class BaseModel {
     }
 
     protected Date getColumnDate(Cursor cursor, String columnName) {
-        int date = cursor.getInt(cursor.getColumnIndexOrThrow(columnName));
+        long date = cursor.getLong(cursor.getColumnIndexOrThrow(columnName));
         return new Date(date);
     }
 

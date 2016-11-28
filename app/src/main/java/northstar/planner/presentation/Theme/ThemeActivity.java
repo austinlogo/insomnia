@@ -2,55 +2,96 @@ package northstar.planner.presentation.Theme;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import northstar.planner.R;
+import northstar.planner.models.Goal;
 import northstar.planner.models.Theme;
+import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.ThemeTable;
+import northstar.planner.persistence.PlannerSqliteDAO;
 import northstar.planner.presentation.BaseActivity;
+import northstar.planner.presentation.goal.GoalActivity;
+import northstar.planner.utils.StringUtils;
 
-public class ThemeActivity extends BaseActivity
+public class ThemeActivity
+        extends BaseActivity
         implements ThemeFragment.ThemeFragmentListener {
 
-    @BindView(R.id.activity_theme_drawer_layout)
+    @BindView(R.id.activity_theme_edit_drawer_layout)
     DrawerLayout mDrawerLayout;
 
+    Theme currentTheme;
+    public PlannerSqliteDAO dao;
+    private ThemeFragment mFragment;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_theme);
-        ButterKnife.bind(this);
-
-        finishDrawerInit(this, mDrawerLayout, "Theme");
-
-        ThemeFragment fragment = ThemeFragment.newInstance();
+        currentTheme = (Theme) getIntent().getExtras().get(ThemeTable.TABLE_NAME);
+        dao = new PlannerSqliteDAO();
+        mFragment = northstar.planner.presentation.Theme.ThemeFragment.newInstance(currentTheme);
 
         getFragmentManager()
                 .beginTransaction()
-                .add(R.id.main_fragment, fragment)
+                .add(R.id.activity_theme_edit_fragment, mFragment)
                 .commit();
+
+        setContentView(R.layout.activity_theme);
+        ButterKnife.bind(this);
+        finishDrawerInit(this, mDrawerLayout, currentTheme.getTitle());
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    public void onResume() {
+        super.onResume();
+        List<Goal> goals = dao.getGoalsByThemeId(currentTheme.getId());
+        mFragment.initGoalsList(goals);
     }
 
     @Override
-    public void startThemeEdit(Theme theme) {
+    public void onPause() {
+        super.onPause();
 
-        Intent i = new Intent(this, ThemeEditActivity.class);
-        if (theme != null) {
-            i.putExtra(ThemeTable._ID, theme.getId());
-            i.putExtra(ThemeTable.TITLE_COLUMN, theme.getTitle());
-            i.putExtra(ThemeTable.DESCRIPTION_COLUMN, theme.getDescription());
+        currentTheme.updateTheme(mFragment.getNewThemeValues());
+        if (StringUtils.isNotEmpty(currentTheme.getTitle())) {
+            dao.updateTheme(currentTheme);
         }
+    }
 
+    @Override
+    protected void deleteAction() {
+        dao.removeTheme(currentTheme.getId());
+        finish();
+    }
+
+    @Override
+    protected void editAction() {
+        getSupportActionBar().setTitle(mFragment.getNewThemeValues().getTitle());
+        mFragment.toggleEditing();
+    }
+
+    @Override
+    public void newGoal(String newGoalTitle) {
+        Goal newGoal = new Goal(currentTheme.getId(), newGoalTitle, "");
+        long id = dao.addGoal(newGoal);
+        newGoal.setId(id);
+
+        mFragment.addedGoal(newGoal);
+    }
+
+    @Override
+    public void openGoal(Goal goal) {
+
+        Intent i = new Intent(this, GoalActivity.class);
+        i.putExtra(GoalTable._ID, goal.getId());
+        i.putExtra(GoalTable.THEME_COLUMN, goal.getTheme());
+//        i.putExtra(GoalTable.TITLE_COLUMN, goal.getTitle());
         startActivity(i);
     }
 }

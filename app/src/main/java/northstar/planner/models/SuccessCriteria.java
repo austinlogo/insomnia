@@ -9,18 +9,18 @@ public class SuccessCriteria extends BaseModel{
     private long goal;
     private String title;
     private double progress;
-    private double committed;
+    private int committed;
 
     public SuccessCriteria(Cursor c) {
         super(c);
         title = getColumnString(c, TaskTable.TITLE_COLUMN);
         goal = getColumnLong(c, TaskTable.GOAL_COLUMN);
         progress = getColumnDouble(c, SuccessCriteriaTable.PROGRESS_COLUMN);
-        committed = getColumnDouble(c, SuccessCriteriaTable.COMMITTED_COLUMN);
+        committed = getColumnInt(c, SuccessCriteriaTable.COMMITTED_COLUMN);
     }
 
-    public SuccessCriteria(Goal currentGoal, String newSuccessCriteriaTitle, int newSuccessCriteriaCommitted) {
-        goal = currentGoal.getId();
+    public SuccessCriteria(String newSuccessCriteriaTitle, int newSuccessCriteriaCommitted) {
+        goal = NEW_ID;
         title = newSuccessCriteriaTitle;
         progress = 0;
         committed = newSuccessCriteriaCommitted;
@@ -38,11 +38,15 @@ public class SuccessCriteria extends BaseModel{
         return progress;
     }
 
-    public double getCommitted() {
+    public int getCommitted() {
         return committed;
     }
 
     public void setId(long id) {
         _id = id;
+    }
+
+    public void setGoal(Goal goal) {
+        this.goal = goal.getId();
     }
 }

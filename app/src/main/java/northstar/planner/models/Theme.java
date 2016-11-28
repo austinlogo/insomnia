@@ -9,7 +9,7 @@ import java.util.List;
 
 import northstar.planner.models.tables.ThemeTable;
 
-public class Theme extends BaseModel implements Serializable{
+public class Theme extends BaseModel {
     private String title;
     private String description;
     private List<Goal> goals;
@@ -22,9 +22,6 @@ public class Theme extends BaseModel implements Serializable{
         this.goals = new ArrayList<>();
     }
 
-    public Theme(String title, String description) {
-        this(-1, title, description);
-    }
 
     public Theme(Bundle bundle) {
 
@@ -39,9 +36,18 @@ public class Theme extends BaseModel implements Serializable{
         this.goals = new ArrayList<>();
     }
 
-    public void updateTheme(String title, String description) {
-        this.title = title;
-        this.description = description;
+    public Theme() {
+        this("", "");
+    }
+
+    public Theme(String title, String description) {
+        this(NEW_ID, title, description);
+    }
+
+
+    public void updateTheme(Theme newThemeValues) {
+        this.title = newThemeValues.getTitle();
+        this.description = newThemeValues.getDescription();
         this.goals = new ArrayList<>();
     }
 

@@ -1,8 +1,11 @@
 package northstar.planner.utils;
 
+import android.animation.LayoutTransition;
+import android.animation.ObjectAnimator;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
 
 public class ViewAnimationUtils {
@@ -59,6 +62,43 @@ public class ViewAnimationUtils {
 
         a.setDuration(DEFAULT_ANIMATION_DURATION);
         v.startAnimation(a);
+    }
+
+    public static void getSlideLayoutTransition(ViewGroup parent, View fromView, View toView) {
+        int width = fromView.getMeasuredWidth();
+        ObjectAnimator hideOld = ObjectAnimator.ofFloat(null, ViewGroup.TRANSLATION_X, 0, -width);
+        ObjectAnimator showNew = ObjectAnimator.ofFloat(null, ViewGroup.TRANSLATION_X, width, 0);
+
+        LayoutTransition trans = new LayoutTransition();
+        trans.setAnimator(LayoutTransition.APPEARING, showNew);
+        trans.setAnimator(LayoutTransition.DISAPPEARING, hideOld);
+        trans.setStartDelay(LayoutTransition.APPEARING, 0);
+        trans.setStartDelay(LayoutTransition.DISAPPEARING, 0);
+        trans.setStartDelay(LayoutTransition.CHANGE_APPEARING, 0);
+        trans.setStartDelay(LayoutTransition.CHANGE_DISAPPEARING, 0);
+        trans.setDuration(350);
+
+        parent.setLayoutTransition(trans);
+        fromView.setVisibility(View.GONE);
+        toView.setVisibility(View.VISIBLE);
+        toView.requestFocus();
+    }
+
+    public static void getSlideDownLayoutTransition(ViewGroup view) {
+        int height = view.getMeasuredHeight();
+        ObjectAnimator show = ObjectAnimator.ofFloat(null, ViewGroup.TRANSLATION_Y, -height, 0);
+        ObjectAnimator hide = ObjectAnimator.ofFloat(null, ViewGroup.TRANSLATION_Y, 0, -height);
+
+        LayoutTransition trans = new LayoutTransition();
+        trans.setAnimator(LayoutTransition.DISAPPEARING, hide);
+//        trans.setAnimator(LayoutTransition.APPEARING, show);
+        trans.setStartDelay(LayoutTransition.APPEARING, 2000);
+        trans.setStartDelay(LayoutTransition.DISAPPEARING, 2000);
+        trans.setStartDelay(LayoutTransition.CHANGE_APPEARING, 2000);
+        trans.setStartDelay(LayoutTransition.CHANGE_DISAPPEARING, 2000);
+        trans.setDuration(5000);
+
+        view.setLayoutTransition(trans);
     }
 
 

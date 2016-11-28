@@ -1,6 +1,8 @@
 package northstar.planner.presentation;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +10,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -29,6 +34,9 @@ public abstract class BaseActivity extends AppCompatActivity{
 
     protected static List<DrawerItem> drawerItems;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
+
+    protected abstract void deleteAction();
+    protected abstract void editAction();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,10 +95,38 @@ public abstract class BaseActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (mActionBarDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.main_menu_delete:
+                deleteAction();
+                return true;
+            case R.id.main_menu_edit:
+                toggleEditIcon(item);
+                editAction();
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void toggleEditIcon(MenuItem menuItem) {
+        if(menuItem.getTitle().equals(getString(R.string.action_edit))) {
+            menuItem.setTitle(getString(R.string.action_save));
+            menuItem.setIcon(getResources().getDrawable(R.drawable.ic_done_white_36dp));
+
+        } else {
+            menuItem.setTitle(getString(R.string.action_edit));
+            menuItem.setIcon(getResources().getDrawable(R.drawable.ic_mode_edit_white_36dp));
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    public void hideKeyboard(View v) {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 }

@@ -8,13 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.List;
 
 import northstar.planner.R;
 import northstar.planner.models.Goal;
 import northstar.planner.models.SuccessCriteria;
 
-public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> {
+public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> implements Serializable {
     private List<SuccessCriteria> successCriterias;
 
     public SuccessCriteriaListAdapter(Context context, List<SuccessCriteria> successCriterias) {
@@ -64,6 +65,10 @@ public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> {
     }
 
     private String getProgressString(SuccessCriteria sc) {
-        return sc.getProgress() + " / " + sc.getCommitted();
+        return (int) sc.getProgress() + " / " + (int) sc.getCommitted();
+    }
+
+    public List<SuccessCriteria> getList() {
+        return successCriterias;
     }
 }

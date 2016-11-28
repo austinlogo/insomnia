@@ -18,7 +18,7 @@ public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<SuccessCriteria>
     private List<SuccessCriteria> successCriterias;
 
     public SuccessCriteriaSpinnerAdapter(Context context, List<SuccessCriteria> successCriterias) {
-        super(context, R.layout.item_theme);
+        super(context, R.layout.item_default);
         this.successCriterias = successCriterias;
     }
 
@@ -34,7 +34,7 @@ public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<SuccessCriteria>
 //        return super.getView(position, convertView, parent);
 
         convertView = (convertView == null)
-                ? LayoutInflater.from(getContext()).inflate(R.layout.item_theme, parent, false)
+                ? LayoutInflater.from(getContext()).inflate(R.layout.item_default, parent, false)
                 : convertView;
 
         TextView text = (TextView) convertView.findViewById(R.id.item_default_text);
@@ -46,10 +46,7 @@ public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<SuccessCriteria>
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        TextView view = new TextView(getContext());
-        view.setTextColor(Color.BLACK);
-        view.setText(successCriterias.get(position).getTitle());
-        return view;
+        return getView(position, convertView, parent);
     }
 
     @Override

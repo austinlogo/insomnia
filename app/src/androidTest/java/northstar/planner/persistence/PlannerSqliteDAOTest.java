@@ -29,7 +29,7 @@ public class PlannerSqliteDAOTest {
     @Before
     public void setUp() throws Exception {
         testTheme = new Theme("TEST_TITLE", "TEST_DESCRIPTION");
-        testGoal = new Goal("GOAL_TITLE", "GOAL_DESCRIPTION");
+        testGoal = new Goal(1, "GOAL_DESCRIPTION");
         testGoal.setTheme(testThemeId);
         dao = new PlannerSqliteDAO();
     }
