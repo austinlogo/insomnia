@@ -5,11 +5,15 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,6 +22,8 @@ import northstar.planner.R;
 import northstar.planner.models.Theme;
 import northstar.planner.persistence.PlannerSqliteDAO;
 import northstar.planner.presentation.adapter.ThemeListAdapter;
+import northstar.planner.presentation.swipe.ThemeListTouchHelperCallback;
+import northstar.planner.presentation.swipe.ThemeRecyclerViewAdapter;
 
 public class ListThemesFragment extends Fragment
         implements AdapterView.OnItemClickListener {
@@ -27,8 +33,8 @@ public class ListThemesFragment extends Fragment
     private Vibrator vibrator;
     private ListThemesFragmentListener activityListener;
 
-    @BindView(R.id.activity_drawer_list)
-    ListView list;
+    @BindView(R.id.activity_theme_list)
+    RecyclerView themeList;
 
     public static ListThemesFragment newInstance() {
         return new ListThemesFragment();
@@ -47,6 +53,19 @@ public class ListThemesFragment extends Fragment
         return v;
     }
 
+    public void initRecyleView(List<Theme> ts) {
+        themeList.setHasFixedSize(true);
+        themeList.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+        ThemeRecyclerViewAdapter adapter = new ThemeRecyclerViewAdapter(ts, activityListener);
+        themeList.setAdapter(adapter);
+
+        ItemTouchHelper.Callback callback = new ThemeListTouchHelperCallback(adapter, getActivity());
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(themeList);
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -56,13 +75,15 @@ public class ListThemesFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        themeListAdapter = new ThemeListAdapter(
-                getActivity().getApplicationContext(),
-                android.R.layout.simple_list_item_1,
-                dao.getAllThemes());
+//        themeListAdapter = new ThemeListAdapter(
+//                getActivity().getApplicationContext(),
+//                android.R.layout.simple_list_item_1,
+//                dao.getAllThemes());
 
-        list.setAdapter(themeListAdapter);
-        list.setOnItemClickListener(this);
+//        themeList.setAdapter();
+//        themeList.setOnItemClickListener(this);
+        initRecyleView(dao.getAllThemes());
+
 
     }
 
@@ -78,7 +99,6 @@ public class ListThemesFragment extends Fragment
         Theme currentTheme = themeListAdapter.getItem(position);
 
         activityListener.startThemeEdit(currentTheme);
-
     }
 
     @OnClick(R.id.fragment_theme_fab)

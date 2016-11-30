@@ -8,7 +8,7 @@
     tools:showIn="@layout/activity_theme_view">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/activity_rec_drawer_list"
+        android:id="@+id/activity_theme_list"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>
