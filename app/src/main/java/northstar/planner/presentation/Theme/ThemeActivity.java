@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
+import android.view.View;
 
 import java.util.List;
 
@@ -33,8 +34,9 @@ public class ThemeActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentTheme = (Theme) getIntent().getExtras().get(ThemeTable.TABLE_NAME);
         dao = new PlannerSqliteDAO();
+        currentTheme = (Theme) getIntent().getExtras().get(ThemeTable.TABLE_NAME);
+
         mFragment = northstar.planner.presentation.Theme.ThemeFragment.newInstance(currentTheme);
 
         getFragmentManager()
@@ -65,6 +67,11 @@ public class ThemeActivity
     }
 
     @Override
+    public View getRootView() {
+        return null;
+    }
+
+    @Override
     protected void deleteAction() {
         dao.removeTheme(currentTheme.getId());
         finish();
@@ -78,11 +85,19 @@ public class ThemeActivity
 
     @Override
     public void newGoal(String newGoalTitle) {
+        storeThemeIfItDoesNotYesExist();
         Goal newGoal = new Goal(currentTheme.getId(), newGoalTitle, "");
         long id = dao.addGoal(newGoal);
         newGoal.setId(id);
 
         mFragment.addedGoal(newGoal);
+    }
+
+    private void storeThemeIfItDoesNotYesExist() {
+        if (currentTheme.isNew()) {
+            currentTheme.updateTheme(mFragment.getNewThemeValues());
+            dao.addTheme(currentTheme, 0);
+        }
     }
 
     @Override

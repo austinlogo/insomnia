@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import northstar.planner.R;
-import northstar.planner.models.Goal;
 import northstar.planner.models.SuccessCriteria;
 
 public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> implements Serializable {
@@ -38,11 +37,11 @@ public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> im
                 ? LayoutInflater.from(getContext()).inflate(R.layout.item_success_criteria, parent, false)
                 : convertView;
 
-        TextView text = (TextView) convertView.findViewById(R.id.item_success_criteria_test);
+        TextView text = (TextView) convertView.findViewById(R.id.item_success_criteria_title);
         TextView committed = (TextView) convertView.findViewById(R.id.item_success_criteria_progress);
 
         text.setText(successCriterias.get(position).getTitle());
-        committed.setText(getProgressString(successCriterias.get(position)));
+        committed.setText(successCriterias.get(position).getProgressString());
 
 
         return convertView;
@@ -55,7 +54,9 @@ public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> im
 
     @Override
     public SuccessCriteria getItem(int position) {
-        return successCriterias.get(position);
+        return position == 0
+                ? null
+                : successCriterias.get(position - 1);
     }
 
     @Override
@@ -64,11 +65,19 @@ public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> im
         notifyDataSetChanged();
     }
 
-    private String getProgressString(SuccessCriteria sc) {
-        return (int) sc.getProgress() + " / " + (int) sc.getCommitted();
-    }
-
     public List<SuccessCriteria> getList() {
         return successCriterias;
+    }
+
+    public void updateSuccessCriteria(SuccessCriteria updatedSuccessCriteria) {
+        for (int i = 0; i < successCriterias.size(); i++) {
+            SuccessCriteria sc = successCriterias.get(i);
+            if (sc.getId() == updatedSuccessCriteria.getId()) {
+                successCriterias.set(i, updatedSuccessCriteria);
+                break;
+            }
+        }
+
+        notifyDataSetChanged();
     }
 }

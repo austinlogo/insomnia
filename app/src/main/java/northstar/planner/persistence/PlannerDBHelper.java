@@ -35,8 +35,7 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
         db.execSQL(SuccessCriteriaTable.SQL_CREATE_QUERY);
     }
 
-    public static void clearAll() {
-        SQLiteDatabase db = instance.getWritableDatabase();
+    public static void clearAll(SQLiteDatabase db) {
         db.execSQL(ThemeTable.getDropTableQuery());
         db.execSQL(GoalTable.getDropTableQuery());
         db.execSQL(TaskTable.getDropTableQuery());
@@ -44,7 +43,7 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        clearAll();
+        clearAll(db);
         onCreate(db);
     }
 }

@@ -3,14 +3,13 @@ package northstar.planner.presentation.Theme;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -22,11 +21,12 @@ import northstar.planner.models.Goal;
 import northstar.planner.models.Theme;
 import northstar.planner.models.tables.ThemeTable;
 import northstar.planner.presentation.BaseFragment;
-import northstar.planner.presentation.adapter.GoalListAdapter;
+import northstar.planner.presentation.adapter.GoalRecyclerViewAdapter;
+import northstar.planner.presentation.adapter.ThemeRecyclerViewAdapter;
 
 public class ThemeFragment
         extends BaseFragment
-        implements View.OnKeyListener, AdapterView.OnItemClickListener {
+        implements View.OnKeyListener {
 
     @BindView(R.id.fragment_theme_edit_title)
     EditText editTitle;
@@ -38,24 +38,22 @@ public class ThemeFragment
     EditText newGoalText;
 
     @BindView(R.id.fragment_theme_edit_goals)
-    ListView goals;
+    RecyclerView goalsRecyclerView;
 
     private ThemeFragmentListener activityListener;
-    private GoalListAdapter goalsListAdapter;
+//    private GoalListAdapter goalsListAdapter;
 
     public static northstar.planner.presentation.Theme.ThemeFragment newInstance(Theme newTheme) {
         northstar.planner.presentation.Theme.ThemeFragment newFragment = new northstar.planner.presentation.Theme.ThemeFragment();
         Bundle b = new Bundle();
         b.putSerializable(ThemeTable.TABLE_NAME, newTheme);
         newFragment.setArguments(b);
-
         return newFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Nullable
@@ -63,9 +61,6 @@ public class ThemeFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_theme, container, false);
         ButterKnife.bind(this, v);
-
-        goals.setOnItemClickListener(this);
-
         return v;
     }
 
@@ -76,14 +71,12 @@ public class ThemeFragment
     }
 
     public void initGoalsList(List<Goal> goalsList) {
-        goalsListAdapter = new GoalListAdapter(getActivity().getApplicationContext(), goalsList);
-        goals.setAdapter(goalsListAdapter);
-
+        initRecyclerView(goalsRecyclerView, goalsList, activityListener);
         setHint();
     }
 
     private void setHint() {
-        if (goalsListAdapter.getCount() > 0) {
+        if (goalsRecyclerView.getAdapter().getItemCount() > 0) {
             newGoalText.setHint(R.string.anything_else);
         }
     }
@@ -128,12 +121,6 @@ public class ThemeFragment
         }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Goal selectedGoal = goalsListAdapter.getItem(position);
-        activityListener.openGoal(selectedGoal);
-    }
-
     public void toggleEditing() {
         boolean isEditable = editTitle.getVisibility() != View.VISIBLE;
         int inputType = isEditable
@@ -159,7 +146,8 @@ public class ThemeFragment
     }
 
     public void addedGoal(Goal newGoal) {
-        goalsListAdapter.add(newGoal);
+//        goalsListAdapter.add(newGoal);
+        ((GoalRecyclerViewAdapter) goalsRecyclerView.getAdapter()).addItem(newGoal);
         newGoalText.setText("");
         setHint();
     }

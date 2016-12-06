@@ -13,10 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
-        <activity android:name=".presentation.swipe.RecycleActivity">
-
-        </activity>
-
         <activity
             android:name=".presentation.Theme.ListThemesActivity"
             android:label="@string/app_name"
@@ -36,10 +32,15 @@
             android:name=".presentation.goal.GoalActivity"
             android:label="Goal"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
             android:name=".presentation.task.TaskActivity"
+            android:label="Task"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".presentation.today.TodayActivity"
             android:label="Task"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan"/>

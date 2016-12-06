@@ -4,7 +4,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import northstar.planner.models.tables.GoalTable;
 
@@ -13,6 +15,7 @@ public class Goal extends BaseModel {
     private String title;
     private String description;
     private List<SuccessCriteria> successCriterias;
+    private Map<Long, SuccessCriteria> successCriteriaMap;
     private List<Task> tasks;
 
     public Goal(Cursor c) {
@@ -39,12 +42,14 @@ public class Goal extends BaseModel {
 
     public void initLists() {
         successCriterias = new ArrayList<>();
+        successCriteriaMap = new HashMap<>();
         tasks = new ArrayList<>();
     }
 
     public void updateGoal(Goal newGoalValues) {
         this.title = newGoalValues.getTitle();
         this.description = newGoalValues.getDescription();
+        this.tasks = newGoalValues.getTasks();
     }
 
     public long getTheme() {
@@ -85,5 +90,19 @@ public class Goal extends BaseModel {
 
     public void addSuccessCriteria(SuccessCriteria sc) {
         successCriterias.add(0, sc);
+    }
+
+    public void setChildren(List<SuccessCriteria> successCriterias, List<Task> tasksByGoalId) {
+        this.successCriterias = successCriterias;
+
+        for (SuccessCriteria sc : successCriterias) {
+            successCriteriaMap.put(sc.getId(), sc);
+        }
+
+        for (Task task : tasksByGoalId) {
+            SuccessCriteria completes = successCriteriaMap.get(task.getCompletes());
+            task.setSuccessCriteria(completes);
+            this.tasks.add(task);
+        }
     }
 }

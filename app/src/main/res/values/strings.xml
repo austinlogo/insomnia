@@ -33,4 +33,9 @@
     <string name="task_title_empty">the task title is empty</string>
     <string name="goal_title_empty">add a title for your goal please</string>
     <string name="not_full">please fill in all values</string>
+    <string name="no_due_date">no due date</string>
+    <string name="no_title">please fill in a title</string>
+    <string name="today">today</string>
+    <string name="deletedItem">deleted item</string>
+    <string name="undo">undo</string>
 </resources>

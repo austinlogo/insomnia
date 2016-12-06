@@ -7,16 +7,20 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import northstar.planner.models.Goal;
+import northstar.planner.models.TaskStatus;
 import northstar.planner.models.SuccessCriteria;
 import northstar.planner.models.Task;
 import northstar.planner.models.Theme;
+import northstar.planner.models.tables.BaseTable;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.SuccessCriteriaTable;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.models.tables.ThemeTable;
+import northstar.planner.utils.DateUtils;
 
 public class PlannerSqliteDAO {//implements PlannerDAO {
 
@@ -33,13 +37,16 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
         db = PlannerDBHelper.getInstance();
     }
 
-    public long addTheme(Theme newTheme) {
+    public Theme addTheme(Theme newTheme, int position) {
         ContentValues newValues = new ContentValues();
 
         newValues.put(ThemeTable.TITLE_COLUMN, newTheme.getTitle());
         newValues.put(ThemeTable.DESCRIPTION_COLUMN, newTheme.getDescription());
+        newValues.put(ThemeTable.ORDER_COLUMN, position);
 
-        return db.insert(ThemeTable.TABLE_NAME, null, newValues);
+        long newId = db.insert(ThemeTable.TABLE_NAME, null, newValues);
+        newTheme.setId(newId);
+        return newTheme;
     }
 
     public long addGoal(Goal goal) {
@@ -70,12 +77,15 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
     public Task addTask(Task task) {
         ContentValues newValues = new ContentValues();
 
+        if (task.getDue() != null) {
+            newValues.put(TaskTable.DUE_COLUMN, task.getDue().getTime());
+        }
+
         newValues.put(TaskTable.TITLE_COLUMN, task.getTitle());
         newValues.put(TaskTable.GOAL_COLUMN, task.getGoal());
-        newValues.put(TaskTable.DUE_COLUMN, task.getDue().getTime());
         newValues.put(TaskTable.COMPLETES_COLUMN, task.getCompletes());
         newValues.put(TaskTable.TASK_COMMITMENT_COLUMN, task.getTaskCommitment());
-        newValues.put(TaskTable.STATUS_COLUMN, task.getStatus().toString());
+        newValues.put(TaskTable.STATUS_COLUMN, task.getTaskStatus().toString());
 
         long result = db.insert(TaskTable.TABLE_NAME, null, newValues);
         task.setId(result);
@@ -101,8 +111,9 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
         Cursor c = db.query(GoalTable.TABLE_NAME, GoalTable.projection, selection, selectionArgs, null, null, null);
         c.moveToFirst();
         Goal result = new Goal(c);
-        result.setSuccessCriterias(getSuccessCriterias(result.getId()));
-        result.setTasks(getTasksByGoalId(result.getId()));
+        result.setChildren(getSuccessCriterias(result.getId()), getTasksByGoalId(result.getId()));
+//        result.setSuccessCriterias();
+//        result.setTasks();
         c.close();
         return result;
     }
@@ -135,10 +146,29 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
     }
 
     public List<Task> getTasksByGoalId(long goalId) {
-        String selection = TaskTable.GOAL_COLUMN + EQUALSQ;
-        String[] selectionArgs = { Long.toString(goalId) };
+        String selection = TaskTable.GOAL_COLUMN + EQUALSQ + " AND " + TaskTable.STATUS_COLUMN + " != ?";
+        String[] selectionArgs = { Long.toString(goalId), TaskStatus.DONE.toString() };
 
-        Cursor c = db.query(TaskTable.TABLE_NAME, TaskTable.projection , selection, selectionArgs, null, null, null);
+        Cursor c = db.query(TaskTable.TABLE_NAME, TaskTable.projection , selection, selectionArgs, null, null, BaseTable.getorderAsc());
+        c.moveToFirst();
+
+        List<Task> result = new ArrayList<>();
+        while(!c.isAfterLast()) {
+            result.add(new Task(c));
+            c.moveToNext();
+        }
+        c.close();
+        return result;
+    }
+
+    public List<Task> getTasksByDueDate(Calendar cal) {
+        Calendar start = DateUtils.getStartOfDay(cal);
+        Calendar end = DateUtils.getEndOfDay(cal);
+
+        String selection = getSelectionForDatesOnThisDay(TaskTable.DUE_COLUMN);
+        String[] selectionArgs = { Long.toString(start.getTime().getTime()), Long.toString(end.getTime().getTime()) };
+
+        Cursor c = db.query(TaskTable.TABLE_NAME, TaskTable.projection , selection, selectionArgs, null, null, BaseTable.getorderAsc());
         c.moveToFirst();
 
         List<Task> result = new ArrayList<>();
@@ -148,6 +178,12 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
         }
         return result;
     }
+
+    private String getSelectionForDatesOnThisDay(String datecolumn) {
+        return datecolumn + " > ? AND " + datecolumn + " < ?";
+    }
+
+
 
     public boolean removeTheme(long themeId) {
         String whereClause = ThemeTable._ID + EQUALSQ;
@@ -217,7 +253,7 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
     }
 
     public List<Theme> getAllThemes() {
-        Cursor c = db.query(ThemeTable.TABLE_NAME, ThemeTable.projection, null, null, null, null, null);
+        Cursor c = db.query(ThemeTable.TABLE_NAME, ThemeTable.projection, null, null, null, null, ThemeTable.getorderAsc());
         c.moveToFirst();
 
         List<Theme> resultList = new ArrayList<>();
@@ -229,9 +265,9 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
         return resultList;
     }
 
-    public long updateTheme(Theme currentTheme) {
+    public Theme updateTheme(Theme currentTheme) {
         if (currentTheme.isNew()) {
-            return addTheme(currentTheme);
+            return addTheme(currentTheme, 0);
         }
         String whereClause = ThemeTable._ID + " = " + currentTheme.getId();
 
@@ -239,7 +275,8 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
         cv.put(ThemeTable.TITLE_COLUMN, currentTheme.getTitle());
         cv.put(ThemeTable.DESCRIPTION_COLUMN, currentTheme.getDescription());
 
-        return db.update(ThemeTable.TABLE_NAME, cv, whereClause, null);
+        db.update(ThemeTable.TABLE_NAME, cv, whereClause, null);
+        return currentTheme;
     }
 
     public long updateGoal(Goal currentGoal) {
@@ -253,6 +290,8 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
         cv.put(GoalTable.TITLE_COLUMN, currentGoal.getTitle());
         cv.put(GoalTable.DESCRIPTION_COLUMN, currentGoal.getDescription());
 
+        updateTaskOrder(currentGoal.getTasks());
+
         return db.update(GoalTable.TABLE_NAME, cv, whereClause, null);
 
     }
@@ -262,5 +301,62 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
         String[] whereArgs = { "1" };
 
         db.delete(GoalTable.TABLE_NAME, whereClause, whereArgs);
+    }
+
+    public void updateThemeOrder(List<Theme> list) {
+        for (int i = 0; i < list.size(); i++) {
+            Theme currentTheme = list.get(i);
+            String whereClause = ThemeTable._ID + " = " + currentTheme.getId();
+
+            ContentValues cv = new ContentValues();
+            cv.put(ThemeTable.ORDER_COLUMN, i+1);
+
+            db.update(ThemeTable.TABLE_NAME, cv, whereClause, null);
+        }
+    }
+
+    public void updateTaskOrder(List<Task> list) {
+        for (int i = 0; i < list.size(); i++) {
+            Task currentTask = list.get(i);
+            String whereClause = TaskTable._ID + " = " + currentTask.getId();
+
+            ContentValues cv = new ContentValues();
+            cv.put(TaskTable.ORDER_COLUMN, i+1);
+
+            db.update(TaskTable.TABLE_NAME, cv, whereClause, null);
+        }
+    }
+
+    public List<Task> getTodaysTasks() {
+        List<Task> tasks = getTasksByGoalId(Task.SCRATCH_ID);
+        tasks.addAll(getTasksByDueDate(DateUtils.today()));
+        return tasks;
+    }
+
+    public SuccessCriteria completeTask(Task completedTask) {
+        setTask(completedTask, TaskStatus.DONE);
+        return updateSuccessCriteria(completedTask);
+    }
+
+    private void setTask(Task currentTask, TaskStatus taskStatus) {
+        ContentValues cv = new ContentValues();
+        cv.put(TaskTable.STATUS_COLUMN, taskStatus.toString());
+
+        String whereClause = TaskTable._ID + " = " + currentTask.getId();
+
+        db.update(TaskTable.TABLE_NAME, cv, whereClause, null);
+    }
+
+    private SuccessCriteria updateSuccessCriteria(Task t) {
+        SuccessCriteria currentSC = t.getSuccessCriteria();
+        currentSC.updateProgress(t.getTaskCommitment());
+
+        ContentValues cv = new ContentValues();
+        cv.put(SuccessCriteriaTable.PROGRESS_COLUMN, currentSC.getProgress());
+
+        String whereClause = SuccessCriteriaTable._ID + " = " + currentSC.getId();
+
+        db.update(SuccessCriteriaTable.TABLE_NAME, cv, whereClause, null);
+        return currentSC;
     }
 }

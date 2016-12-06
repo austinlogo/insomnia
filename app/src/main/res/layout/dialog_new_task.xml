@@ -16,23 +16,24 @@
 
     <TextView
         android:id="@+id/dialog_new_task_datepicker"
-        android:hint="@string/click_to_set_date"
+        android:hint="@string/no_due_date"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
         android:padding="@dimen/smallSpace"
-        android:layout_below="@id/dialog_new_task_title"
-        android:layout_height="wrap_content"/>
+        android:layout_below="@id/dialog_new_task_title"/>
 
-    <TextView
-        android:id="@+id/dialog_new_task_successcriteria_header"
-        android:padding="@dimen/smallSpace"
-        android:text="@string/select_a_success_criteria"
-        android:layout_below="@id/dialog_new_task_datepicker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <!--<TextView-->
+        <!--android:id="@+id/dialog_new_task_successcriteria_header"-->
+        <!--android:padding="@dimen/smallSpace"-->
+        <!--android:text="@string/select_a_success_criteria"-->
+        <!--android:layout_below="@id/dialog_new_task_datepicker"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"/>-->
 
     <Spinner
         android:id="@+id/dialog_new_task_successcriteria"
-        android:layout_below="@id/dialog_new_task_successcriteria_header"
+        android:layout_below="@id/dialog_new_task_datepicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

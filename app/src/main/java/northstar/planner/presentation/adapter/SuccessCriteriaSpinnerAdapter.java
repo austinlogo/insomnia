@@ -7,8 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import northstar.planner.R;
@@ -19,7 +22,10 @@ public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<SuccessCriteria>
 
     public SuccessCriteriaSpinnerAdapter(Context context, List<SuccessCriteria> successCriterias) {
         super(context, R.layout.item_default);
-        this.successCriterias = successCriterias;
+        List<SuccessCriteria> spinnerSCList = new ArrayList<>(successCriterias);
+
+        spinnerSCList.add(0, new SuccessCriteria("Select an Success Criteria", 0));
+        this.successCriterias = spinnerSCList;
     }
 
     @Override

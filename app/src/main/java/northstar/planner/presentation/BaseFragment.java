@@ -1,14 +1,67 @@
 package northstar.planner.presentation;
 
 import android.app.Fragment;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 
-/**
- * Created by Austin on 11/24/2016.
- */
+import java.util.List;
 
-public class BaseFragment extends Fragment {
+import northstar.planner.models.Goal;
+import northstar.planner.models.Task;
+import northstar.planner.models.Theme;
+import northstar.planner.presentation.Theme.ListThemesFragment;
+import northstar.planner.presentation.Theme.ThemeFragment;
+import northstar.planner.presentation.adapter.GoalRecyclerViewAdapter;
+import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
+import northstar.planner.presentation.goal.GoalFragment;
+import northstar.planner.presentation.swipe.GenericListTouchHelperCallback;
+import northstar.planner.presentation.adapter.ThemeRecyclerViewAdapter;
+
+public abstract class BaseFragment extends Fragment {
 
     public BaseActivity getBaseActivity() {
         return (BaseActivity)getActivity();
+    }
+
+    public void initRecyclerView(RecyclerView recView, ThemeRecyclerViewAdapter adapter) {
+        recView.setHasFixedSize(true);
+        recView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+//        ThemeRecyclerViewAdapter adapter = new ThemeRecyclerViewAdapter(ts, activityListener);
+        recView.setAdapter(adapter);
+
+        ItemTouchHelper.Callback callback = new GenericListTouchHelperCallback(adapter, getBaseActivity());
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recView);
+    }
+
+    public void initRecyclerView(RecyclerView recView, List<Goal> goalList, ThemeFragment.ThemeFragmentListener activityListener) {
+        recView.setHasFixedSize(true);
+        recView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        GoalRecyclerViewAdapter adapter = new GoalRecyclerViewAdapter(goalList, activityListener);
+        recView.setAdapter(adapter);
+
+        ItemTouchHelper.Callback callback = new GenericListTouchHelperCallback(adapter, getBaseActivity());
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recView);
+    }
+
+    public void initRecyclerView(RecyclerView recView, TaskRecyclerViewAdapter adapter) {
+        recView.setHasFixedSize(false);
+        recView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+//        TaskRecyclerViewAdapter adapter = new TaskRecyclerViewAdapter(taskList, activityListener);
+        recView.setAdapter(adapter);
+
+        ItemTouchHelper.Callback callback = new GenericListTouchHelperCallback(adapter, getBaseActivity());
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recView);
+    }
+
+    protected boolean undoPressed(int event) {
+        return event == Snackbar.Callback.DISMISS_EVENT_ACTION;
     }
 }

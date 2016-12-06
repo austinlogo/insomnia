@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/fragment_add_task_title"
+        android:hint="@string/add_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/fragment_add_task_datepicker_choice"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Spinner
+        android:id="@+id/fragment_add_task_successcriteria_value"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/fragment_add_task_title_icon"
+            android:src="@drawable/ic_title_white_24dp"
+            android:padding="@dimen/smallSpace"
+            android:background="?selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <ImageButton
+            android:id="@+id/fragment_add_task_datepicker"
+            android:background="?selectableItemBackground"
+            android:src="@drawable/ic_date_range_white_24dp"
+            android:padding="@dimen/smallSpace"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <ImageButton
+            android:id="@+id/fragment_add_task_successcriteria"
+            android:src="@drawable/ic_equalizer_white_24dp"
+            android:padding="@dimen/smallSpace"
+            android:background="?selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <ImageButton
+            android:id="@+id/fragment_add_task_done"
+            android:src="@drawable/ic_done_white_36dp"
+            android:maxHeight="24dp"
+            android:padding="@dimen/smallSpace"
+            android:background="?selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+</LinearLayout>

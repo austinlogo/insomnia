@@ -17,6 +17,7 @@ public class GoalTable extends BaseTable {
             PRIMARY_KEY + ", " +
             THEME_COLUMN + " INTEGER, " +
             TITLE_COLUMN + " TEXT, " +
+            ORDER_COLUMN + " INTEGER, " +
             DESCRIPTION_COLUMN + " TEXT)";
 
     public static String getDropTableQuery() {

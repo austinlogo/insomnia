@@ -1,47 +1,39 @@
 package northstar.planner.presentation.goal;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.content.Context;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Date;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnItemClick;
-import butterknife.OnItemSelected;
 import northstar.planner.R;
 import northstar.planner.models.BaseModel;
 import northstar.planner.models.Goal;
 import northstar.planner.models.SuccessCriteria;
 import northstar.planner.models.Task;
+import northstar.planner.models.Theme;
 import northstar.planner.models.tables.GoalTable;
-import northstar.planner.persistence.PlannerSqliteDAO;
 import northstar.planner.presentation.BaseFragment;
 import northstar.planner.presentation.adapter.SuccessCriteriaListAdapter;
 import northstar.planner.presentation.adapter.SuccessCriteriaSpinnerAdapter;
-import northstar.planner.presentation.adapter.TaskListAdapter;
+import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.task.NewTaskDialog;
-import northstar.planner.utils.DateUtils;
 import northstar.planner.utils.StringUtils;
-import northstar.planner.utils.ViewAnimationUtils;
 
 public class GoalFragment
         extends BaseFragment
@@ -57,7 +49,7 @@ public class GoalFragment
     ListView successCriteria;
 
     @BindView(R.id.fragment_goal_tasks)
-    ListView successTasks;
+    RecyclerView tasksRecyclerView;
 
     @BindView(R.id.fragment_goal_new_success_criteria_title)
     EditText successCriteriaTitle;
@@ -69,7 +61,7 @@ public class GoalFragment
     EditText newTaskTitle;
 
     private SuccessCriteriaListAdapter successCriteriasAdapter;
-    private TaskListAdapter taskListAdapter;
+    private TaskRecyclerViewAdapter taskListAdapter;
     private SuccessCriteriaSpinnerAdapter scAdpater;
     GoalFragmentListener activityListener;
 
@@ -90,9 +82,11 @@ public class GoalFragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Goal currentGoal = (Goal) getArguments().get(GoalTable.TABLE_NAME);
         View v = inflater.inflate(R.layout.fragment_goal, container, false);
         ButterKnife.bind(this, v);
+
+        taskListAdapter = new TaskRecyclerViewAdapter(new ArrayList<Task>(), activityListener);
+        initRecyclerView(tasksRecyclerView, taskListAdapter);
 
         return v;
     }
@@ -110,10 +104,9 @@ public class GoalFragment
         successCriteriasAdapter = new SuccessCriteriaListAdapter(getActivity(), currentGoal.getSuccessCriterias());
         successCriteria.setAdapter(successCriteriasAdapter);
 
-        taskListAdapter = new TaskListAdapter(getActivity(), currentGoal.getTasks());
-        successTasks.setAdapter(taskListAdapter);
-
         scAdpater = new SuccessCriteriaSpinnerAdapter(getActivity(), currentGoal.getSuccessCriterias());
+
+        taskListAdapter.updateList(currentGoal.getTasks());
     }
 
     private void initListeners() {
@@ -140,7 +133,9 @@ public class GoalFragment
                 case R.id.fragment_goal_new_success_criteria_committed:
                     return addSuccessCriteria();
                 case R.id.item_new_task_title:
-                    return createNewTask();
+                    activityListener.createTask(v.getText().toString(), successCriteriasAdapter);
+                    return true;
+//                    return createNewTask();
 
             }
         }
@@ -149,8 +144,9 @@ public class GoalFragment
 
     private boolean createNewTask() {
         if (!newTaskTitle.getText().toString().isEmpty()) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
             NewTaskDialog dialog = NewTaskDialog.newinstance(newTaskTitle, successCriteriasAdapter);
-            dialog.show(getFragmentManager(), "new task");
+            dialog.show(ft, "show");
             newTaskTitle.setText("");
             return true;
         } else {
@@ -171,19 +167,20 @@ public class GoalFragment
         return true;
     }
 
-    @OnItemClick(R.id.fragment_goal_tasks)
-    public void onTaskItemSelected(int position) {
-        activityListener.openTask( taskListAdapter.getItem(position));
+    public void updateSuccessCriteria(SuccessCriteria sc) {
+        successCriteriasAdapter.updateSuccessCriteria(sc);
     }
 
     private void storeAndPropagateNewSuccessCriteria(String newSuccessCriteriaTitle, int newSuccessCriteriaCommitted) {
         SuccessCriteria sc = new SuccessCriteria(newSuccessCriteriaTitle, newSuccessCriteriaCommitted);
         sc = activityListener.addSuccessCriteria(sc);
-        successCriteriasAdapter.add(sc);
+        successCriteriasAdapter.notifyDataSetChanged();
     }
 
     public Goal getNewGoalValues() {
-        return new Goal(BaseModel.NEW_ID, editTitle.getText().toString(), editDescription.getText().toString());
+        Goal updatedGoalValues = new Goal(BaseModel.NEW_ID, editTitle.getText().toString(), editDescription.getText().toString());
+        updatedGoalValues.setTasks(taskListAdapter.getList());
+        return updatedGoalValues;
     }
 
     public void toggleEditing() {
@@ -211,8 +208,40 @@ public class GoalFragment
         }
     }
 
+    protected void removeItemWorkflow(final Task item, final int position) {
+
+        Snackbar.make(getBaseActivity().getRootView(), R.string.deletedItem, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .setCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        super.onDismissed(snackbar, event);
+                        if (undoPressed(event)) {
+                            taskListAdapter.undoDeletion(item, position);
+                        } else {
+                            getBaseActivity().removeFromDb(item);
+                        }
+                    }
+
+                    @Override
+                    public void onShown(Snackbar snackbar) {
+                        super.onShown(snackbar);
+                    }
+                })
+                .setActionTextColor(getResources().getColor(R.color.colorAccent))
+                .show();
+    }
+
     public interface GoalFragmentListener {
         SuccessCriteria addSuccessCriteria(SuccessCriteria sc);
         void openTask(Task t);
+        void removeTask(int position, Task t);
+        void completeTask(Task t);
+        void createTask(String newTask, SuccessCriteriaListAdapter adapter);
     }
 }

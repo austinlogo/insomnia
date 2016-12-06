@@ -28,6 +28,12 @@
         <item name="android:padding">@dimen/standardSpace</item>
     </style>
 
+    <style name="AppTheme.DrawerItem">
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:background">?selectableItemBackground</item>
+    </style>
+
     <style name="AppTheme.EditText">
         <item name="android:padding">@dimen/standardSpace</item>
         <item name="android:layout_marginBottom">@dimen/standardSpace</item>
@@ -39,9 +45,31 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
+    <style name="AppTheme.EditText.Add">
+        <item name="android:hint">@string/add_task</item>
+        <item name="android:background">?editTextBackground</item>
+        <item name="android:inputType">text</item>
+        <item name="android:visibility">visible</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
     <style name="AppTheme.Button">
         <item name="android:background">?selectableItemBackground</item>
         <item name="android:padding">@dimen/smallSpace</item>
         <item name="android:layout_margin">@dimen/standardSpace</item>
+    </style>
+
+    <style name="AppTheme.TextViewItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:paddingStart">@dimen/standardSpace</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 </resources>

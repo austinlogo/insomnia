@@ -80,10 +80,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/fragment_goal_tasks"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </ListView>
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 </LinearLayout>

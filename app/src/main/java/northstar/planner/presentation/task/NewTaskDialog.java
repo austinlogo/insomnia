@@ -55,6 +55,7 @@ public class NewTaskDialog
     private SuccessCriteriaListAdapter successCriteriaListAdapter;
     private SuccessCriteria selectedSc;
     private Calendar selectedDate;
+    private boolean firstSelect = true;
 
     public static NewTaskDialog newinstance(EditText editTitle, SuccessCriteriaListAdapter successCriteriasAdapter) {
         NewTaskDialog newTaskdialog = new NewTaskDialog();
@@ -69,7 +70,6 @@ public class NewTaskDialog
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         successCriteriaListAdapter = (SuccessCriteriaListAdapter) getArguments().get(SuccessCriteriaTable.TABLE_NAME);
-        selectedDate = DateUtils.today();
     }
 
     @Override
@@ -82,6 +82,7 @@ public class NewTaskDialog
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        getDialog().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View v = inflater.inflate(R.layout.dialog_new_task, container, false);
         ButterKnife.bind(this, v);
 
@@ -104,6 +105,9 @@ public class NewTaskDialog
     }
 
     private DatePickerDialog initDatePickerDialog() {
+        selectedDate = selectedDate == null
+                ? DateUtils.today()
+                : selectedDate;
         DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(),
                 this,
@@ -122,11 +126,8 @@ public class NewTaskDialog
 
     @OnClick(R.id.dialog_new_task_done)
     public void onDoneClick(View v) {
-        if (title.getText().toString().isEmpty()
-                || picker.getText().toString().isEmpty()
-                || commitment.getText().toString().isEmpty()) {
-
-            Toast.makeText(getActivity(), getString(R.string.not_full), Toast.LENGTH_SHORT).show();
+        if (title.getText().toString().isEmpty()) {
+            Toast.makeText(getActivity(), getString(R.string.no_title), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -137,6 +138,15 @@ public class NewTaskDialog
 
     @OnItemSelected(R.id.dialog_new_task_successcriteria)
     public void onSuccessCriteriaSelected(Spinner spinner, int position) {
+        if (firstSelect) {
+            firstSelect = false;
+            commitment.setText("0");
+            commitment.setVisibility(View.GONE);
+            return;
+        } else {
+            commitment.setVisibility(View.VISIBLE);
+        }
+
         selectedSc = successCriteriaListAdapter.getItem(position);
         String maxHint = String.format(getString(R.string.max), selectedSc.getCommitted());
         commitment.setHint(maxHint);

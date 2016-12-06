@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               style="@style/AppTheme.Fragment">
+    <EditText
+        android:id="@+id/fragment_goal_title"
+        style="@style/AppTheme.EditText.NoMargin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        android:inputType="none"
+        android:visibility="gone"/>
 
+    <EditText
+        android:id="@+id/fragment_task_due"
+        style="@style/AppTheme.EditText"
+        android:layout_width="match_parent"
+        android:gravity="top|start"
+        android:minHeight="50dp"
+        android:layout_height="wrap_content"/>
 
+    <include layout="@layout/item_success_criteria"/>
 
 </LinearLayout>

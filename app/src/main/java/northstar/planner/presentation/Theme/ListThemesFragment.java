@@ -1,36 +1,28 @@
 package northstar.planner.presentation.Theme;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Vibrator;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import northstar.planner.R;
+import northstar.planner.models.BaseModel;
 import northstar.planner.models.Theme;
-import northstar.planner.persistence.PlannerSqliteDAO;
-import northstar.planner.presentation.adapter.ThemeListAdapter;
-import northstar.planner.presentation.swipe.ThemeListTouchHelperCallback;
-import northstar.planner.presentation.swipe.ThemeRecyclerViewAdapter;
+import northstar.planner.presentation.BaseFragment;
+import northstar.planner.presentation.adapter.ThemeRecyclerViewAdapter;
 
-public class ListThemesFragment extends Fragment
-        implements AdapterView.OnItemClickListener {
+public class ListThemesFragment extends BaseFragment {
 
-    private ThemeListAdapter themeListAdapter;
-    private PlannerSqliteDAO dao;
-    private Vibrator vibrator;
+    private ThemeRecyclerViewAdapter adapter;
     private ListThemesFragmentListener activityListener;
 
     @BindView(R.id.activity_theme_list)
@@ -41,64 +33,30 @@ public class ListThemesFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_theme_view, container, false);
         ButterKnife.bind(this, v);
-
-        dao = new PlannerSqliteDAO();
-
-        vibrator = (Vibrator) getActivity().getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-
+        adapter = new ThemeRecyclerViewAdapter(new ArrayList<Theme>(), activityListener);
+        initRecyclerView(themeList, adapter);
         return v;
-    }
-
-    public void initRecyleView(List<Theme> ts) {
-        themeList.setHasFixedSize(true);
-        themeList.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-
-        ThemeRecyclerViewAdapter adapter = new ThemeRecyclerViewAdapter(ts, activityListener);
-        themeList.setAdapter(adapter);
-
-        ItemTouchHelper.Callback callback = new ThemeListTouchHelperCallback(adapter, getActivity());
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(themeList);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        getBaseActivity().updateThemes(adapter.getList());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-//        themeListAdapter = new ThemeListAdapter(
-//                getActivity().getApplicationContext(),
-//                android.R.layout.simple_list_item_1,
-//                dao.getAllThemes());
-
-//        themeList.setAdapter();
-//        themeList.setOnItemClickListener(this);
-        initRecyleView(dao.getAllThemes());
-
-
+        adapter.updateList(getBaseActivity().getThemes());
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
         activityListener = (ListThemesFragmentListener) activity;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Theme currentTheme = themeListAdapter.getItem(position);
-
-        activityListener.startThemeEdit(currentTheme);
     }
 
     @OnClick(R.id.fragment_theme_fab)
@@ -106,9 +64,37 @@ public class ListThemesFragment extends Fragment
         activityListener.startThemeEdit(null);
     }
 
+    protected void removeItemWorkflow(final Theme item, final int position) {
+
+        Snackbar.make(getBaseActivity().getRootView(), R.string.deletedItem, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .setCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        super.onDismissed(snackbar, event);
+                        if (undoPressed(event)) {
+                            adapter.undoDeletion(item, position);
+                        } else {
+                            getBaseActivity().removeFromDb(item);
+                        }
+                    }
+
+                    @Override
+                    public void onShown(Snackbar snackbar) {
+                        super.onShown(snackbar);
+                    }
+                })
+                .setActionTextColor(getResources().getColor(R.color.colorAccent))
+                .show();
+    }
 
     public interface ListThemesFragmentListener {
         void startThemeEdit(Theme theme);
+        void removeItem(Theme item, int position);
     }
-
 }

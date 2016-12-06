@@ -7,6 +7,7 @@ public class ThemeTable extends BaseTable {
     public static final String[] projection = {
             _ID,
             TITLE_COLUMN,
+            ORDER_COLUMN,
             DESCRIPTION_COLUMN
     };
 
@@ -15,6 +16,7 @@ public class ThemeTable extends BaseTable {
              TABLE_NAME  + " (" +
              PRIMARY_KEY + ", " +
              TITLE_COLUMN + " TEXT, " +
+             ORDER_COLUMN + " INTEGER, " +
              DESCRIPTION_COLUMN + " TEXT)";
 
     public static String getDropTableQuery() {

@@ -6,7 +6,7 @@ public class TaskTable extends BaseTable{
     public static final String TASK_COMMITMENT_COLUMN = "Task_Commitment";
     public static final String COMPLETES_COLUMN = "Completes";
     public static final String DUE_COLUMN = "Due";
-    public static final String STATUS_COLUMN = "Status";
+    public static final String STATUS_COLUMN = "TaskStatus";
 
     public static final String[] projection = {
             _ID,
@@ -15,6 +15,7 @@ public class TaskTable extends BaseTable{
             TASK_COMMITMENT_COLUMN,
             COMPLETES_COLUMN,
             DUE_COLUMN,
+            ORDER_COLUMN,
             STATUS_COLUMN
     };
 
@@ -27,6 +28,7 @@ public class TaskTable extends BaseTable{
             TASK_COMMITMENT_COLUMN + " REAL, " +
             COMPLETES_COLUMN + " INTEGER, " +
             DUE_COLUMN + " NUMERIC, " +
+            ORDER_COLUMN + " INTEGER, " +
             STATUS_COLUMN +" STATUS_COLUMN)";
 
     public static String getDropTableQuery() {

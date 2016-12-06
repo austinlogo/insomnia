@@ -42,11 +42,15 @@ public class SuccessCriteria extends BaseModel{
         return committed;
     }
 
-    public void setId(long id) {
-        _id = id;
-    }
-
     public void setGoal(Goal goal) {
         this.goal = goal.getId();
+    }
+
+    public String getProgressString() {
+        return (int) progress + " / " + committed;
+    }
+
+    public void updateProgress(double taskCommitment) {
+        progress = Math.min(taskCommitment + progress, committed);
     }
 }

@@ -21,6 +21,7 @@ public class SuccessCriteriaTable extends BaseTable{
             GOAL_COLUMN + " INTEGER, " +
             TITLE_COLUMN + " TEXT, " +
             PROGRESS_COLUMN + " REAL, " +
+            ORDER_COLUMN + " INTEGER, " +
             COMMITTED_COLUMN + " REAL)";
 
     public static String getDropTableQuery() {

@@ -12,4 +12,5 @@
     <dimen name="smallSpace">8dp</dimen>
     <dimen name="standardSpace">15dp</dimen>
     <dimen name="largeSpace">25dp</dimen>
+    <dimen name="slide_list_icon_length">24dp</dimen>
 </resources>

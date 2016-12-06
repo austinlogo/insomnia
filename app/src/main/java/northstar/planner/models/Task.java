@@ -1,14 +1,15 @@
 package northstar.planner.models;
 
-import android.app.DatePickerDialog;
 import android.database.Cursor;
 import android.widget.EditText;
 
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
+import northstar.planner.PlannerApplication;
+import northstar.planner.R;
 import northstar.planner.models.tables.TaskTable;
+import northstar.planner.utils.DateUtils;
 
 public class Task extends BaseModel {
     private long goal;
@@ -17,13 +18,13 @@ public class Task extends BaseModel {
     private long completes;
     private SuccessCriteria successCriteria;
     private Date due;
-    private Status status;
+    private TaskStatus taskStatus;
 
     public Task() {
         _id = NEW_ID;
         goal = NEW_ID;
         due = new Date();
-        status = Status.NOT_STARTED;
+        taskStatus = TaskStatus.NOT_STARTED;
     }
 
     public Task(Cursor c) {
@@ -33,7 +34,7 @@ public class Task extends BaseModel {
         taskCommitment = getColumnDouble(c, TaskTable.TASK_COMMITMENT_COLUMN);
         completes = getColumnLong(c, TaskTable.COMPLETES_COLUMN);
         due = getColumnDate(c, TaskTable.DUE_COLUMN);
-        status = Status.valueOf(getColumnString(c, TaskTable.STATUS_COLUMN));
+        taskStatus = TaskStatus.valueOf(getColumnString(c, TaskTable.STATUS_COLUMN));
     }
 
     public Task (long goalId, String newTitle) {
@@ -45,11 +46,13 @@ public class Task extends BaseModel {
         goal = NEW_ID;
         _id = NEW_ID;
         title = newTaskTitle.getText().toString();
-        due = chosenDate.getTime();
-        completes = item.getId();
+        due = chosenDate == null ? null : chosenDate.getTime();
+        completes = (item != null)
+                ? item.getId()
+                : NEW_ID;
         successCriteria = item;
         taskCommitment = commitment;
-        status = Status.NOT_STARTED;
+        taskStatus = TaskStatus.NOT_STARTED;
     }
 
     public long getGoal() {
@@ -68,12 +71,16 @@ public class Task extends BaseModel {
         return completes;
     }
 
+    public SuccessCriteria getSuccessCriteria() {
+        return successCriteria;
+    }
+
     public Date getDue() {
         return due;
     }
 
-    public Status getStatus() {
-        return status;
+    public TaskStatus getTaskStatus() {
+        return taskStatus;
     }
 
     public void setId(long id) {
@@ -95,5 +102,16 @@ public class Task extends BaseModel {
 
     public void setGoal(Goal goal) {
         this.goal = goal.getId();
+    }
+
+    public String getDueString() {
+        if (due == null) {
+            return "";
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(due);
+        String todayString = PlannerApplication.getInstance().getString(R.string.today);
+        return DateUtils.getDateString(todayString, cal);
     }
 }

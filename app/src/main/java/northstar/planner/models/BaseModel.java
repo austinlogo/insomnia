@@ -10,6 +10,7 @@ import northstar.planner.models.tables.BaseTable;
 public abstract class BaseModel implements Serializable {
     protected long _id;
     public static final long NEW_ID = -1;
+    public static final long SCRATCH_ID = -2;
 
     public BaseModel() {
     }
@@ -44,7 +45,9 @@ public abstract class BaseModel implements Serializable {
 
     protected Date getColumnDate(Cursor cursor, String columnName) {
         long date = cursor.getLong(cursor.getColumnIndexOrThrow(columnName));
-        return new Date(date);
+        return date == 0
+                ? null
+                : new Date(date);
     }
 
     public boolean isNew() {
@@ -54,4 +57,9 @@ public abstract class BaseModel implements Serializable {
     public boolean equals(BaseModel model) {
         return model._id == this._id;
     }
+
+    public void setId(long id) {
+        _id = id;
+    }
+
 }

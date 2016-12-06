@@ -4,22 +4,32 @@
     android:id="@+id/activity_goal_drawer_layout"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:animateLayoutChanges="true"
     android:fitsSystemWindows="true">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
+        android:animateLayoutChanges="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/include_toolbar" />
+        <include layout="@layout/include_toolbar"
+            android:id="@+id/activity_goal_toolbar"/>
 
         <FrameLayout
             android:id="@+id/activity_goal_fragment"
             xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_below="@id/activity_goal_toolbar"
             android:layout_height="match_parent"
             android:layout_width="match_parent"/>
 
-    </LinearLayout>
+        <FrameLayout
+            android:id="@+id/activity_goal_add_task"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
 
     <include layout="@layout/include_drawer_list" />
 

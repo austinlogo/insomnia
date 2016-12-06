@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,6 +17,8 @@ import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.persistence.PlannerSqliteDAO;
 import northstar.planner.presentation.BaseActivity;
+import northstar.planner.presentation.adapter.SuccessCriteriaListAdapter;
+import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.task.NewTaskDialog;
 import northstar.planner.presentation.task.TaskActivity;
 
@@ -22,27 +26,35 @@ public class GoalActivity
         extends BaseActivity
         implements GoalFragment.GoalFragmentListener, NewTaskDialog.NewTaskDialogListener {
 
-    @BindView(R.id.activity_theme_edit_drawer_layout)
+    @BindView(R.id.activity_goal_drawer_layout)
     DrawerLayout mDrawerLayout;
 
-    private GoalFragment mFragment;
+    @BindView(R.id.activity_goal_fragment)
+    FrameLayout goalFragmentLayout;
+
+    @BindView(R.id.activity_goal_add_task)
+    FrameLayout goalAddTaskLayout;
+
+    private GoalFragment goalFragment;
+    private AddTaskFragment addTaskFragment;
     private PlannerSqliteDAO dao;
     private Goal currentGoal;
-    private long parentTheme;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_theme);
+        setContentView(R.layout.activity_goal);
         ButterKnife.bind(this);
         dao = new PlannerSqliteDAO();
-        parentTheme = getIntent().getExtras().getLong(GoalTable.THEME_COLUMN);
         currentGoal = dao.getGoal(getIntent().getExtras().getLong(GoalTable._ID));
-        mFragment = GoalFragment.newInstance(currentGoal);
+        goalFragment = GoalFragment.newInstance(currentGoal);
+        addTaskFragment = AddTaskFragment.newInstance("");
+
 
         getFragmentManager()
                 .beginTransaction()
-                .add(R.id.activity_theme_edit_fragment, mFragment)
+                .add(R.id.activity_goal_fragment, goalFragment)
+                .add(R.id.activity_goal_add_task, addTaskFragment)
                 .commit();
 
         finishDrawerInit(this, mDrawerLayout, currentGoal.getTitle());
@@ -52,13 +64,13 @@ public class GoalActivity
     protected void onResume() {
         super.onResume();
         currentGoal = dao.getGoal(currentGoal.getId());
-        mFragment.initViews(currentGoal);
+        goalFragment.initViews(currentGoal);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        currentGoal.updateGoal(mFragment.getNewGoalValues());
+        currentGoal.updateGoal(goalFragment.getNewGoalValues());
         dao.updateGoal(currentGoal);
     }
 
@@ -77,6 +89,28 @@ public class GoalActivity
         startActivity(i);
     }
 
+    @Override
+    public void removeTask(int position, Task t) {
+        goalFragment.removeItemWorkflow(t, position);
+    }
+
+    @Override
+    public void completeTask(Task t) {
+        SuccessCriteria updatedSuccessCriteria = getDao().completeTask(t);
+        goalFragment.updateSuccessCriteria(updatedSuccessCriteria);
+    }
+
+    @Override
+    public void createTask(String newTaskTitle, SuccessCriteriaListAdapter successCriteriasAdapter) {
+        goalFragmentLayout.setVisibility(View.GONE);
+        goalAddTaskLayout.setVisibility(View.VISIBLE);
+        addTaskFragment.updateFragmentValues(newTaskTitle, successCriteriasAdapter);
+    }
+
+    @Override
+    public View getRootView() {
+        return mDrawerLayout;
+    }
 
     @Override
     protected void deleteAction() {
@@ -86,15 +120,16 @@ public class GoalActivity
 
     @Override
     protected void editAction() {
-        getSupportActionBar().setTitle(mFragment.getNewGoalValues().getTitle());
-        mFragment.toggleEditing();
+        getSupportActionBar().setTitle(goalFragment.getNewGoalValues().getTitle());
+        goalFragment.toggleEditing();
     }
 
     @Override
     public Task setResult(Task task) {
         task.setGoal(currentGoal);
         task = dao.addTask(task);
-        currentGoal.getTasks().add(0, task);
+//        currentGoal.getTasks().add(0, task);
+        ((TaskRecyclerViewAdapter) goalFragment.tasksRecyclerView.getAdapter()).addItem(task);
         return task;
     }
 }

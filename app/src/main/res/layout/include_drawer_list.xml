@@ -3,11 +3,12 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:layout_width="240dp"
+    android:layout_width="250dp"
     android:layout_gravity="start"
     android:divider="@android:color/transparent"
     android:dividerHeight="0dp"
     android:background="#EEE"
+    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -16,10 +17,53 @@
         android:layout_height="60dp"
         android:background="@color/colorPrimary" />
 
-    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/activity_drawer_list"
-            android:layout_width="240dp"
-            android:layout_height="match_parent"
-            android:choiceMode="singleChoice"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/activity_drawer_list_theme_icon"
+            android:layout_width="wrap_content"
+            android:padding="5dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_menu_camera"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/activity_drawer_list_today"
+            style="@style/AppTheme.DrawerItem"
+            android:text="@string/drawer_item_today"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/item_drawer_icon"
+            android:layout_width="wrap_content"
+            android:padding="5dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_menu_camera"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/activity_drawer_list_theme_head"
+            style="@style/AppTheme.DrawerItem"
+            android:text="@string/drawer_item_themes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <ListView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/activity_drawer_list_themes"
+        android:visibility="gone"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
