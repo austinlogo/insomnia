@@ -24,6 +24,7 @@ import northstar.planner.models.tables.TaskTable;
 import northstar.planner.persistence.PlannerSqliteDAO;
 import northstar.planner.presentation.BaseFragment;
 import northstar.planner.presentation.adapter.SuccessCriteriaListAdapter;
+import northstar.planner.presentation.adapter.SuccessCriteriaSpinnerAdapter;
 import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.goal.GoalFragment;
 
@@ -97,7 +98,7 @@ public class TodayFragment
     }
 
     @Override
-    public void createTask(String newTask, SuccessCriteriaListAdapter adapter) {
+    public void createTask(String newTask, SuccessCriteriaSpinnerAdapter adapter) {
 
     }
 }

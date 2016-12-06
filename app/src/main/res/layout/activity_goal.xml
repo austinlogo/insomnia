@@ -31,7 +31,7 @@
 
     </RelativeLayout>
 
-    <include layout="@layout/include_drawer_list" />
+    <include layout="@layout/include_drawer_list"/>
 
 </android.support.v4.widget.DrawerLayout>
 

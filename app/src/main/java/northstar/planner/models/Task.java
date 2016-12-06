@@ -96,7 +96,10 @@ public class Task extends BaseModel {
     }
 
     public void setSuccessCriteria(SuccessCriteria successCriteria) {
-        this.completes = successCriteria.getId();
+        this.completes = completes == NEW_ID
+                ? NEW_ID
+                : successCriteria.getId();
+
         this.successCriteria = successCriteria;
     }
 

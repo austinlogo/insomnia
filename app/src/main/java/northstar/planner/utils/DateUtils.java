@@ -6,6 +6,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import northstar.planner.PlannerApplication;
+import northstar.planner.R;
+
 public class DateUtils {
 
     private static final int ONE_WEEK = 7;
@@ -37,6 +40,8 @@ public class DateUtils {
 
         if (cal.get(Calendar.DAY_OF_YEAR) == today().get(Calendar.DAY_OF_YEAR)) {
             return todayString;
+        } else if (cal.get(Calendar.DAY_OF_YEAR) - today().get(Calendar.DAY_OF_YEAR) == 1) {
+            return PlannerApplication.getInstance().getString(R.string.tomorrow);
         } else if (cal.get(Calendar.DAY_OF_YEAR) > today().get(Calendar.DAY_OF_YEAR)
                 && cal.getTime().getTime() <= nextWeek().getTime().getTime()) {
             return cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);

@@ -5,13 +5,13 @@
               android:layout_height="wrap_content">
 
     <EditText
-        android:id="@+id/fragment_add_task_title"
+        android:id="@+id/fragment_add_task_title_value"
         android:hint="@string/add_task"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:id="@+id/fragment_add_task_datepicker_choice"
+        android:id="@+id/fragment_add_task_datepicker_value"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -22,41 +22,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <EditText
+        android:id="@+id/fragment_add_task_committed_value"
+        android:hint="@string/add_task"
+        android:layout_width="match_parent"
+        android:inputType="number"
+        android:visibility="gone"
+        android:layout_height="wrap_content"/>
+
     <LinearLayout
         android:orientation="horizontal"
         android:background="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="48dp">
 
         <ImageButton
             android:id="@+id/fragment_add_task_title_icon"
             android:src="@drawable/ic_title_white_24dp"
             android:padding="@dimen/smallSpace"
+            android:scaleType="fitCenter"
             android:background="?selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
 
         <ImageButton
-            android:id="@+id/fragment_add_task_datepicker"
+            android:id="@+id/fragment_add_task_datepicker_icon"
             android:background="?selectableItemBackground"
             android:src="@drawable/ic_date_range_white_24dp"
             android:padding="@dimen/smallSpace"
+            android:scaleType="fitCenter"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
 
         <ImageButton
-            android:id="@+id/fragment_add_task_successcriteria"
+            android:id="@+id/fragment_add_task_successcriteria_icon"
             android:src="@drawable/ic_equalizer_white_24dp"
             android:padding="@dimen/smallSpace"
+            android:scaleType="fitCenter"
             android:background="?selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
 
         <ImageButton
-            android:id="@+id/fragment_add_task_done"
-            android:src="@drawable/ic_done_white_36dp"
-            android:maxHeight="24dp"
+            android:id="@+id/fragment_add_task_committed_icon"
+            android:src="@drawable/goal_48"
             android:padding="@dimen/smallSpace"
+            android:scaleType="fitCenter"
+            android:background="?selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <ImageButton
+            android:id="@+id/fragment_add_task_done_icon"
+            android:src="@drawable/ic_done_white_36dp"
+            android:maxHeight="8dp"
+            android:scaleType="fitCenter"
             android:background="?selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>

@@ -21,6 +21,9 @@
         android:id="@+id/fragment_goal_description"
         style="@style/AppTheme.EditText"
         android:layout_width="match_parent"
+        android:inputType="none"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
         android:gravity="top|start"
         android:minHeight="50dp"
         android:layout_height="wrap_content"/>

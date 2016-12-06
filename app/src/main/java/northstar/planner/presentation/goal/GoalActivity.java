@@ -17,17 +17,17 @@ import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.persistence.PlannerSqliteDAO;
 import northstar.planner.presentation.BaseActivity;
+import northstar.planner.presentation.BaseFragment;
 import northstar.planner.presentation.adapter.SuccessCriteriaListAdapter;
+import northstar.planner.presentation.adapter.SuccessCriteriaSpinnerAdapter;
 import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.task.NewTaskDialog;
 import northstar.planner.presentation.task.TaskActivity;
+import northstar.planner.presentation.task.TaskBasedActivity;
 
 public class GoalActivity
-        extends BaseActivity
-        implements GoalFragment.GoalFragmentListener, NewTaskDialog.NewTaskDialogListener {
-
-    @BindView(R.id.activity_goal_drawer_layout)
-    DrawerLayout mDrawerLayout;
+        extends TaskBasedActivity
+        implements GoalFragment.GoalFragmentListener, AddTaskFragment.AddTaskFragmentListener {
 
     @BindView(R.id.activity_goal_fragment)
     FrameLayout goalFragmentLayout;
@@ -37,33 +37,33 @@ public class GoalActivity
 
     private GoalFragment goalFragment;
     private AddTaskFragment addTaskFragment;
-    private PlannerSqliteDAO dao;
     private Goal currentGoal;
+    private FrameLayout fragmentVisible;
+
+    public GoalActivity() {
+
+    }
+
+    @Override
+    public BaseFragment setMainFragment() {
+        return null;
+    }
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_goal);
+        goalFragment = (GoalFragment) super.onCreate(savedInstanceState, GoalTable.TABLE_NAME);
         ButterKnife.bind(this);
-        dao = new PlannerSqliteDAO();
-        currentGoal = dao.getGoal(getIntent().getExtras().getLong(GoalTable._ID));
-        goalFragment = GoalFragment.newInstance(currentGoal);
-        addTaskFragment = AddTaskFragment.newInstance("");
+        
+        currentGoal = getDao().getGoal(getIntent().getExtras().getLong(GoalTable._ID));
 
-
-        getFragmentManager()
-                .beginTransaction()
-                .add(R.id.activity_goal_fragment, goalFragment)
-                .add(R.id.activity_goal_add_task, addTaskFragment)
-                .commit();
-
-        finishDrawerInit(this, mDrawerLayout, currentGoal.getTitle());
+        finishDrawerInit(this, getmDrawerLayout(), currentGoal.getTitle());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        currentGoal = dao.getGoal(currentGoal.getId());
         goalFragment.initViews(currentGoal);
     }
 
@@ -71,13 +71,13 @@ public class GoalActivity
     protected void onPause() {
         super.onPause();
         currentGoal.updateGoal(goalFragment.getNewGoalValues());
-        dao.updateGoal(currentGoal);
+        getDao().updateGoal(currentGoal);
     }
 
     @Override
     public SuccessCriteria addSuccessCriteria(SuccessCriteria sc) {
         sc.setGoal(currentGoal);
-        sc = dao.addSuccessCriteria(sc);
+        sc = getDao().addSuccessCriteria(sc);
         currentGoal.addSuccessCriteria(sc);
         return sc;
     }
@@ -101,20 +101,19 @@ public class GoalActivity
     }
 
     @Override
-    public void createTask(String newTaskTitle, SuccessCriteriaListAdapter successCriteriasAdapter) {
-        goalFragmentLayout.setVisibility(View.GONE);
-        goalAddTaskLayout.setVisibility(View.VISIBLE);
+    public void createTask(String newTaskTitle, SuccessCriteriaSpinnerAdapter successCriteriasAdapter) {
+        setFragmentVisible(goalAddTaskLayout);
         addTaskFragment.updateFragmentValues(newTaskTitle, successCriteriasAdapter);
     }
 
     @Override
     public View getRootView() {
-        return mDrawerLayout;
+        return null;//mDrawerLayout;
     }
 
     @Override
     protected void deleteAction() {
-        dao.removeGoal(currentGoal.getId());
+        getDao().removeGoal(currentGoal.getId());
         finish();
     }
 
@@ -124,12 +123,32 @@ public class GoalActivity
         goalFragment.toggleEditing();
     }
 
+//    @Override
+//    public Task setResult(Task task) {
+//        task.setGoal(currentGoal);
+//        task = getDao().addTask(task);
+////        currentGoal.getTasks().add(0, task);
+//        ((TaskRecyclerViewAdapter) goalFragment.tasksRecyclerView.getAdapter()).addItem(task);
+//        return task;
+//    }
+
     @Override
-    public Task setResult(Task task) {
-        task.setGoal(currentGoal);
-        task = dao.addTask(task);
-//        currentGoal.getTasks().add(0, task);
-        ((TaskRecyclerViewAdapter) goalFragment.tasksRecyclerView.getAdapter()).addItem(task);
-        return task;
+    public void addNewTask(Task newTask) {
+        hideKeyboard(goalAddTaskLayout);
+        setFragmentVisible(goalFragmentLayout);
+        storeNewTask(newTask);
+
+    }
+
+    private void storeNewTask(Task newTask) {
+        newTask.setGoal(currentGoal);
+        newTask = getDao().addTask(newTask);
+        currentGoal.getTasks().add(0, newTask);
+        ((TaskRecyclerViewAdapter) goalFragment.tasksRecyclerView.getAdapter()).addItem(newTask);
+    }
+
+    public void setFragmentVisible(FrameLayout fragmentVisible) {
+        goalFragmentLayout.setVisibility(goalFragmentLayout.getId() == fragmentVisible.getId() ? View.VISIBLE : View.GONE);
+        goalAddTaskLayout.setVisibility(goalAddTaskLayout.getId() == fragmentVisible.getId() ? View.VISIBLE : View.GONE);
     }
 }

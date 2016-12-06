@@ -133,7 +133,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mActionBarDrawerToggle.syncState();
+//        mActionBarDrawerToggle.syncState();
     }
 
     @Override

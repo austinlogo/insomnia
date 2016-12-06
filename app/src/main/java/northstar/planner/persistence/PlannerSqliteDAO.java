@@ -166,7 +166,7 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
         Calendar end = DateUtils.getEndOfDay(cal);
 
         String selection = getSelectionForDatesOnThisDay(TaskTable.DUE_COLUMN);
-        String[] selectionArgs = { Long.toString(start.getTime().getTime()), Long.toString(end.getTime().getTime()) };
+        String[] selectionArgs = { Long.toString(start.getTime().getTime()), Long.toString(end.getTime().getTime()), TaskStatus.DONE.toString() };
 
         Cursor c = db.query(TaskTable.TABLE_NAME, TaskTable.projection , selection, selectionArgs, null, null, BaseTable.getorderAsc());
         c.moveToFirst();
@@ -180,7 +180,7 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
     }
 
     private String getSelectionForDatesOnThisDay(String datecolumn) {
-        return datecolumn + " > ? AND " + datecolumn + " < ?";
+        return datecolumn + " > ? AND " + datecolumn + " < ? AND " + TaskTable.STATUS_COLUMN + " != ?";
     }
 
 
@@ -349,6 +349,11 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
 
     private SuccessCriteria updateSuccessCriteria(Task t) {
         SuccessCriteria currentSC = t.getSuccessCriteria();
+
+        if (currentSC == null) {
+            return null;
+        }
+
         currentSC.updateProgress(t.getTaskCommitment());
 
         ContentValues cv = new ContentValues();

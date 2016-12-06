@@ -16,27 +16,33 @@ import northstar.planner.models.Task;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.persistence.PlannerSqliteDAO;
 import northstar.planner.presentation.BaseActivity;
+import northstar.planner.presentation.goal.AddTaskFragment;
 import northstar.planner.presentation.task.TaskFragment;
 
-public class TodayActivity extends BaseActivity {
+public class TodayActivity
+        extends BaseActivity
+        implements AddTaskFragment.AddTaskFragmentListener{
 
-    @BindView(R.id.activity_theme_drawer_layout)
+    @BindView(R.id.activity_goal_drawer_layout)
     DrawerLayout mDrawerLayout;
 
     PlannerSqliteDAO dao;
     TodayFragment mFragment;
+    AddTaskFragment addTaskFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_theme_view);
+        setContentView(R.layout.activity_goal);
         ButterKnife.bind(this);
         dao = new PlannerSqliteDAO();
         mFragment = TodayFragment.newInstance();
+        addTaskFragment = AddTaskFragment.newInstance("");
 
         getFragmentManager()
                 .beginTransaction()
-                .add(R.id.main_fragment, mFragment)
+                .add(R.id.activity_goal_fragment, mFragment)
+                .add(R.id.activity_goal_add_task, addTaskFragment)
                 .commit();
 
         finishDrawerInit(this, mDrawerLayout, getString(R.string.drawer_item_today));
@@ -47,7 +53,8 @@ public class TodayActivity extends BaseActivity {
         super.onPostCreate(savedInstanceState);
 
 //        List<Task> scratchTasks = getDao().getTasksByGoalId(BaseModel.SCRATCH_ID);
-        List<Task> scratchTasks = getDao().getTodaysTasks(); getDao().getTasksByGoalId(BaseModel.SCRATCH_ID);
+        List<Task> scratchTasks = getDao().getTodaysTasks();
+        getDao().getTasksByGoalId(BaseModel.SCRATCH_ID);
         mFragment.initViews(scratchTasks);
     }
 
@@ -68,6 +75,11 @@ public class TodayActivity extends BaseActivity {
 
     @Override
     protected void editAction() {
+
+    }
+
+    @Override
+    public void addNewTask(Task t) {
 
     }
 }

@@ -133,10 +133,8 @@ public class GoalFragment
                 case R.id.fragment_goal_new_success_criteria_committed:
                     return addSuccessCriteria();
                 case R.id.item_new_task_title:
-                    activityListener.createTask(v.getText().toString(), successCriteriasAdapter);
+                    activityListener.createTask(v.getText().toString(), scAdpater);
                     return true;
-//                    return createNewTask();
-
             }
         }
         return false;
@@ -242,6 +240,6 @@ public class GoalFragment
         void openTask(Task t);
         void removeTask(int position, Task t);
         void completeTask(Task t);
-        void createTask(String newTask, SuccessCriteriaListAdapter adapter);
+        void createTask(String newTask, SuccessCriteriaSpinnerAdapter adapter);
     }
 }

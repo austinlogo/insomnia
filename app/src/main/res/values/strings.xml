@@ -38,4 +38,5 @@
     <string name="today">today</string>
     <string name="deletedItem">deleted item</string>
     <string name="undo">undo</string>
+    <string name="tomorrow">tomorrow</string>
 </resources>
