@@ -3,7 +3,6 @@ package northstar.planner.presentation.goal;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -15,13 +14,9 @@ import northstar.planner.models.SuccessCriteria;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.TaskTable;
-import northstar.planner.persistence.PlannerSqliteDAO;
-import northstar.planner.presentation.BaseActivity;
 import northstar.planner.presentation.BaseFragment;
-import northstar.planner.presentation.adapter.SuccessCriteriaListAdapter;
 import northstar.planner.presentation.adapter.SuccessCriteriaSpinnerAdapter;
 import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
-import northstar.planner.presentation.task.NewTaskDialog;
 import northstar.planner.presentation.task.TaskActivity;
 import northstar.planner.presentation.task.TaskBasedActivity;
 
@@ -40,25 +35,13 @@ public class GoalActivity
     private Goal currentGoal;
     private FrameLayout fragmentVisible;
 
-    public GoalActivity() {
-
-    }
-
-    @Override
-    public BaseFragment setMainFragment() {
-        return null;
-    }
-
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         goalFragment = (GoalFragment) super.onCreate(savedInstanceState, GoalTable.TABLE_NAME);
+        currentGoal = (Goal) getMainModel();
         ButterKnife.bind(this);
-        
-        currentGoal = getDao().getGoal(getIntent().getExtras().getLong(GoalTable._ID));
 
-        finishDrawerInit(this, getmDrawerLayout(), currentGoal.getTitle());
+        finishDrawerInit(this, getDrawerLayout(), currentGoal.getTitle());
     }
 
     @Override
@@ -122,15 +105,6 @@ public class GoalActivity
         getSupportActionBar().setTitle(goalFragment.getNewGoalValues().getTitle());
         goalFragment.toggleEditing();
     }
-
-//    @Override
-//    public Task setResult(Task task) {
-//        task.setGoal(currentGoal);
-//        task = getDao().addTask(task);
-////        currentGoal.getTasks().add(0, task);
-//        ((TaskRecyclerViewAdapter) goalFragment.tasksRecyclerView.getAdapter()).addItem(task);
-//        return task;
-//    }
 
     @Override
     public void addNewTask(Task newTask) {

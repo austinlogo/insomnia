@@ -8,6 +8,7 @@ import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import northstar.planner.R;
+import northstar.planner.models.BaseModel;
 import northstar.planner.models.Goal;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.GoalTable;
@@ -25,8 +26,7 @@ public abstract class TaskBasedActivity
 
     private BaseFragment mainFragment;
     private AddTaskFragment addTaskFragment;
-
-    public abstract BaseFragment setMainFragment();
+    private BaseModel mainModel;
 
     protected BaseFragment onCreate(@Nullable Bundle savedInstanceState, String tableName) {
         super.onCreate(savedInstanceState);
@@ -49,13 +49,18 @@ public abstract class TaskBasedActivity
         switch (tableName) {
             case GoalTable.TABLE_NAME:
                 Goal currentGoal = getDao().getGoal(getIntent().getExtras().getLong(GoalTable._ID));
+                mainModel = currentGoal;
                 return GoalFragment.newInstance(currentGoal);
         }
         return null;
     }
 
-    public DrawerLayout getmDrawerLayout() {
+    public DrawerLayout getDrawerLayout() {
         return mDrawerLayout;
+    }
+
+    public BaseModel getMainModel() {
+        return mainModel;
     }
 
     @Override

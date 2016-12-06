@@ -110,14 +110,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @OnLongClick(R.id.activity_drawer_list_theme_head)
     public boolean OnThemeLongClick() {
-        closeDrawers();
+//        closeDrawers();
         startActivity(new Intent(this, ListThemesActivity.class));
         return true;
     }
 
     @OnItemClick(R.id.activity_drawer_list_themes)
     public void onThemeListItemSelected(int position) {
-        closeDrawers();
+//        closeDrawers();
         Theme selectedTheme = themeListAdapter.getItem(position);
 
         Intent i = new Intent(this, ThemeActivity.class);
@@ -133,13 +133,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-//        mActionBarDrawerToggle.syncState();
+        mActionBarDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mActionBarDrawerToggle.onConfigurationChanged(newConfig );
+        mActionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -154,6 +154,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                 editAction();
                 return true;
         }
+
+        if (mActionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
