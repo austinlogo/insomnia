@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +24,6 @@ import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.OnLongClick;
 import northstar.planner.R;
-import northstar.planner.models.BaseModel;
 import northstar.planner.models.Goal;
 import northstar.planner.models.SuccessCriteria;
 import northstar.planner.models.Task;
@@ -57,6 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     PlannerSqliteDAO dao;
 
     public abstract View getRootView();
+
     protected abstract void deleteAction();
     protected abstract void editAction();
 
@@ -134,6 +133,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mActionBarDrawerToggle.syncState();
+        //hideKeyboard(getCurrentFocus());
     }
 
     @Override

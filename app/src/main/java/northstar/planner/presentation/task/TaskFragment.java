@@ -2,20 +2,15 @@ package northstar.planner.presentation.task;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import northstar.planner.R;
-import northstar.planner.models.BaseModel;
 import northstar.planner.models.Task;
-import northstar.planner.models.Theme;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.persistence.PlannerSqliteDAO;
 import northstar.planner.presentation.BaseFragment;
@@ -60,7 +55,7 @@ public class TaskFragment extends BaseFragment {
     public void initUI(Task currentTask) {
         due.setText(currentTask.getDueString());
 
-        if (currentTask.getCompletes() != BaseModel.NEW_ID) {
+        if (currentTask.getCompletes() > 0) {
             successCriteriaTitle.setText(currentTask.getSuccessCriteria().getTitle());
             successCriteriaProgress.setText(currentTask.getSuccessCriteria().getProgressString());
         }

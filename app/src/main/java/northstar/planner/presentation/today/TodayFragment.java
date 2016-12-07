@@ -1,5 +1,6 @@
 package northstar.planner.presentation.today;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -20,17 +21,14 @@ import northstar.planner.R;
 import northstar.planner.models.BaseModel;
 import northstar.planner.models.SuccessCriteria;
 import northstar.planner.models.Task;
-import northstar.planner.models.tables.TaskTable;
-import northstar.planner.persistence.PlannerSqliteDAO;
-import northstar.planner.presentation.BaseFragment;
-import northstar.planner.presentation.adapter.SuccessCriteriaListAdapter;
-import northstar.planner.presentation.adapter.SuccessCriteriaSpinnerAdapter;
+import northstar.planner.models.TaskStatus;
 import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.goal.GoalFragment;
+import northstar.planner.presentation.task.TaskBasedFragment;
 
 public class TodayFragment
-        extends BaseFragment
-        implements TextView.OnEditorActionListener, GoalFragment.GoalFragmentListener {
+        extends TaskBasedFragment
+        implements TextView.OnEditorActionListener {
 
     @BindView(R.id.fragment_today_add)
     EditText addTask;
@@ -39,15 +37,12 @@ public class TodayFragment
     RecyclerView taskList;
 
     private TaskRecyclerViewAdapter taskRecyclerViewAdapter;
+    GoalFragment.TaskActionListener activityListener;
+    TodayActivityListener todayActivityListener;
 
     public static TodayFragment newInstance() {
         TodayFragment fragment = new TodayFragment();
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -56,7 +51,7 @@ public class TodayFragment
         View v = inflater.inflate(R.layout.fragment_today, container, false);
         ButterKnife.bind(this, v);
 
-        taskRecyclerViewAdapter = new TaskRecyclerViewAdapter(new ArrayList<Task>(), this);
+        taskRecyclerViewAdapter = new TaskRecyclerViewAdapter(new ArrayList<Task>(), activityListener);
         initRecyclerView(taskList, taskRecyclerViewAdapter);
 
         addTask.setOnEditorActionListener(this);
@@ -71,34 +66,24 @@ public class TodayFragment
     public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             Task newTask = new Task(BaseModel.SCRATCH_ID, v.getText().toString());
+            newTask.setTaskStatus(TaskStatus.IN_PROGRESS);
             taskRecyclerViewAdapter.addItem(newTask);
+            todayActivityListener.addTask(newTask);
             v.setText("");
         }
         return false;
     }
 
     @Override
-    public SuccessCriteria addSuccessCriteria(SuccessCriteria sc) {
-        return null;
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        activityListener = (GoalFragment.TaskActionListener) activity;
+        todayActivityListener = (TodayActivityListener) activity;
     }
 
-    @Override
-    public void openTask(Task t) {
+    @Override protected void updateSuccessCriteria(SuccessCriteria sc) { /* NOOP */ }
 
-    }
-
-    @Override
-    public void removeTask(int position, Task t) {
-
-    }
-
-    @Override
-    public void completeTask(Task t) {
-
-    }
-
-    @Override
-    public void createTask(String newTask, SuccessCriteriaSpinnerAdapter adapter) {
-
+    public interface TodayActivityListener {
+        void addTask(Task newTask);
     }
 }

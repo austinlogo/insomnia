@@ -9,12 +9,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 import northstar.planner.R;
 import northstar.planner.models.Task;
-import northstar.planner.models.Theme;
-import northstar.planner.presentation.Theme.ThemeFragment;
 import northstar.planner.presentation.goal.GoalFragment;
 import northstar.planner.presentation.swipe.ItemTouchHelperAdapter;
 
@@ -23,9 +20,9 @@ public class TaskRecyclerViewAdapter
         implements ItemTouchHelperAdapter {
 
     private List<Task> tasks;
-    private GoalFragment.GoalFragmentListener activityListener;
+    private GoalFragment.TaskActionListener activityListener;
 
-    public TaskRecyclerViewAdapter(List<Task> tasks, GoalFragment.GoalFragmentListener lis) {
+    public TaskRecyclerViewAdapter(List<Task> tasks, GoalFragment.TaskActionListener lis) {
         this.tasks = tasks;
         activityListener = lis;
     }

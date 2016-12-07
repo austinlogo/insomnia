@@ -31,7 +31,6 @@ public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> im
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-//        return super.getView(position, convertView, parent);
 
         convertView = (convertView == null)
                 ? LayoutInflater.from(getContext()).inflate(R.layout.item_success_criteria, parent, false)
@@ -54,9 +53,7 @@ public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> im
 
     @Override
     public SuccessCriteria getItem(int position) {
-        return position == 0
-                ? null
-                : successCriterias.get(position - 1);
+        return successCriterias.get(position);
     }
 
     @Override
@@ -79,5 +76,11 @@ public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> im
         }
 
         notifyDataSetChanged();
+    }
+
+    public boolean remove(int position) {
+        successCriterias.remove(position);
+        notifyDataSetChanged();
+        return true;
     }
 }

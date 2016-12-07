@@ -24,9 +24,9 @@ import northstar.planner.models.SuccessCriteria;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.presentation.BaseFragment;
-import northstar.planner.presentation.adapter.SuccessCriteriaListAdapter;
 import northstar.planner.presentation.adapter.SuccessCriteriaSpinnerAdapter;
 import northstar.planner.utils.DateUtils;
+import northstar.planner.utils.NumberUtils;
 
 public class AddTaskFragment extends BaseFragment implements DatePickerDialog.OnDateSetListener {
 
@@ -123,8 +123,8 @@ public class AddTaskFragment extends BaseFragment implements DatePickerDialog.On
             Toast.makeText(getActivity(), getString(R.string.no_title), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        Task newTask = new Task(addTaskTitle, selectedDate, selectedSc, Integer.parseInt(committedValue.getText().toString()));
+        int committedValueInt = NumberUtils.parseInt(committedValue.getText().toString());
+        Task newTask = new Task(addTaskTitle, selectedDate, selectedSc, committedValueInt);
         activityListener.addNewTask(newTask);
     }
 

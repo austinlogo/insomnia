@@ -117,4 +117,8 @@ public class Task extends BaseModel {
         String todayString = PlannerApplication.getInstance().getString(R.string.today);
         return DateUtils.getDateString(todayString, cal);
     }
+
+    public void setTaskStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
+    }
 }

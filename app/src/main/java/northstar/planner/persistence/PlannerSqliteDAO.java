@@ -216,6 +216,23 @@ public class PlannerSqliteDAO {//implements PlannerDAO {
         }
         return i == 1;
     }
+
+    public boolean removeSuccessCriteria(SuccessCriteria successCriteria) {
+        String whereClause = SuccessCriteriaTable._ID + EQUALSQ;
+        String[] whereArgs = { Long.toString(successCriteria.getId()) };
+
+        int i = db.delete(SuccessCriteriaTable.TABLE_NAME, whereClause, whereArgs);
+        removeTasksBySuccessCriteriaId(successCriteria.getId());
+
+        return i == 1;
+    }
+
+    private void removeTasksBySuccessCriteriaId(long successCriteriaId) {
+        String whereClause = TaskTable.COMPLETES_COLUMN + EQUALSQ;
+        String[] whereArgs = { Long.toString(successCriteriaId)};
+
+        db.delete(TaskTable.TABLE_NAME, whereClause, whereArgs);
+    }
     
 
     public boolean removeTask(long taskId) {

@@ -43,7 +43,7 @@
             android:name=".presentation.today.TodayActivity"
             android:label="Task"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>
