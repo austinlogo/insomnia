@@ -25,17 +25,21 @@ import butterknife.OnItemClick;
 import butterknife.OnLongClick;
 import northstar.planner.R;
 import northstar.planner.models.Goal;
-import northstar.planner.models.SuccessCriteria;
+import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
 import northstar.planner.models.Theme;
 import northstar.planner.models.tables.ThemeTable;
-import northstar.planner.persistence.PlannerSqliteDAO;
+import northstar.planner.persistence.PlannerSqliteGateway;
 import northstar.planner.presentation.Theme.ListThemesActivity;
 import northstar.planner.presentation.Theme.ThemeActivity;
 import northstar.planner.presentation.adapter.ThemeListAdapter;
 import northstar.planner.presentation.today.TodayActivity;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity
+        extends AppCompatActivity
+        implements DrawerLayout.DrawerListener {
+
+    public static final int EDIT_MENUITEM_INDEX = 1;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -52,17 +56,20 @@ public abstract class BaseActivity extends AppCompatActivity {
     private ThemeListAdapter themeListAdapter;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private List<Theme> themes;
-    PlannerSqliteDAO dao;
+    protected Menu optionsMenu;
+
+    PlannerSqliteGateway dao;
 
     public abstract View getRootView();
 
     protected abstract void deleteAction();
-    protected abstract void editAction();
+    public abstract void editAction();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dao = new PlannerSqliteDAO();
+        dao = new PlannerSqliteGateway();
+//        dao.getThemeStructure();
     }
 
     protected void finishDrawerInit(Activity act, DrawerLayout mDrawerLayout, String actionBarTitle) {
@@ -79,6 +86,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle(actionBarTitle);
         mActionBarDrawerToggle.syncState();
+        ((DrawerLayout) getRootView()).setDrawerListener(this);
     }
 
     @Override
@@ -91,6 +99,13 @@ public abstract class BaseActivity extends AppCompatActivity {
                 themes);
 
         themeList.setAdapter(themeListAdapter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideKeyboard();
+        closeDrawers();
     }
 
     @OnClick(R.id.activity_drawer_list_today)
@@ -133,7 +148,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mActionBarDrawerToggle.syncState();
-        //hideKeyboard(getCurrentFocus());
     }
 
     @Override
@@ -151,7 +165,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 return true;
             case R.id.main_menu_edit:
                 toggleEditIcon(item);
-                editAction();
                 return true;
         }
 
@@ -162,7 +175,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void toggleEditIcon(MenuItem menuItem) {
+    protected void toggleEditIcon(MenuItem menuItem) {
         if(menuItem.getTitle().equals(getString(R.string.action_edit))) {
             menuItem.setTitle(getString(R.string.action_save));
             menuItem.setIcon(getResources().getDrawable(R.drawable.ic_done_white_36dp));
@@ -171,21 +184,45 @@ public abstract class BaseActivity extends AppCompatActivity {
             menuItem.setTitle(getString(R.string.action_edit));
             menuItem.setIcon(getResources().getDrawable(R.drawable.ic_mode_edit_white_36dp));
         }
+
+        editAction();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        optionsMenu = menu;
         return true;
     }
 
-    public void hideKeyboard(View v) {
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    public void hideKeyboard() {
+        if (getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
-    public PlannerSqliteDAO getDao() {
+
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+        hideKeyboard();
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
+
+    }
+
+    public PlannerSqliteGateway getDao() {
         return dao;
     }
 
@@ -194,7 +231,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void updateThemes(List<Theme> list) {
-        dao.updateThemeOrder(list);
+        dao.updateOrder(ThemeTable.TABLE_NAME, list);
     }
 
     public void removeFromDb(Theme theme) {
@@ -209,7 +246,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         getDao().removeTask(task.getId());
     }
 
-    public void removeFromDb(SuccessCriteria sc) {
+    public void removeFromDb(Metric sc) {
         getDao().removeTheme(sc.getId());
     }
 }

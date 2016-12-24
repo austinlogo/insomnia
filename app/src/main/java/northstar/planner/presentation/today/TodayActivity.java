@@ -12,7 +12,7 @@ import northstar.planner.R;
 import northstar.planner.models.BaseModel;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.TaskTable;
-import northstar.planner.presentation.goal.AddTaskFragment;
+import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.goal.GoalFragment;
 import northstar.planner.presentation.task.TaskBasedActivity;
 
@@ -21,7 +21,7 @@ public class TodayActivity
         implements GoalFragment.TaskActionListener, TodayFragment.TodayActivityListener {
 
     TodayFragment mFragment;
-    AddTaskFragment addTaskFragment;
+//    AddTaskFragment addTaskFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,25 +34,34 @@ public class TodayActivity
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         List<Task> scratchTasks = getDao().getTodaysTasks();
-        getDao().getTasksByGoalId(BaseModel.SCRATCH_ID);
+        getDao().getTasksByPriority();
+//        getDao().getTasksByGoalId(BaseModel.SCRATCH_ID);
         mFragment.initViews(scratchTasks);
     }
 
     @Override
     protected void storeNewTask(Task newTask) {
+        newTask.setGoal(BaseModel.SCRATCH_ID);
         getDao().addTask(newTask);
+        ((TaskRecyclerViewAdapter) mFragment.taskList.getAdapter()).addItem(newTask);
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         return true;
     }
     @Override protected void deleteAction() {}
-    @Override protected void editAction() {}
+    @Override public void editAction() {}
 
     @Override
-    public void addTask(Task newTask) {
-        newTask = getDao().addTask(newTask);
+    public void openAddTaskWorkflow(String newTaskTitle) {
+        setFragmentVisible(addTaskLayout);
+        addTaskFragment.updateFragmentValuesForTodayTask(newTaskTitle);
     }
 
     @Override

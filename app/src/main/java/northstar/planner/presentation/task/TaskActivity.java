@@ -1,25 +1,29 @@
 package northstar.planner.presentation.task;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
-import android.widget.AdapterView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import northstar.planner.R;
 import northstar.planner.models.Task;
+import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.TaskTable;
-import northstar.planner.persistence.PlannerSqliteDAO;
+import northstar.planner.persistence.PlannerSqliteGateway;
 import northstar.planner.presentation.BaseActivity;
+import northstar.planner.presentation.goal.GoalActivity;
 
-public class TaskActivity extends BaseActivity {
+public class TaskActivity
+        extends BaseActivity
+        implements TaskFragment.TaskFragmentListener {
 
     @BindView(R.id.activity_task_drawer_layout)
     DrawerLayout mDrawerLayout;
 
-    PlannerSqliteDAO dao;
+    PlannerSqliteGateway dao;
     Task currentTask;
     TaskFragment mFragment;
 
@@ -28,8 +32,9 @@ public class TaskActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
         ButterKnife.bind(this);
-        dao = new PlannerSqliteDAO();
+        dao = new PlannerSqliteGateway();
         currentTask = (Task) getIntent().getExtras().getSerializable(TaskTable.TABLE_NAME);
+        currentTask = getDao().getTask(currentTask.getId());
         mFragment = TaskFragment.newInstance(getIntent().getExtras());
 
         getFragmentManager()
@@ -48,7 +53,14 @@ public class TaskActivity extends BaseActivity {
 
     @Override
     public View getRootView() {
-        return null;
+        return mDrawerLayout;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        currentTask = mFragment.updateValues();
+        dao.updateTask(currentTask);
     }
 
     @Override
@@ -58,7 +70,17 @@ public class TaskActivity extends BaseActivity {
     }
 
     @Override
-    protected void editAction() {
+    public void editAction() {
+        getSupportActionBar().setTitle(mFragment.updateValues().getTitle());
+        mFragment.toggleEditing();
+    }
 
+    @Override
+    public void navigateToGoal() {
+        Intent i = new Intent(this, GoalActivity.class);
+        i.putExtra(GoalTable._ID, currentTask.getGoal());
+//        i.putExtra(GoalTable.THEME_COLUMN, goal.getTheme());
+//        i.putExtra(GoalTable.TITLE_COLUMN, goal.getTitle());
+        startActivity(i);
     }
 }

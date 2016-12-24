@@ -1,5 +1,6 @@
 package northstar.planner.presentation.adapter;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +13,10 @@ import java.util.List;
 
 import northstar.planner.R;
 import northstar.planner.models.Task;
+import northstar.planner.presentation.goal.GoalActivity;
 import northstar.planner.presentation.goal.GoalFragment;
 import northstar.planner.presentation.swipe.ItemTouchHelperAdapter;
+import northstar.planner.utils.DateUtils;
 
 public class TaskRecyclerViewAdapter
         extends RecyclerView.Adapter<TaskRecyclerViewAdapter.MyViewHolder>
@@ -31,7 +34,7 @@ public class TaskRecyclerViewAdapter
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View item = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.item_task, parent, false);
+                .inflate(R.layout.item_task_context, parent, false);
 
         return new MyViewHolder(item);
     }
@@ -41,6 +44,17 @@ public class TaskRecyclerViewAdapter
         final Task currentTask = tasks.get(position);
         holder.title.setText(currentTask.getTitle());
         holder.due.setText(currentTask.getDueString());
+
+        if (!(activityListener instanceof GoalActivity)) {
+            holder.goalTitle.setText(currentTask.getGoalTitle());
+        }
+
+        if (currentTask.getDue() != null
+                && currentTask.getDue().getTime() < DateUtils.getStartOfDay(DateUtils.today()).getTimeInMillis()) {
+            holder.due.setTextColor(Color.RED);
+        } else {
+            holder.due.setTextColor(Color.BLACK);
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,12 +123,13 @@ public class TaskRecyclerViewAdapter
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        protected TextView title, due;
+        protected TextView title, due, goalTitle;
 
         public MyViewHolder(View v) {
             super(v);
             title = (TextView) v.findViewById(R.id.item_task_title);
             due = (TextView) v.findViewById(R.id.item_task_due);
+            goalTitle = (TextView) v.findViewById(R.id.item_task_goal_title);
         }
     }
 }

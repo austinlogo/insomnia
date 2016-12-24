@@ -4,8 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import northstar.planner.models.tables.ActiveHoursTable;
 import northstar.planner.models.tables.GoalTable;
-import northstar.planner.models.tables.SuccessCriteriaTable;
+import northstar.planner.models.tables.MetricTable;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.models.tables.ThemeTable;
 
@@ -32,14 +33,16 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
         db.execSQL(ThemeTable.SQL_CREATE_QUERY);
         db.execSQL(GoalTable.SQL_CREATE_QUERY);
         db.execSQL(TaskTable.SQL_CREATE_QUERY);
-        db.execSQL(SuccessCriteriaTable.SQL_CREATE_QUERY);
+        db.execSQL(MetricTable.SQL_CREATE_QUERY);
+        db.execSQL(ActiveHoursTable.SQL_CREATE_QUERY);
     }
 
     public static void clearAll(SQLiteDatabase db) {
         db.execSQL(ThemeTable.getDropTableQuery());
         db.execSQL(GoalTable.getDropTableQuery());
         db.execSQL(TaskTable.getDropTableQuery());
-        db.execSQL(SuccessCriteriaTable.getDropTableQuery());
+        db.execSQL(MetricTable.getDropTableQuery());
+        db.execSQL(MetricTable.getDropTableQuery());
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

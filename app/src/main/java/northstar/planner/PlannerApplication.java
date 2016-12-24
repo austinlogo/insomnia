@@ -2,7 +2,7 @@ package northstar.planner;
 
 import android.app.Application;
 
-import northstar.planner.persistence.PlannerSqliteDAO;
+import northstar.planner.persistence.PlannerSqliteGateway;
 
 public class PlannerApplication extends Application{
 
@@ -12,7 +12,7 @@ public class PlannerApplication extends Application{
     public void onCreate() {
         super.onCreate();
         context = this;
-        new PlannerSqliteDAO(getApplicationContext());
+        new PlannerSqliteGateway(getApplicationContext());
     }
 
     public static Application getInstance() {

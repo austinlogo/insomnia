@@ -9,7 +9,6 @@ import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import northstar.planner.R;
-import northstar.planner.models.BaseModel;
 import northstar.planner.models.Theme;
 import northstar.planner.models.tables.ThemeTable;
 import northstar.planner.presentation.BaseActivity;
@@ -63,13 +62,6 @@ public class ListThemesActivity extends BaseActivity
         return mDrawerLayout;
     }
 
-    @Override
-    protected void deleteAction() {
-        //NOOP
-    }
-
-    @Override
-    protected void editAction() {
-        //NOOP
-    }
+    @Override protected void deleteAction() {}
+    @Override public void editAction() {}
 }

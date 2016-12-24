@@ -12,7 +12,7 @@ import butterknife.ButterKnife;
 import northstar.planner.R;
 import northstar.planner.models.BaseModel;
 import northstar.planner.models.Goal;
-import northstar.planner.models.SuccessCriteria;
+import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.TaskTable;
@@ -20,6 +20,7 @@ import northstar.planner.presentation.BaseActivity;
 import northstar.planner.presentation.BaseFragment;
 import northstar.planner.presentation.goal.AddTaskFragment;
 import northstar.planner.presentation.goal.GoalFragment;
+import northstar.planner.presentation.today.AddOverlayFragment;
 import northstar.planner.presentation.today.TodayFragment;
 
 public abstract class TaskBasedActivity
@@ -35,12 +36,16 @@ public abstract class TaskBasedActivity
     protected FrameLayout mainFragmentLayout;
 
     @BindView(R.id.activity_goal_add_task)
-    protected FrameLayout goalAddTaskLayout;
+    protected FrameLayout addTaskLayout;
+
+    @BindView(R.id.activity_goal_add_overlay)
+    protected FrameLayout addOverlay;
 
     private TaskBasedFragment mainFragment;
-    private BaseModel mainModel;
+    protected BaseModel mainModel;
 
     protected AddTaskFragment addTaskFragment;
+    protected AddOverlayFragment addOverlayFragment;
 
     protected BaseFragment onCreate(@Nullable Bundle savedInstanceState, String tableName) {
         super.onCreate(savedInstanceState);
@@ -54,6 +59,7 @@ public abstract class TaskBasedActivity
                 .beginTransaction()
                 .add(R.id.activity_goal_fragment, mainFragment)
                 .add(R.id.activity_goal_add_task, addTaskFragment)
+//                .add(R.id.activity_goal_add_overlay, null)
                 .commit();
 
         return mainFragment;
@@ -82,14 +88,14 @@ public abstract class TaskBasedActivity
 
     @Override
     public void addNewTask(Task newTask) {
-        hideKeyboard(goalAddTaskLayout);
+        hideKeyboard();
         setFragmentVisible(mainFragmentLayout);
         storeNewTask(newTask);
     }
 
     public void setFragmentVisible(FrameLayout fragmentVisible) {
         mainFragmentLayout.setVisibility(mainFragmentLayout.getId() == fragmentVisible.getId() ? View.VISIBLE : View.GONE);
-        goalAddTaskLayout.setVisibility(goalAddTaskLayout.getId() == fragmentVisible.getId() ? View.VISIBLE : View.GONE);
+        addTaskLayout.setVisibility(addTaskLayout.getId() == fragmentVisible.getId() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -106,7 +112,31 @@ public abstract class TaskBasedActivity
 
     @Override
     public void completeTask(Task t) {
-        SuccessCriteria updatedSuccessCriteria = getDao().completeTask(t);
-        mainFragment.updateSuccessCriteria(updatedSuccessCriteria);
+        Metric updatedMetric = getDao().completeTask(t);
+        mainFragment.updateMetric(updatedMetric);
+    }
+
+    public void attachAddOverlayToActivity() {
+        getFragmentManager().beginTransaction()
+                .add(R.id.activity_goal_add_overlay, addOverlayFragment)
+                .commit();
+    }
+
+    public void removeAddOverlayFromActivity() {
+        addOverlay.setVisibility(View.GONE);
+        getFragmentManager().beginTransaction()
+                .remove(addOverlayFragment)
+                .commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (addTaskLayout.getVisibility() == View.VISIBLE) {
+            setFragmentVisible(mainFragmentLayout);
+        } else if (addOverlay.getVisibility() == View.VISIBLE) {
+            removeAddOverlayFromActivity();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

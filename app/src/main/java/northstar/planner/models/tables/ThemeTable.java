@@ -1,6 +1,7 @@
 package northstar.planner.models.tables;
 
 public class ThemeTable extends BaseTable {
+    public static final String TITLE_COLUMN = "Title";
     public static final String TABLE_NAME = "Themes";
     public static final String DESCRIPTION_COLUMN = "Description";
 
@@ -9,6 +10,11 @@ public class ThemeTable extends BaseTable {
             TITLE_COLUMN,
             ORDER_COLUMN,
             DESCRIPTION_COLUMN
+    };
+
+    public static final String[] shallowProjection = {
+            _ID,
+            TITLE_COLUMN
     };
 
     public static final String SQL_CREATE_QUERY =

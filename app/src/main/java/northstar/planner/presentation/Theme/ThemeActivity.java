@@ -1,12 +1,12 @@
 package northstar.planner.presentation.Theme;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
+import android.util.AttributeSet;
 import android.view.View;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,9 +15,9 @@ import northstar.planner.models.Goal;
 import northstar.planner.models.Theme;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.ThemeTable;
-import northstar.planner.persistence.PlannerSqliteDAO;
 import northstar.planner.presentation.BaseActivity;
 import northstar.planner.presentation.goal.GoalActivity;
+import northstar.planner.presentation.hours.ActiveHoursDialogFragment;
 import northstar.planner.utils.StringUtils;
 
 public class ThemeActivity
@@ -28,14 +28,13 @@ public class ThemeActivity
     DrawerLayout mDrawerLayout;
 
     Theme currentTheme;
-    public PlannerSqliteDAO dao;
     private ThemeFragment mFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dao = new PlannerSqliteDAO();
         currentTheme = (Theme) getIntent().getExtras().get(ThemeTable.TABLE_NAME);
+        currentTheme = getDao().getTheme(currentTheme.getId());
 
         mFragment = northstar.planner.presentation.Theme.ThemeFragment.newInstance(currentTheme);
 
@@ -52,33 +51,47 @@ public class ThemeActivity
     @Override
     public void onResume() {
         super.onResume();
-        List<Goal> goals = dao.getGoalsByThemeId(currentTheme.getId());
-        mFragment.initGoalsList(goals);
+        currentTheme.setGoals(getDao().getGoalsByThemeId(currentTheme.getId()));
+        mFragment.initGoalsList(currentTheme.getGoals());
+
+//        ActiveHoursDialogFragment.newInstance().show(getFragmentManager(), "TAG");
+    }
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        View v = super.onCreateView(name, context, attrs);
+
+        if (optionsMenu != null && currentTheme.isNew()) {
+            toggleEditIcon(optionsMenu.getItem(EDIT_MENUITEM_INDEX));
+        }
+        return v;
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
+        getDao().updateOrder(GoalTable.TABLE_NAME, currentTheme.getGoals());
         currentTheme.updateTheme(mFragment.getNewThemeValues());
+
         if (StringUtils.isNotEmpty(currentTheme.getTitle())) {
-            dao.updateTheme(currentTheme);
+            getDao().updateTheme(currentTheme);
         }
     }
 
     @Override
     public View getRootView() {
-        return null;
+        return mDrawerLayout;
     }
 
     @Override
     protected void deleteAction() {
-        dao.removeTheme(currentTheme.getId());
+        getDao().removeTheme(currentTheme.getId());
         finish();
     }
 
     @Override
-    protected void editAction() {
+    public void editAction() {
         getSupportActionBar().setTitle(mFragment.getNewThemeValues().getTitle());
         mFragment.toggleEditing();
     }
@@ -87,7 +100,7 @@ public class ThemeActivity
     public void newGoal(String newGoalTitle) {
         storeThemeIfItDoesNotYesExist();
         Goal newGoal = new Goal(currentTheme.getId(), newGoalTitle, "");
-        long id = dao.addGoal(newGoal);
+        long id = getDao().addGoal(newGoal);
         newGoal.setId(id);
 
         mFragment.addedGoal(newGoal);
@@ -96,7 +109,7 @@ public class ThemeActivity
     private void storeThemeIfItDoesNotYesExist() {
         if (currentTheme.isNew()) {
             currentTheme.updateTheme(mFragment.getNewThemeValues());
-            dao.addTheme(currentTheme, 0);
+            getDao().addTheme(currentTheme, 0);
         }
     }
 
@@ -105,8 +118,11 @@ public class ThemeActivity
 
         Intent i = new Intent(this, GoalActivity.class);
         i.putExtra(GoalTable._ID, goal.getId());
-        i.putExtra(GoalTable.THEME_COLUMN, goal.getTheme());
-//        i.putExtra(GoalTable.TITLE_COLUMN, goal.getTitle());
         startActivity(i);
+    }
+
+    @Override
+    public void openActiveHoursDialog() {
+        ActiveHoursDialogFragment.newInstance(currentTheme.getId()).show(getFragmentManager(), "TAG");
     }
 }

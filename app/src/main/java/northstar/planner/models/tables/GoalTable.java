@@ -23,4 +23,8 @@ public class GoalTable extends BaseTable {
     public static String getDropTableQuery() {
         return DROP_TABLE + TABLE_NAME;
     }
+
+    public static String uniqueTitle() {
+        return TABLE_NAME + "_" + TITLE_COLUMN;
+    }
 }

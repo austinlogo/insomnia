@@ -8,15 +8,17 @@ import java.util.Date;
 
 import northstar.planner.PlannerApplication;
 import northstar.planner.R;
+import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.utils.DateUtils;
 
 public class Task extends BaseModel {
     private long goal;
+    private String goalTitle;
     private String title;
     private double taskCommitment;
     private long completes;
-    private SuccessCriteria successCriteria;
+    private Metric metric;
     private Date due;
     private TaskStatus taskStatus;
 
@@ -31,6 +33,7 @@ public class Task extends BaseModel {
         super(c);
         title = getColumnString(c, TaskTable.TITLE_COLUMN);
         goal = getColumnLong(c, TaskTable.GOAL_COLUMN);
+        goalTitle = getColumnString(c, GoalTable.uniqueTitle());
         taskCommitment = getColumnDouble(c, TaskTable.TASK_COMMITMENT_COLUMN);
         completes = getColumnLong(c, TaskTable.COMPLETES_COLUMN);
         due = getColumnDate(c, TaskTable.DUE_COLUMN);
@@ -42,17 +45,34 @@ public class Task extends BaseModel {
         goal = goalId;
     }
 
-    public Task(EditText newTaskTitle, Calendar chosenDate, SuccessCriteria item, int commitment) {
+    public Task(long goalId, String title, Date due) {
+        goal = goalId;
+        _id = NEW_ID;
+        this.title = title;
+        this.due = due;
+        metric = null;
+        taskCommitment = 0;
+        taskStatus = TaskStatus.IN_PROGRESS;
+    }
+
+    public Task(EditText newTaskTitle, Calendar chosenDate, Metric item, int commitment) {
+        boolean hasSuccessCriteria = item != null && item.getId() != NEW_ID;
+
         goal = NEW_ID;
         _id = NEW_ID;
         title = newTaskTitle.getText().toString();
         due = chosenDate == null ? null : chosenDate.getTime();
-        completes = (item != null)
-                ? item.getId()
-                : NEW_ID;
-        successCriteria = item;
-        taskCommitment = commitment;
         taskStatus = TaskStatus.NOT_STARTED;
+
+        if (hasSuccessCriteria) {
+            completes = item.getId();
+            metric = item;
+            taskCommitment = commitment;
+        } else {
+            completes = NEW_ID;
+            metric = null;
+            taskCommitment = 0;
+        }
     }
 
     public long getGoal() {
@@ -71,8 +91,8 @@ public class Task extends BaseModel {
         return completes;
     }
 
-    public SuccessCriteria getSuccessCriteria() {
-        return successCriteria;
+    public Metric getMetric() {
+        return metric;
     }
 
     public Date getDue() {
@@ -95,16 +115,20 @@ public class Task extends BaseModel {
         this.due = dueDate;
     }
 
-    public void setSuccessCriteria(SuccessCriteria successCriteria) {
-        this.completes = completes == NEW_ID
+    public void setMetric(Metric metric) {
+        this.completes = metric == null
                 ? NEW_ID
-                : successCriteria.getId();
+                : metric.getId();
 
-        this.successCriteria = successCriteria;
+        this.metric = metric;
     }
 
     public void setGoal(Goal goal) {
         this.goal = goal.getId();
+    }
+
+    public void setGoal(long id) {
+        this.goal = id;
     }
 
     public String getDueString() {
@@ -120,5 +144,9 @@ public class Task extends BaseModel {
 
     public void setTaskStatus(TaskStatus taskStatus) {
         this.taskStatus = taskStatus;
+    }
+
+    public String getGoalTitle() {
+        return goalTitle;
     }
 }

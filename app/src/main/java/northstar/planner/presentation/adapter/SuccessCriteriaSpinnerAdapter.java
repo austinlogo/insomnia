@@ -1,36 +1,34 @@
 package northstar.planner.presentation.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import northstar.planner.R;
-import northstar.planner.models.SuccessCriteria;
+import northstar.planner.models.IncrementalMetric;
+import northstar.planner.models.Metric;
 
-public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<SuccessCriteria> {
-    private List<SuccessCriteria> successCriterias;
+public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<Metric> {
+    private List<Metric> metrics;
 
-    public SuccessCriteriaSpinnerAdapter(Context context, List<SuccessCriteria> successCriterias) {
+    public SuccessCriteriaSpinnerAdapter(Context context, List<Metric> metrics) {
         super(context, R.layout.item_default);
-        List<SuccessCriteria> spinnerSCList = new ArrayList<>(successCriterias);
+        List<Metric> spinnerSCList = new ArrayList<>(metrics);
 
-        spinnerSCList.add(0, new SuccessCriteria("Select an Success Criteria", 0));
-        this.successCriterias = spinnerSCList;
+        spinnerSCList.add(0, new IncrementalMetric("Select an Success Criteria", 0));
+        this.metrics = spinnerSCList;
     }
 
     @Override
     public int getCount() {
-        return successCriterias.size();
+        return metrics.size();
     }
 
 
@@ -45,7 +43,7 @@ public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<SuccessCriteria>
 
         TextView text = (TextView) convertView.findViewById(R.id.item_default_text);
 
-        text.setText(successCriterias.get(position).getTitle());
+        text.setText(metrics.get(position).getTitle());
 
         return convertView;
     }
@@ -57,21 +55,21 @@ public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<SuccessCriteria>
 
     @Override
     public long getItemId(int position) {
-        return successCriterias.get(position).getId();
+        return metrics.get(position).getId();
     }
 
     @Override
-    public SuccessCriteria getItem(int position) {
-        return successCriterias.get(position);
+    public Metric getItem(int position) {
+        return metrics.get(position);
     }
 
     @Override
-    public void add(SuccessCriteria object) {
-        successCriterias.add(0, object);
+    public void add(Metric object) {
+        metrics.add(0, object);
         notifyDataSetChanged();
     }
 
-    private String getProgressString(SuccessCriteria sc) {
+    private String getProgressString(Metric sc) {
         return sc.getProgress() + " / " + sc.getCommitted();
     }
 }

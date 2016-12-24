@@ -4,14 +4,14 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import northstar.planner.R;
-import northstar.planner.models.SuccessCriteria;
+import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
 import northstar.planner.presentation.BaseFragment;
 import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 
 public abstract class TaskBasedFragment extends BaseFragment {
 
-    protected abstract void updateSuccessCriteria(SuccessCriteria sc);
+    protected abstract void updateMetric(Metric sc);
 
     protected TaskRecyclerViewAdapter taskListAdapter;
 
@@ -28,7 +28,9 @@ public abstract class TaskBasedFragment extends BaseFragment {
                     @Override
                     public void onDismissed(Snackbar snackbar, int event) {
                         super.onDismissed(snackbar, event);
-                        if (undoPressed(event)) {
+                        if (getBaseActivity() == null) {
+                            return;
+                        } else if (undoPressed(event)) {
                             taskListAdapter.undoDeletion(item, position);
                         } else {
                             getBaseActivity().removeFromDb(item);

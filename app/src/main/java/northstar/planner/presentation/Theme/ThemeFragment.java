@@ -9,24 +9,30 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnEditorAction;
 import northstar.planner.R;
 import northstar.planner.models.Goal;
 import northstar.planner.models.Theme;
 import northstar.planner.models.tables.ThemeTable;
 import northstar.planner.presentation.BaseFragment;
 import northstar.planner.presentation.adapter.GoalRecyclerViewAdapter;
-import northstar.planner.presentation.adapter.ThemeRecyclerViewAdapter;
 
 public class ThemeFragment
         extends BaseFragment
         implements View.OnKeyListener {
+
+    @BindView(R.id.fragment_theme_title_container)
+    LinearLayout titleContainer;
 
     @BindView(R.id.fragment_theme_edit_title)
     EditText editTitle;
@@ -41,7 +47,6 @@ public class ThemeFragment
     RecyclerView goalsRecyclerView;
 
     private ThemeFragmentListener activityListener;
-//    private GoalListAdapter goalsListAdapter;
 
     public static northstar.planner.presentation.Theme.ThemeFragment newInstance(Theme newTheme) {
         northstar.planner.presentation.Theme.ThemeFragment newFragment = new northstar.planner.presentation.Theme.ThemeFragment();
@@ -87,7 +92,8 @@ public class ThemeFragment
         newGoalText.setOnKeyListener(this);
 
         if (currentTheme.isNew()) {
-            toggleEditing();
+//            toggleEditing();
+
         }
     }
 
@@ -110,6 +116,21 @@ public class ThemeFragment
         return false;
     }
 
+    @OnEditorAction(R.id.fragment_theme_edit_title)
+    public boolean onEditTitleDone(int actionId) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            getBaseActivity().editAction();
+            getBaseActivity().hideKeyboard();
+            return true;
+        }
+        return false;
+    }
+
+    @OnClick(R.id.fragment_theme_edit_active_hours)
+    public void onActiveHoursClick() {
+        activityListener.openActiveHoursDialog();
+    }
+
     public boolean startGoalCreation(View v) {
         if (!newGoalText.getText().toString().isEmpty()) {
             activityListener.newGoal(newGoalText.getText().toString());
@@ -122,7 +143,7 @@ public class ThemeFragment
     }
 
     public void toggleEditing() {
-        boolean isEditable = editTitle.getVisibility() != View.VISIBLE;
+        boolean isEditable = titleContainer.getVisibility() != View.VISIBLE;
         int inputType = isEditable
                 ? InputType.TYPE_CLASS_TEXT
                 : InputType.TYPE_NULL;
@@ -134,7 +155,7 @@ public class ThemeFragment
         editTitle.setInputType(inputType);
         editTitle.setFocusable(isEditable);
         editTitle.setFocusableInTouchMode(isEditable);
-        editTitle.setVisibility(visibility);
+        titleContainer.setVisibility(visibility);
 
         editDescription.setInputType(inputType);
         editDescription.setFocusable(isEditable);
@@ -155,5 +176,6 @@ public class ThemeFragment
     public interface ThemeFragmentListener {
         void newGoal(String newGoalTitle);
         void openGoal(Goal goal);
+        void openActiveHoursDialog();
     }
 }

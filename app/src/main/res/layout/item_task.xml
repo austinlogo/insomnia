@@ -6,6 +6,9 @@
 
     <TextView
         android:id="@+id/item_task_title"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:maxLength="40"
         style="@style/AppTheme.TextViewItem" />
 
     <TextView

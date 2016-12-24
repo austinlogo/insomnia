@@ -14,8 +14,8 @@ public class Goal extends BaseModel {
     private long theme;
     private String title;
     private String description;
-    private List<SuccessCriteria> successCriterias;
-    private Map<Long, SuccessCriteria> successCriteriaMap;
+    private List<Metric> metrics;
+    private Map<Long, Metric> successCriteriaMap;
     private List<Task> tasks;
 
     public Goal(Cursor c) {
@@ -41,7 +41,7 @@ public class Goal extends BaseModel {
     }
 
     public void initLists() {
-        successCriterias = new ArrayList<>();
+        metrics = new ArrayList<>();
         successCriteriaMap = new HashMap<>();
         tasks = new ArrayList<>();
     }
@@ -72,12 +72,12 @@ public class Goal extends BaseModel {
         _id = id;
     }
 
-    public List<SuccessCriteria> getSuccessCriterias() {
-        return successCriterias;
+    public List<Metric> getMetrics() {
+        return metrics;
     }
 
-    public void setSuccessCriterias(List<SuccessCriteria> successCriterias) {
-        this.successCriterias = successCriterias;
+    public void setMetrics(List<Metric> metrics) {
+        this.metrics = metrics;
     }
 
     public List<Task> getTasks() {
@@ -88,20 +88,20 @@ public class Goal extends BaseModel {
         this.tasks = tasks;
     }
 
-    public void addSuccessCriteria(SuccessCriteria sc) {
-        successCriterias.add(0, sc);
+    public void addMetric(Metric sc) {
+        metrics.add(0, sc);
     }
 
-    public void setChildren(List<SuccessCriteria> successCriterias, List<Task> tasksByGoalId) {
-        this.successCriterias = successCriterias;
+    public void setChildren(List<Metric> metrics, List<Task> tasksByGoalId) {
+        this.metrics = metrics;
 
-        for (SuccessCriteria sc : successCriterias) {
+        for (Metric sc : metrics) {
             successCriteriaMap.put(sc.getId(), sc);
         }
 
         for (Task task : tasksByGoalId) {
-            SuccessCriteria completes = successCriteriaMap.get(task.getCompletes());
-            task.setSuccessCriteria(completes);
+            Metric completes = successCriteriaMap.get(task.getCompletes());
+            task.setMetric(completes);
             this.tasks.add(task);
         }
     }

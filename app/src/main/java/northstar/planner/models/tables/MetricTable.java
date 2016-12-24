@@ -1,6 +1,6 @@
 package northstar.planner.models.tables;
 
-public class SuccessCriteriaTable extends BaseTable{
+public class MetricTable extends BaseTable{
     public static final String TABLE_NAME = "Success_Criteria";
     public static final String GOAL_COLUMN = "Goal";
     public static final String PROGRESS_COLUMN = "Progress";

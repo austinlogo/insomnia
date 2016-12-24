@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/fragment_add_metric_title_value"
+        style="@style/AppTheme.EditText.Add"
+        android:hint="add metric"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/fragment_add_metric_committed_value"
+        android:visibility="gone"
+        android:hint="@string/hint_metric_amount"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:layout_height="@dimen/addIconRowHeight">
+
+        <ImageButton
+            android:id="@+id/fragment_add_metric_title_icon"
+            android:src="@drawable/ic_title_white_24dp"
+            android:padding="@dimen/smallSpace"
+            android:scaleType="fitCenter"
+            android:background="?selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <ImageButton
+            android:id="@+id/fragment_add_metric_type_icon"
+            android:src="@drawable/ic_arrow_upward_white_24dp"
+            android:padding="@dimen/smallSpace"
+            android:scaleType="fitCenter"
+            android:background="?selectableItemBackground"
+            android:layout_toEndOf="@id/fragment_add_metric_title_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <ImageButton
+            android:id="@+id/fragment_add_metric_committed_icon"
+            android:src="@drawable/goal_48"
+            android:padding="@dimen/smallSpace"
+            android:scaleType="fitCenter"
+            android:background="?selectableItemBackground"
+            android:layout_toEndOf="@id/fragment_add_metric_type_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <ImageButton
+            android:id="@+id/fragment_add_metric_done_icon"
+            android:src="@drawable/ic_done_white_36dp"
+            android:maxHeight="8dp"
+            android:layout_alignParentEnd="true"
+            android:scaleType="fitCenter"
+            android:background="?selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

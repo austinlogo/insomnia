@@ -12,19 +12,19 @@ import java.io.Serializable;
 import java.util.List;
 
 import northstar.planner.R;
-import northstar.planner.models.SuccessCriteria;
+import northstar.planner.models.Metric;
 
-public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> implements Serializable {
-    private List<SuccessCriteria> successCriterias;
+public class MetricsListAdapter extends ArrayAdapter<Metric> implements Serializable {
+    private List<Metric> metrics;
 
-    public SuccessCriteriaListAdapter(Context context, List<SuccessCriteria> successCriterias) {
+    public MetricsListAdapter(Context context, List<Metric> metrics) {
         super(context, R.layout.item_theme);
-        this.successCriterias = successCriterias;
+        this.metrics = metrics;
     }
 
     @Override
     public int getCount() {
-        return successCriterias.size();
+        return metrics.size();
     }
 
 
@@ -39,8 +39,8 @@ public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> im
         TextView text = (TextView) convertView.findViewById(R.id.item_success_criteria_title);
         TextView committed = (TextView) convertView.findViewById(R.id.item_success_criteria_progress);
 
-        text.setText(successCriterias.get(position).getTitle());
-        committed.setText(successCriterias.get(position).getProgressString());
+        text.setText(metrics.get(position).getTitle());
+        committed.setText(metrics.get(position).getProgressString());
 
 
         return convertView;
@@ -48,29 +48,29 @@ public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> im
 
     @Override
     public long getItemId(int position) {
-        return successCriterias.get(position).getId();
+        return metrics.get(position).getId();
     }
 
     @Override
-    public SuccessCriteria getItem(int position) {
-        return successCriterias.get(position);
+    public Metric getItem(int position) {
+        return metrics.get(position);
     }
 
     @Override
-    public void add(SuccessCriteria object) {
-        successCriterias.add(0, object);
+    public void add(Metric object) {
+        metrics.add(0, object);
         notifyDataSetChanged();
     }
 
-    public List<SuccessCriteria> getList() {
-        return successCriterias;
+    public List<Metric> getList() {
+        return metrics;
     }
 
-    public void updateSuccessCriteria(SuccessCriteria updatedSuccessCriteria) {
-        for (int i = 0; i < successCriterias.size(); i++) {
-            SuccessCriteria sc = successCriterias.get(i);
-            if (sc.getId() == updatedSuccessCriteria.getId()) {
-                successCriterias.set(i, updatedSuccessCriteria);
+    public void updateSuccessCriteria(Metric updatedMetric) {
+        for (int i = 0; i < metrics.size(); i++) {
+            Metric sc = metrics.get(i);
+            if (sc.getId() == updatedMetric.getId()) {
+                metrics.set(i, updatedMetric);
                 break;
             }
         }
@@ -79,7 +79,7 @@ public class SuccessCriteriaListAdapter extends ArrayAdapter<SuccessCriteria> im
     }
 
     public boolean remove(int position) {
-        successCriterias.remove(position);
+        metrics.remove(position);
         notifyDataSetChanged();
         return true;
     }

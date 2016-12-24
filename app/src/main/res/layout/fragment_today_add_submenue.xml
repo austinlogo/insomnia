@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/fragment_today_add_submenu_layout"
+              android:orientation="vertical"
+              android:background="@color/translucent"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/metric"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="@dimen/standardSpace"
+                android:layout_marginBottom="@dimen/standardSpace"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+            <android.support.design.widget.FloatingActionButton
+                style="@style/AppTheme.Fab"
+                android:src="@drawable/ic_equalizer_white_24dp"
+                android:layout_marginBottom="@dimen/standardSpace"
+                android:id="@+id/fragment_today_add_submenu_add_metric"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/task"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="@dimen/standardSpace"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+            <android.support.design.widget.FloatingActionButton
+                style="@style/AppTheme.Fab"
+                android:src="@drawable/seed"
+                android:id="@+id/fragment_today_add_submenu_add_task"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -1,18 +1,13 @@
 package northstar.planner.presentation.swipe;
 
-import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Gravity;
 import android.view.View;
 
-import java.util.List;
-
 import northstar.planner.R;
-import northstar.planner.models.BaseModel;
 import northstar.planner.models.drawable.SlideListSquareIcon;
 import northstar.planner.presentation.BaseActivity;
 
@@ -28,8 +23,8 @@ public class GenericListTouchHelperCallback extends ItemTouchHelper.Callback {
         float length = ctx.getResources().getDimension(R.dimen.slide_list_icon_length);
         activity = ctx;
 
-        doneIcon = new SlideListSquareIcon(ctx.getDrawable(R.drawable.ic_done_white_36dp), Color.rgb(0, 150, 0), Gravity.START, length);
-        deleteIcon = new SlideListSquareIcon(ctx.getDrawable(R.drawable.ic_delete_white_36dp), Color.RED, Gravity.END, length);
+        doneIcon = new SlideListSquareIcon(ctx.getDrawable(R.drawable.ic_done_white_36dp), activity.getResources().getColor(R.color.green), Gravity.START, length);
+        deleteIcon = new SlideListSquareIcon(ctx.getDrawable(R.drawable.ic_delete_white_36dp), activity.getResources().getColor(R.color.red), Gravity.END, length);
     }
 
     @Override

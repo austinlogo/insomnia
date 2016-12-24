@@ -16,7 +16,7 @@ import org.robolectric.util.FragmentTestUtil;
 
 import northstar.planner.BuildConfig;
 import northstar.planner.models.Theme;
-import northstar.planner.persistence.PlannerSqliteDAO;
+import northstar.planner.persistence.PlannerSqliteGateway;
 import northstar.planner.presentation.adapter.ThemeListAdapter;
 import northstar.planner.presentation.Theme.shell.BlankThemeActivityListener;
 
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 public class ListThemesFragmentTest {
 
     @Mock
-    PlannerSqliteDAO dao;
+    PlannerSqliteGateway dao;
 
     @Mock
     ListThemesFragment.ListThemesFragmentListener activityListener;

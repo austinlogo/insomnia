@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +17,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
-import butterknife.OnTextChanged;
 import northstar.planner.R;
-import northstar.planner.models.BaseModel;
-import northstar.planner.models.SuccessCriteria;
+import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
-import northstar.planner.models.tables.SuccessCriteriaTable;
+import northstar.planner.models.tables.MetricTable;
 import northstar.planner.models.tables.TaskTable;
-import northstar.planner.presentation.adapter.SuccessCriteriaListAdapter;
+import northstar.planner.presentation.adapter.MetricsListAdapter;
 import northstar.planner.presentation.adapter.SuccessCriteriaSpinnerAdapter;
 import northstar.planner.utils.DateUtils;
 
@@ -52,16 +48,16 @@ public class NewTaskDialog
     EditText commitment;
 
     private NewTaskDialogListener activityListener;
-    private SuccessCriteriaListAdapter successCriteriaListAdapter;
-    private SuccessCriteria selectedSc;
+    private MetricsListAdapter metricsListAdapter;
+    private Metric selectedSc;
     private Calendar selectedDate;
     private boolean firstSelect = true;
 
-    public static NewTaskDialog newinstance(EditText editTitle, SuccessCriteriaListAdapter successCriteriasAdapter) {
+    public static NewTaskDialog newinstance(EditText editTitle, MetricsListAdapter successCriteriasAdapter) {
         NewTaskDialog newTaskdialog = new NewTaskDialog();
         Bundle b = new Bundle();
         b.putString(TaskTable.TITLE_COLUMN, editTitle.getText().toString());
-        b.putSerializable(SuccessCriteriaTable.TABLE_NAME, successCriteriasAdapter);
+        b.putSerializable(MetricTable.TABLE_NAME, successCriteriasAdapter);
         newTaskdialog.setArguments(b);
         return newTaskdialog;
     }
@@ -69,7 +65,7 @@ public class NewTaskDialog
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        successCriteriaListAdapter = (SuccessCriteriaListAdapter) getArguments().get(SuccessCriteriaTable.TABLE_NAME);
+        metricsListAdapter = (MetricsListAdapter) getArguments().get(MetricTable.TABLE_NAME);
     }
 
     @Override
@@ -87,7 +83,7 @@ public class NewTaskDialog
         ButterKnife.bind(this, v);
 
         title.setText(getArguments().getString(TaskTable.TITLE_COLUMN));
-        scSpinner.setAdapter(new SuccessCriteriaSpinnerAdapter(getActivity(), successCriteriaListAdapter.getList()));
+        scSpinner.setAdapter(new SuccessCriteriaSpinnerAdapter(getActivity(), metricsListAdapter.getList()));
         title.requestFocus();
         return v;
     }
@@ -147,7 +143,7 @@ public class NewTaskDialog
             commitment.setVisibility(View.VISIBLE);
         }
 
-        selectedSc = successCriteriaListAdapter.getItem(position);
+        selectedSc = metricsListAdapter.getItem(position);
         String maxHint = String.format(getString(R.string.max), selectedSc.getCommitted());
         commitment.setHint(maxHint);
     }

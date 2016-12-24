@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <!-- Customize removeAddOverlayFromActivity theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -35,14 +35,22 @@
     </style>
 
     <style name="AppTheme.EditText">
-        <item name="android:padding">@dimen/standardSpace</item>
-        <item name="android:layout_marginBottom">@dimen/standardSpace</item>
-        <item name="android:background">@color/lightGrey</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme.EditText.NoMargin" parent="AppTheme.EditText">
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme.Fab">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_marginEnd">@dimen/standardSpace</item>
+        <item name="android:layout_marginBottom">@dimen/fab_margin</item>
+        <item name="android:src">@drawable/ic_add_white_36dp</item>
     </style>
 
     <style name="AppTheme.EditText.Add">
@@ -72,4 +80,17 @@
         <item name="android:paddingStart">@dimen/standardSpace</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
+    <style name="AppTheme.TextViewItem.NoPaddingTop" parent="AppTheme.TextViewItem">
+        <item name="android:paddingTop">0dp</item>
+    </style>
+
+    <style name="AppTheme.addIconLayout">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:animateLayoutChanges">true</item>
+        <item name="android:layout_height">48dp</item>
+    </style>
+
 </resources>

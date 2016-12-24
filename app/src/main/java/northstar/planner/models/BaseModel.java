@@ -50,6 +50,8 @@ public abstract class BaseModel implements Serializable {
                 : new Date(date);
     }
 
+
+
     public boolean isNew() {
         return _id == NEW_ID;
     }

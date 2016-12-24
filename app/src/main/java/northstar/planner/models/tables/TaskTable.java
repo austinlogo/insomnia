@@ -7,6 +7,7 @@ public class TaskTable extends BaseTable{
     public static final String COMPLETES_COLUMN = "Completes";
     public static final String DUE_COLUMN = "Due";
     public static final String STATUS_COLUMN = "TaskStatus";
+    public static final String GOAL_TITLE_COLUMN = "goalTitle";
 
     public static final String[] projection = {
             _ID,

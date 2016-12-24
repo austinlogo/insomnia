@@ -2,7 +2,7 @@ package northstar.planner.persistence;
 
 import northstar.planner.models.Theme;
 
-public interface PlannerDAO {
+public interface PlannerGateway {
 
     void addTheme(Theme newTheme);
 

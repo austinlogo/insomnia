@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="?selectableItemBackground"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/item_task_goal_title"
+        android:textSize="6pt"
+        android:paddingStart="@dimen/standardSpace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout android:orientation="horizontal"
+                    android:background="@android:color/transparent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/item_task_title"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:maxLength="40"
+            android:background="@android:color/transparent"
+            style="@style/AppTheme.TextViewItem.NoPaddingTop" />
+
+        <TextView
+            android:id="@+id/item_task_due"
+            android:layout_alignParentEnd="true"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:paddingBottom="20dp"
+            android:textColor="@android:color/black"
+            android:paddingEnd="@dimen/smallSpace"
+            android:layout_width="wrap_content"/>
+    </RelativeLayout>
+</LinearLayout>

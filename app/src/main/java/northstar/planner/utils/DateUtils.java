@@ -12,6 +12,7 @@ import northstar.planner.R;
 public class DateUtils {
 
     private static final int ONE_WEEK = 7;
+    private static final int MINUTES_IN_HOUR = 60;
 
     public static java.util.Date getDateFromDatePicker(DatePicker datePicker){
         int day = datePicker.getDayOfMonth();
@@ -37,15 +38,22 @@ public class DateUtils {
     }
 
     public static String getDateString(String todayString, Calendar cal) {
+        int today = today().get(Calendar.DAY_OF_YEAR);
+        int yesterday = today - 1;
+        int tomorrow = today + 1;
 
-        if (cal.get(Calendar.DAY_OF_YEAR) == today().get(Calendar.DAY_OF_YEAR)) {
+        if (cal.get(Calendar.DAY_OF_YEAR) == yesterday) {
+            return PlannerApplication.getInstance().getString(R.string.yesterday);
+        } else if (cal.get(Calendar.DAY_OF_YEAR) == today) {
             return todayString;
-        } else if (cal.get(Calendar.DAY_OF_YEAR) - today().get(Calendar.DAY_OF_YEAR) == 1) {
+        } else if (cal.get(Calendar.DAY_OF_YEAR) == tomorrow) {
             return PlannerApplication.getInstance().getString(R.string.tomorrow);
         } else if (cal.get(Calendar.DAY_OF_YEAR) > today().get(Calendar.DAY_OF_YEAR)
                 && cal.getTime().getTime() <= nextWeek().getTime().getTime()) {
+
             return cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
         } else {
+
             return cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US) + " " +
                     cal.get(Calendar.DAY_OF_MONTH) + " " +
                     cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + ", " +
@@ -69,5 +77,16 @@ public class DateUtils {
         c.set(Calendar.MILLISECOND, 59);
 
         return c;
+    }
+
+    public static long getLongTime(int hourOfDay, int minute) {
+        return (hourOfDay * MINUTES_IN_HOUR) + minute;
+    }
+
+    public static String getStringTime(long time) {
+        long hours = time / MINUTES_IN_HOUR;
+        long minutes = time % MINUTES_IN_HOUR;
+
+        return String.format("%02d", hours) + ":" + String.format("%02d", minutes);
     }
 }

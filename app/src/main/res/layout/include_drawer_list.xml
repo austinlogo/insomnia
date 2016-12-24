@@ -24,7 +24,7 @@
 
         <ImageView
             android:id="@+id/activity_drawer_list_theme_icon"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/addIconRowHeight"
             android:padding="5dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_menu_camera"
@@ -45,12 +45,12 @@
 
         <ImageView
             android:id="@+id/item_drawer_icon"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/addIconRowHeight"
             android:padding="5dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_menu_camera"
+            android:src="@drawable/tree_black"
+            android:scaleType="fitStart"
             android:layout_height="match_parent"/>
-
         <TextView
             android:id="@+id/activity_drawer_list_theme_head"
             style="@style/AppTheme.DrawerItem"
@@ -62,7 +62,6 @@
     <ListView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/activity_drawer_list_themes"
-        android:visibility="gone"
         android:layout_width="240dp"
         android:layout_height="wrap_content"/>
 

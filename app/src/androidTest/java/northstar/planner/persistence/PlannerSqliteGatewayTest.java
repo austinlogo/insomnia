@@ -18,11 +18,11 @@ import northstar.planner.models.Theme;
 import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
-public class PlannerSqliteDAOTest {
+public class PlannerSqliteGatewayTest {
 
     private static long testThemeId = 24601;
 
-    private PlannerSqliteDAO dao;
+    private PlannerSqliteGateway dao;
     private Theme testTheme;
     private Goal testGoal;
 
@@ -31,7 +31,7 @@ public class PlannerSqliteDAOTest {
         testTheme = new Theme("TEST_TITLE", "TEST_DESCRIPTION");
         testGoal = new Goal(1, "GOAL_DESCRIPTION");
         testGoal.setTheme(testThemeId);
-        dao = new PlannerSqliteDAO();
+        dao = new PlannerSqliteGateway();
     }
 
     @After
@@ -41,7 +41,7 @@ public class PlannerSqliteDAOTest {
 
     @AfterClass
     public static void cleanup() {
-        new PlannerSqliteDAO().removeTheme("TEST_TITLE");
+        new PlannerSqliteGateway().removeTheme("TEST_TITLE");
     }
 
     @Test

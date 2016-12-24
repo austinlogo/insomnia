@@ -2,29 +2,62 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               style="@style/AppTheme.Fragment">
 
-    <EditText
-        android:id="@+id/fragment_theme_edit_title"
-        style="@style/AppTheme.EditText.NoMargin"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        android:inputType="none"
+    <LinearLayout
+        android:id="@+id/fragment_theme_title_container"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:visibility="gone"
-        android:hint="@string/theme_title_hint"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/ic_title_black_24dp"
+            android:padding="@dimen/smallSpace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/fragment_theme_edit_title"
+            style="@style/AppTheme.EditText.NoMargin"
+            android:layout_gravity="start|center_vertical"
+            android:hint="@string/theme_title_hint"
+            android:imeOptions="actionDone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:background="@color/lightGrey"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/ic_short_text_black_24dp"
+            android:padding="@dimen/smallSpace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/fragment_theme_edit_description"
+            style="@style/AppTheme.EditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="center_vertical|start"
+            android:hint="@string/theme_description_hint"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:padding="@dimen/smallSpace"
+        android:background="?selectableItemBackground"
+        android:id="@+id/fragment_theme_edit_active_hours"
+        android:text="@string/active_hours"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-
-
-    <EditText
-        android:id="@+id/fragment_theme_edit_description"
-        style="@style/AppTheme.EditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:visibility="visible"
-        android:gravity="top|start"
-        android:minHeight="50dp"
-        android:hint="@string/theme_description_hint"/>
 
     <EditText
         android:id="@+id/fragment_theme_edit_new_goal_text"

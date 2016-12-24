@@ -4,39 +4,30 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import northstar.planner.R;
-import northstar.planner.models.BaseModel;
-import northstar.planner.models.SuccessCriteria;
+import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
-import northstar.planner.models.TaskStatus;
 import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.goal.GoalFragment;
 import northstar.planner.presentation.task.TaskBasedFragment;
 
 public class TodayFragment
-        extends TaskBasedFragment
-        implements TextView.OnEditorActionListener {
-
-    @BindView(R.id.fragment_today_add)
-    EditText addTask;
+        extends TaskBasedFragment {
 
     @BindView(R.id.fragment_today_tasks)
     RecyclerView taskList;
 
-    private TaskRecyclerViewAdapter taskRecyclerViewAdapter;
+//    private TaskRecyclerViewAdapter taskRecyclerViewAdapter;
     GoalFragment.TaskActionListener activityListener;
     TodayActivityListener todayActivityListener;
 
@@ -51,27 +42,30 @@ public class TodayFragment
         View v = inflater.inflate(R.layout.fragment_today, container, false);
         ButterKnife.bind(this, v);
 
-        taskRecyclerViewAdapter = new TaskRecyclerViewAdapter(new ArrayList<Task>(), activityListener);
-        initRecyclerView(taskList, taskRecyclerViewAdapter);
+        taskListAdapter = new TaskRecyclerViewAdapter(new ArrayList<Task>(), activityListener);
+        initRecyclerView(taskList, taskListAdapter);
 
-        addTask.setOnEditorActionListener(this);
+//        addTask.setOnEditorActionListener(this);
         return v;
     }
 
     public void initViews(List<Task> scratchTasks) {
-        taskRecyclerViewAdapter.updateList(scratchTasks);
+        taskListAdapter.updateList(scratchTasks);
     }
 
-    @Override
-    public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-            Task newTask = new Task(BaseModel.SCRATCH_ID, v.getText().toString());
-            newTask.setTaskStatus(TaskStatus.IN_PROGRESS);
-            taskRecyclerViewAdapter.addItem(newTask);
-            todayActivityListener.addTask(newTask);
-            v.setText("");
-        }
-        return false;
+//    @Override
+//    public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) {
+//        if (actionId == EditorInfo.IME_ACTION_DONE) {
+//            todayActivityListener.openAddTaskWorkflow(v.getText().toString());
+//            v.setText("");
+//            getBaseActivity().hideKeyboard();
+//        }
+//        return false;
+//    }
+
+    @OnClick(R.id.fragment_today_add_fab)
+    public void onClick() {
+        todayActivityListener.openAddTaskWorkflow("");
     }
 
     @Override
@@ -81,9 +75,9 @@ public class TodayFragment
         todayActivityListener = (TodayActivityListener) activity;
     }
 
-    @Override protected void updateSuccessCriteria(SuccessCriteria sc) { /* NOOP */ }
+    @Override protected void updateMetric(Metric sc) { /* NOOP */ }
 
     public interface TodayActivityListener {
-        void addTask(Task newTask);
+        void openAddTaskWorkflow(String newTaskTitle);
     }
 }

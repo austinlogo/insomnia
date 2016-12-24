@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Planner</string>
+    <string name="app_name">Insomnia</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_a">AActivity</string>
     <string name="title_activity_lll">lll</string>
@@ -17,17 +17,17 @@
     <string name="no_goals_hint">Quick! add a goal</string>
     <string name="some_goals_hint">add another goal</string>
     <string name="new_theme_prompt">add new theme</string>
-    <string name="new_success_criteria">new success criteria</string>
+    <string name="new_success_criteria">add a new metric</string>
     <string name="new_task">new task</string>
-    <string name="success_criteria_commited_hint">50</string>
+    <string name="success_criteria_commited_hint">amount</string>
     <string name="add_task">add a new task</string>
-    <string name="select_a_success_criteria">Select a success Criteria</string>
+    <string name="select_a_success_criteria">Select a metrci</string>
     <string name="click_to_set_date">click to set a date</string>
     <string name="action_delete">delete</string>
     <string name="action_edit">edit</string>
     <string name="action_save">save</string>
     <string name="theme_title_hint">theme title</string>
-    <string name="theme_description_hint">theme description</string>
+    <string name="theme_description_hint">description</string>
     <string name="anything_else">anything else?</string>
     <string name="max">Max: %1$d</string>
     <string name="task_title_empty">the task title is empty</string>
@@ -39,4 +39,21 @@
     <string name="deletedItem">deleted item</string>
     <string name="undo">undo</string>
     <string name="tomorrow">tomorrow</string>
+    <string name="yesterday">yesterday</string>
+    <string name="metric">metric</string>
+    <string name="task">task</string>
+    <string name="hint_metric_amount">add completed time</string>
+    <string name="weekdays">Week Days</string>
+    <string name="weekends">weekends</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="startTime">Start</string>
+    <string name="endTime">end</string>
+    <string name="day">Day</string>
+    <string name="active_hours">active hours</string>
 </resources>

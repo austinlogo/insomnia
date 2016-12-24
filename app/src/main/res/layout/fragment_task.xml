@@ -1,23 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               style="@style/AppTheme.Fragment">
-    <EditText
-        android:id="@+id/fragment_goal_title"
-        style="@style/AppTheme.EditText.NoMargin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        android:inputType="none"
-        android:visibility="gone"/>
 
-    <EditText
-        android:id="@+id/fragment_task_due"
-        style="@style/AppTheme.EditText"
+    <LinearLayout
+        android:id="@+id/fragment_task_title_container"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:gravity="top|start"
-        android:minHeight="50dp"
-        android:layout_height="wrap_content"/>
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/ic_title_black_24dp"
+            android:padding="@dimen/smallSpace"
+            android:layout_width="@dimen/addIconRowHeight"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/fragment_task_title"
+            style="@style/AppTheme.EditText.NoMargin"
+            android:layout_gravity="center_vertical|start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="none"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/fragment_task_due_container"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="?selectableItemBackground"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:padding="@dimen/smallSpace"
+            android:layout_width="@dimen/addIconRowHeight"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_date_range_black_24dp"/>
+
+        <TextView
+            android:id="@+id/fragment_task_due"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fragment_task_goal_container"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="?selectableItemBackground"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:padding="@dimen/smallSpace"
+            android:layout_width="@dimen/icon_width"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/sprout_black"
+            android:scaleType="fitCenter"
+            android:layout_height="@dimen/addIconRowHeight"/>
+
+        <TextView
+            android:id="@+id/fragment_task_goal"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
     <include layout="@layout/item_success_criteria"/>
 
