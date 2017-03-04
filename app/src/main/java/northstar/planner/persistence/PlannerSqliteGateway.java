@@ -85,6 +85,14 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
         if (task.getDue() != null) {
             newValues.put(TaskTable.DUE_COLUMN, task.getDue().getTime());
+        } else {
+            newValues.put(TaskTable.DUE_COLUMN, 0);
+        }
+
+        if (task.getSnooze() != null) {
+            newValues.put(TaskTable.SNOOZE_COLUMN, task.getSnooze().getTime());
+        } else {
+            newValues.put(TaskTable.SNOOZE_COLUMN, 0);
         }
 
         newValues.put(TaskTable.TITLE_COLUMN, task.getTitle());
@@ -182,6 +190,19 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         }
         c.close();
         return result;
+    }
+
+    private List<Task> filterTaskBySnoozeTime(List<Task> tasks, long currentTime) {
+        List<Task> filteredTasks = new ArrayList<>();
+
+        for (Task currentTask : tasks) {
+            if (currentTask.hasSnoozed() && currentTask.getSnooze().getTime() >= currentTime) { // still snoozing
+                continue;
+            }
+
+            filteredTasks.add(currentTask);
+        }
+        return filteredTasks;
     }
 
     public List<Task> getTasksBeforeDueDate(Calendar cal) {
@@ -369,6 +390,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
     public List<Task> getTodaysTasks() {
         List<Task> tasks = getTasksByGoalId(Task.SCRATCH_ID);
+        tasks = filterTaskBySnoozeTime(tasks, (new Date()).getTime());
 
         List<Task> todaysTasks = getTasksByPriority(); //getTasksBeforeDueDate(DateUtils.today());
         for (int i = todaysTasks.size() - 1; i >= 0; i--) {
@@ -384,7 +406,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
     public List<Task> getTasksByPriority() {
         Date now = new Date();
-        long time = DateUtils.getLongTime(now.getHours(), now.getMinutes());
+        long timeOfDay = DateUtils.getLongTime(now.getHours(), now.getMinutes());
 
         String query = "Select ta.*, g." + GoalTable.TITLE_COLUMN + " as " + GoalTable.uniqueTitle() + " from " + TaskTable.TABLE_NAME + " ta"
                 + " LEFT JOIN " + GoalTable.TABLE_NAME + " g on"
@@ -396,8 +418,9 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
                     + " AND ah." + ActiveHoursTable.DAY_COLUMN + " = " + DateUtils.today().get(Calendar.DAY_OF_WEEK)
                 + " WHERE ta." + TaskTable.GOAL_COLUMN + " >= 0"
                     + " AND ta." + TaskTable.STATUS_COLUMN + " != '" + TaskStatus.DONE + "'"
-                    + " AND ah." + ActiveHoursTable.START_COLUMN + " < " + time
-                    + " AND ah." + ActiveHoursTable.END_COLUMN + " > " + time
+                    + " AND ta." + TaskTable.SNOOZE_COLUMN + " < " + now.getTime()
+                    + " AND ah." + ActiveHoursTable.START_COLUMN + " < " + timeOfDay
+                    + " AND ah." + ActiveHoursTable.END_COLUMN + " > " + timeOfDay
                 + " ORDER BY th." + ThemeTable.ORDER_COLUMN
                 + " , g." + GoalTable.ORDER_COLUMN
                 + " , ta." + TaskTable.ORDER_COLUMN
@@ -512,5 +535,15 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         }
 
         return checkBoxGroups;
+    }
+
+    public void snooze(long taskId, Date snoozeTime) {
+        ContentValues cv = new ContentValues();
+        cv.put(TaskTable.SNOOZE_COLUMN, snoozeTime.getTime());
+
+        String whereClause = TaskTable._ID + " = " + taskId;
+
+        db.update(TaskTable.TABLE_NAME, cv, whereClause, null);
+        return;
     }
 }

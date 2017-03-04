@@ -12,7 +12,7 @@
         <ImageView
             android:src="@drawable/ic_title_black_24dp"
             android:padding="@dimen/smallSpace"
-            android:layout_width="@dimen/addIconRowHeight"
+            android:layout_width="@dimen/icon_width"
             android:layout_height="wrap_content"/>
         <EditText
             android:id="@+id/fragment_task_title"
@@ -34,12 +34,32 @@
         android:layout_height="wrap_content">
         <ImageView
             android:padding="@dimen/smallSpace"
-            android:layout_width="@dimen/addIconRowHeight"
+            android:layout_width="@dimen/icon_width"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_date_range_black_24dp"/>
 
         <TextView
             android:id="@+id/fragment_task_due"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fragment_task_snooze_container"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="?selectableItemBackground"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:padding="@dimen/smallSpace"
+            android:layout_width="@dimen/icon_width"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_snooze_black_36dp"/>
+
+        <TextView
+            android:id="@+id/fragment_task_snooze"
             android:layout_width="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"/>

@@ -27,6 +27,7 @@ import northstar.planner.models.tables.TaskTable;
 import northstar.planner.persistence.PlannerSqliteGateway;
 import northstar.planner.presentation.BaseFragment;
 import northstar.planner.utils.DateUtils;
+import northstar.planner.utils.StringUtils;
 
 public class TaskFragment
         extends BaseFragment
@@ -40,6 +41,15 @@ public class TaskFragment
 
     @BindView(R.id.fragment_task_due)
     TextView due;
+
+    @BindView(R.id.fragment_task_snooze)
+    TextView snooze;
+
+    @BindView(R.id.fragment_task_snooze_container)
+    LinearLayout snoozeContainer;
+
+    @BindView(R.id.fragment_task_goal_container)
+    LinearLayout taskGoalContainer;
 
     @BindView(R.id.item_success_criteria_title)
     TextView successCriteriaTitle;
@@ -93,8 +103,31 @@ public class TaskFragment
         this.currentTask = currentTask;
         editTitle.setText(currentTask.getTitle());
         due.setText(currentTask.getDueString());
-        goalTitle.setText(currentTask.getGoalTitle());
+        setGoalTitleRow();
+        setSnoozeRow();
+        setMetricProgressRow();
+    }
 
+    private void setGoalTitleRow() {
+        if (StringUtils.isEmpty(currentTask.getGoalTitle())) {
+            taskGoalContainer.setVisibility(View.GONE);
+        } else {
+            taskGoalContainer.setVisibility(View.VISIBLE);
+            goalTitle.setText(currentTask.getGoalTitle());
+        }
+
+    }
+
+    private void setSnoozeRow() {
+        if (!currentTask.hasSnoozed()) {
+            snoozeContainer.setVisibility(View.GONE);
+        } else {
+            snoozeContainer.setVisibility(View.VISIBLE);
+            snooze.setText(currentTask.getSnoozeString());
+        }
+    }
+
+    private void setMetricProgressRow() {
         if (currentTask.getCompletes() > 0) {
             successCriteriaTitle.setText(currentTask.getMetric().getTitle());
             successCriteriaProgress.setText(currentTask.getMetric().getProgressString());

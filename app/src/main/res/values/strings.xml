@@ -56,4 +56,5 @@
     <string name="endTime">end</string>
     <string name="day">Day</string>
     <string name="active_hours">active hours</string>
+    <string name="action_snooze">snooze</string>
 </resources>

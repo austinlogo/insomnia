@@ -3,6 +3,8 @@
                 style="@style/AppTheme.Fragment"
               android:orientation="vertical"
               android:animateLayoutChanges="true"
+                android:focusable="true"
+              android:focusableInTouchMode="true"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
@@ -21,6 +23,6 @@
 
     <android.support.design.widget.FloatingActionButton
         style="@style/AppTheme.Fab"
-        android:src="@drawable/seed"
+        android:src="@drawable/ic_add_white_36dp"
         android:id="@+id/fragment_today_add_fab"/>
 </RelativeLayout>

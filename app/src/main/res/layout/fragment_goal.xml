@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="vertical"
                 android:animateLayoutChanges="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -119,11 +121,10 @@
 
         </RelativeLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/fragment_goal_tasks"
-                android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-            </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_goal_tasks"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton

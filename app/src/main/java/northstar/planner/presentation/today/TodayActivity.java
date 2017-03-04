@@ -34,6 +34,7 @@ public class TodayActivity
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+
     }
 
     @Override

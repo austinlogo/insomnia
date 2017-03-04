@@ -3,6 +3,7 @@ package northstar.planner.models;
 import android.database.Cursor;
 import android.widget.EditText;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -20,6 +21,7 @@ public class Task extends BaseModel {
     private long completes;
     private Metric metric;
     private Date due;
+    private Date snooze;
     private TaskStatus taskStatus;
 
     public Task() {
@@ -37,6 +39,7 @@ public class Task extends BaseModel {
         taskCommitment = getColumnDouble(c, TaskTable.TASK_COMMITMENT_COLUMN);
         completes = getColumnLong(c, TaskTable.COMPLETES_COLUMN);
         due = getColumnDate(c, TaskTable.DUE_COLUMN);
+        snooze = getColumnDate(c, TaskTable.SNOOZE_COLUMN);
         taskStatus = TaskStatus.valueOf(getColumnString(c, TaskTable.STATUS_COLUMN));
     }
 
@@ -132,12 +135,16 @@ public class Task extends BaseModel {
     }
 
     public String getDueString() {
-        if (due == null) {
+        return getDateString(due);
+    }
+
+    private String getDateString(Date date) {
+        if (date == null) {
             return "";
         }
 
         Calendar cal = Calendar.getInstance();
-        cal.setTime(due);
+        cal.setTime(date);
         String todayString = PlannerApplication.getInstance().getString(R.string.today);
         return DateUtils.getDateString(todayString, cal);
     }
@@ -148,5 +155,28 @@ public class Task extends BaseModel {
 
     public String getGoalTitle() {
         return goalTitle;
+    }
+
+    public String getSnoozeString() {
+        if (snooze == null) {
+            return null;
+        }
+
+        SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm");
+        String time = localDateFormat.format(snooze);
+
+        return getDateString(snooze) + ", " + time;
+    }
+
+    public void setSnooze(Date snooze) {
+        this.snooze = snooze;
+    }
+
+    public boolean hasSnoozed() {
+        return snooze != null;
+    }
+
+    public Date getSnooze() {
+        return snooze;
     }
 }

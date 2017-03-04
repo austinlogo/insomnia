@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import butterknife.BindView;
@@ -57,12 +58,18 @@ public abstract class TaskBasedActivity
 
         getFragmentManager()
                 .beginTransaction()
-                .add(R.id.activity_goal_fragment, mainFragment)
                 .add(R.id.activity_goal_add_task, addTaskFragment)
-//                .add(R.id.activity_goal_add_overlay, null)
+                .add(R.id.activity_goal_fragment, mainFragment)
                 .commit();
 
         return mainFragment;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     public TaskBasedFragment setMainFragment(String tableName) {

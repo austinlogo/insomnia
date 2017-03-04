@@ -11,8 +11,6 @@ import java.util.List;
 
 import northstar.planner.R;
 import northstar.planner.models.Goal;
-import northstar.planner.models.Theme;
-import northstar.planner.presentation.Theme.ListThemesFragment;
 import northstar.planner.presentation.Theme.ThemeFragment;
 import northstar.planner.presentation.swipe.ItemTouchHelperAdapter;
 
@@ -40,6 +38,7 @@ public class GoalRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
+
         final Goal currentGoal = goals.get(position);
         holder.view.setText(currentGoal.getTitle());
 
@@ -88,12 +87,11 @@ public class GoalRecyclerViewAdapter
 
     @Override
     public void onItemDeleted(int position) {
-
+        notifyItemRemoved(position);
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         protected TextView view;
-        private ThemeFragment.ThemeFragmentListener listener;
 
         public MyViewHolder(View v) {
             super(v);

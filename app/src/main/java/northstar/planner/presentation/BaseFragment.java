@@ -9,15 +9,11 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import java.util.List;
 
 import northstar.planner.models.Goal;
-import northstar.planner.models.Task;
-import northstar.planner.models.Theme;
-import northstar.planner.presentation.Theme.ListThemesFragment;
 import northstar.planner.presentation.Theme.ThemeFragment;
 import northstar.planner.presentation.adapter.GoalRecyclerViewAdapter;
 import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
-import northstar.planner.presentation.goal.GoalFragment;
-import northstar.planner.presentation.swipe.GenericListTouchHelperCallback;
 import northstar.planner.presentation.adapter.ThemeRecyclerViewAdapter;
+import northstar.planner.presentation.swipe.GenericListTouchHelperCallback;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -38,10 +34,11 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void initRecyclerView(RecyclerView recView, List<Goal> goalList, ThemeFragment.ThemeFragmentListener activityListener) {
-        recView.setHasFixedSize(true);
+        recView.setHasFixedSize(false);
         recView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         GoalRecyclerViewAdapter adapter = new GoalRecyclerViewAdapter(goalList, activityListener);
+//        adapter.setHasStableIds(true);
         recView.setAdapter(adapter);
 
         ItemTouchHelper.Callback callback = new GenericListTouchHelperCallback(adapter, getBaseActivity());

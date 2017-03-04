@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -69,7 +70,6 @@ public abstract class BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dao = new PlannerSqliteGateway();
-//        dao.getThemeStructure();
     }
 
     protected void finishDrawerInit(Activity act, DrawerLayout mDrawerLayout, String actionBarTitle) {
@@ -142,6 +142,11 @@ public abstract class BaseActivity
 
     private void closeDrawers() {
         ((DrawerLayout) getRootView()).closeDrawers();
+    }
+
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(parent, name, context, attrs);
     }
 
     @Override

@@ -14,7 +14,7 @@
     <dimen name="largeSpace">25dp</dimen>
     <dimen name="xlSpace">35dp</dimen>
     <dimen name="slide_list_icon_length">24dp</dimen>
-    <dimen name="addIconRowHeight">48dp</dimen>
+    <dimen name="addIconRowHeight">30dp</dimen>
     <dimen name="icon_width">48dp</dimen>
 
 </resources>

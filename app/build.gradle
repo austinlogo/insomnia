@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
+//apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'jacoco'
 
 jacoco {
@@ -10,12 +10,21 @@ android {
     compileSdkVersion 23
     buildToolsVersion "24.0.0"
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         applicationId "northstar.planner"
         minSdkVersion 21
-        targetSdkVersion 21
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        jackOptions {
+            enabled true
+        }
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -41,14 +50,14 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.0-rc1'
 
     // Dagger 2
-    apt 'com.google.dagger:dagger-compiler:2.7'
     compile 'com.google.dagger:dagger:2.7'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.7'
     provided 'javax.annotation:jsr250-api:1.0'
 
     // Butterknife
     compile 'com.jakewharton:butterknife:8.4.0'
-    apt 'com.jakewharton:butterknife-compiler:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+//    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
     // Unit Tests
     androidTestCompile 'com.android.support:support-annotations:24.1.0'

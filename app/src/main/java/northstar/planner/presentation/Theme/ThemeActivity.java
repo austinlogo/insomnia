@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.WindowManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +35,12 @@ public class ThemeActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentTheme = (Theme) getIntent().getExtras().get(ThemeTable.TABLE_NAME);
-        currentTheme = getDao().getTheme(currentTheme.getId());
+
+        if (currentTheme.getId() == Theme.NEW_ID) {
+            currentTheme = new Theme();
+        } else {
+            currentTheme = getDao().getTheme(currentTheme.getId());
+        }
 
         mFragment = northstar.planner.presentation.Theme.ThemeFragment.newInstance(currentTheme);
 
@@ -46,6 +52,7 @@ public class ThemeActivity
         setContentView(R.layout.activity_theme);
         ButterKnife.bind(this);
         finishDrawerInit(this, mDrawerLayout, currentTheme.getTitle());
+        hideKeyboard();
     }
 
     @Override
@@ -54,7 +61,7 @@ public class ThemeActivity
         currentTheme.setGoals(getDao().getGoalsByThemeId(currentTheme.getId()));
         mFragment.initGoalsList(currentTheme.getGoals());
 
-//        ActiveHoursDialogFragment.newInstance().show(getFragmentManager(), "TAG");
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     @Override
@@ -63,7 +70,9 @@ public class ThemeActivity
 
         if (optionsMenu != null && currentTheme.isNew()) {
             toggleEditIcon(optionsMenu.getItem(EDIT_MENUITEM_INDEX));
+            mFragment.toggleEditing();
         }
+
         return v;
     }
 
