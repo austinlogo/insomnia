@@ -1,4 +1,4 @@
-package northstar.planner.presentation.goal;
+ package northstar.planner.presentation.goal;
 
 import android.app.Fragment;
 import android.os.Bundle;

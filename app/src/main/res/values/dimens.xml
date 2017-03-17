@@ -9,6 +9,7 @@
 
     <dimen name="toolbar_height" >60dp</dimen>
 
+    <dimen name="tinySpace">4dp</dimen>
     <dimen name="smallSpace">8dp</dimen>
     <dimen name="standardSpace">15dp</dimen>
     <dimen name="largeSpace">25dp</dimen>

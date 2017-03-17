@@ -112,9 +112,15 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
         Cursor c = db.query(ThemeTable.TABLE_NAME, ThemeTable.projection, selection, selectionArgs, null, null, null);
         c.moveToFirst();
-        Theme result = new Theme(c);
+        Theme result = constructThemeFromCursor(c);
         c.close();
-        result.setGoals(getGoalsByThemeId(themeId));
+//        result.setGoals(getGoalsByThemeId(themeId));
+        return result;
+    }
+
+    private Theme constructThemeFromCursor(Cursor c) {
+        Theme result = new Theme(c);
+        result.setGoals(getGoalsByThemeId(result.getId()));
         return result;
     }
 
@@ -308,23 +314,13 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         return results;
     }
 
-    public List<Theme> getAllThemes(List<Long> themes) {
-        List<Theme> resultList = new ArrayList<>();
-
-        for (long themeId : themes) {
-            resultList.add(getTheme(themeId));
-        }
-
-        return resultList;
-    }
-
     public List<Theme> getAllThemes() {
         Cursor c = db.query(ThemeTable.TABLE_NAME, ThemeTable.projection, null, null, null, null, ThemeTable.getorderAsc());
         c.moveToFirst();
 
         List<Theme> resultList = new ArrayList<>();
         while(!c.isAfterLast()) {
-            resultList.add(new Theme(c));
+            resultList.add(constructThemeFromCursor(c));
             c.moveToNext();
         }
 

@@ -84,6 +84,7 @@ public class Task extends BaseModel {
         return goal;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }

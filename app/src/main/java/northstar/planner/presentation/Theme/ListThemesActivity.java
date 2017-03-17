@@ -43,7 +43,7 @@ public class ListThemesActivity extends BaseActivity
                 : new Theme();
 
         Intent i = new Intent(this, ThemeActivity.class);
-        i.putExtra(ThemeTable.TABLE_NAME, theme);
+        i.putExtra(ThemeTable.TABLE_NAME, theme.getId());
         startActivity(i);
     }
 

@@ -75,7 +75,7 @@ public abstract class TaskBasedActivity
     public TaskBasedFragment setMainFragment(String tableName) {
         switch (tableName) {
             case GoalTable.TABLE_NAME:
-                Goal currentGoal = getDao().getGoal(getIntent().getExtras().getLong(GoalTable._ID));
+                Goal currentGoal = getDao().getGoal(getIntent().getExtras().getLong(GoalTable.TABLE_NAME));
                 mainModel = currentGoal;
                 return GoalFragment.newInstance(currentGoal);
             case TaskTable.TABLE_NAME:

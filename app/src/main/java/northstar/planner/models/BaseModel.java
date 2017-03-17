@@ -12,6 +12,8 @@ public abstract class BaseModel implements Serializable {
     public static final long NEW_ID = -1;
     public static final long SCRATCH_ID = -2;
 
+    public abstract String getTitle();
+
     public BaseModel() {
     }
 

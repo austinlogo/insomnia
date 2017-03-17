@@ -60,6 +60,7 @@ public class Goal extends BaseModel {
         theme = themeId;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }

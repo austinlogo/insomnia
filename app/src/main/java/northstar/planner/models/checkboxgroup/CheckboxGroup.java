@@ -97,6 +97,10 @@ public class CheckboxGroup
         activePicker = null;
     }
 
+
+    @Override
+    public String getTitle() { return "";} // TODO: this is terrible and needs a different layer of abstractions in the Model in order to be good.
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         toggleViews();

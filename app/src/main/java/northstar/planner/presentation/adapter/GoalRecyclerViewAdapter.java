@@ -75,8 +75,8 @@ public class GoalRecyclerViewAdapter
     }
 
     public void addItem(Goal newGoal) {
-        goals.add(0, newGoal);
-        notifyItemInserted(0);
+        goals.add(newGoal);
+        notifyItemInserted(goals.size() );
     }
 
     @Override

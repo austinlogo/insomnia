@@ -34,12 +34,12 @@ public class ThemeActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentTheme = (Theme) getIntent().getExtras().get(ThemeTable.TABLE_NAME);
+        long currentThemeId = getIntent().getLongExtra(ThemeTable.TABLE_NAME, 0L);
 
-        if (currentTheme.getId() == Theme.NEW_ID) {
+        if (currentThemeId == Theme.NEW_ID) {
             currentTheme = new Theme();
         } else {
-            currentTheme = getDao().getTheme(currentTheme.getId());
+            currentTheme = getDao().getTheme(currentThemeId);
         }
 
         mFragment = northstar.planner.presentation.Theme.ThemeFragment.newInstance(currentTheme);
@@ -111,7 +111,7 @@ public class ThemeActivity
         Goal newGoal = new Goal(currentTheme.getId(), newGoalTitle, "");
         long id = getDao().addGoal(newGoal);
         newGoal.setId(id);
-
+        drawerAdapter.updateGoal(newGoal);
         mFragment.addedGoal(newGoal);
     }
 

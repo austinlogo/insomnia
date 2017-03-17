@@ -33,13 +33,16 @@ import northstar.planner.models.Goal;
 import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
 import northstar.planner.models.Theme;
+import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.models.tables.ThemeTable;
 import northstar.planner.notification.NotificationPublisher;
 import northstar.planner.persistence.PlannerSqliteGateway;
 import northstar.planner.presentation.Theme.ListThemesActivity;
 import northstar.planner.presentation.Theme.ThemeActivity;
-import northstar.planner.presentation.adapter.ThemeListAdapter;
+import northstar.planner.presentation.adapter.DrawerAdapter;
+import northstar.planner.presentation.adapter.DrawerListeners;
+import northstar.planner.presentation.goal.GoalActivity;
 import northstar.planner.presentation.task.TaskActivity;
 import northstar.planner.presentation.today.FocusActivity;
 
@@ -61,9 +64,9 @@ public abstract class BaseActivity
     @BindView(R.id.activity_drawer_list_themes)
     protected ListView themeList;
 
-    private ThemeListAdapter themeListAdapter;
+    protected DrawerAdapter drawerAdapter;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
-    private List<Theme> themes;
+    protected List<Theme> themes;
     protected Menu optionsMenu;
 
     PlannerSqliteGateway dao;
@@ -100,13 +103,25 @@ public abstract class BaseActivity
     protected void onResume() {
         super.onResume();
         themes = dao.getAllThemes();
-        themeListAdapter = new ThemeListAdapter(
+        drawerAdapter = new DrawerAdapter(
                 this,
                 R.layout.include_drawer_list,
-                themes);
+                themes,
+                new DrawerListeners() {
+                    @Override
+                    public void onThemeClicked(long themeId) {
+                        startThemeActivity(themeId);
+                    }
 
-        themeList.setAdapter(themeListAdapter);
+                    @Override
+                    public void onGoalClicked(long goalId) {
+                        startGoalActivity(goalId);
+                    }
+                });
+
+        themeList.setAdapter(drawerAdapter);
     }
+
 
     @Override
     protected void onPause() {
@@ -138,12 +153,20 @@ public abstract class BaseActivity
     @OnItemClick(R.id.activity_drawer_list_themes)
     public void onThemeListItemSelected(int position) {
 //        closeDrawers();
-        Theme selectedTheme = themeListAdapter.getItem(position);
+        long selectedThemeId = drawerAdapter.getItemModel(position).getTheme().getId();
+        startThemeActivity(selectedThemeId);
+    }
 
+    private void startThemeActivity(long themeId) {
         Intent i = new Intent(this, ThemeActivity.class);
-        i.putExtra(ThemeTable.TABLE_NAME, selectedTheme);
+        i.putExtra(ThemeTable.TABLE_NAME, themeId);
         startActivity(i);
+    }
 
+    private void startGoalActivity(long goalId) {
+        Intent i = new Intent(this, GoalActivity.class);
+        i.putExtra(GoalTable.TABLE_NAME, goalId);
+        startActivity(i);
     }
 
     private void closeDrawers() {

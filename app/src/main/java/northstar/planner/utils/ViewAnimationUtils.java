@@ -5,8 +5,9 @@ import android.animation.ObjectAnimator;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 public class ViewAnimationUtils {
 
@@ -99,6 +100,26 @@ public class ViewAnimationUtils {
         trans.setDuration(5000);
 
         view.setLayoutTransition(trans);
+    }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 
 

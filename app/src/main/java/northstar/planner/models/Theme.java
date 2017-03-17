@@ -3,7 +3,6 @@ package northstar.planner.models;
 import android.database.Cursor;
 import android.os.Bundle;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +56,7 @@ public class Theme extends BaseModel {
         description = getColumnString(c, ThemeTable.DESCRIPTION_COLUMN);
     }
 
+    @Override
     public String getTitle() {
         return title;
     }

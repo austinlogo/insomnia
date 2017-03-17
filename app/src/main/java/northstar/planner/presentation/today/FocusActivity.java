@@ -41,11 +41,17 @@ public class FocusActivity
         super.onResume();
         List<Task> scratchTasks = getDao().getTodaysTasks();
         getDao().getTasksByPriority();
-        mFragment.initViews(scratchTasks);
+        determineIfWeShowHelperImage(scratchTasks);
+    }
+
+    private void determineIfWeShowHelperImage(List<Task> focusTasks) {
+        mFragment.showLonelyImage(isEmptyApp(focusTasks));
+        mFragment.initViews(focusTasks);
     }
 
     @Override
     protected void storeNewTask(Task newTask) {
+        mFragment.showLonelyImage(false);
         newTask.setGoal(BaseModel.SCRATCH_ID);
         getDao().addTask(newTask);
         ((TaskRecyclerViewAdapter) mFragment.taskList.getAdapter()).addItem(newTask);
@@ -61,5 +67,9 @@ public class FocusActivity
     public void openAddTaskWorkflow(String newTaskTitle) {
         setFragmentVisible(addTaskLayout);
         addTaskFragment.updateFragmentValuesForTodayTask(newTaskTitle);
+    }
+
+    protected boolean isEmptyApp(List<Task> focusTasks) {
+        return themes.isEmpty() && focusTasks.isEmpty();
     }
 }

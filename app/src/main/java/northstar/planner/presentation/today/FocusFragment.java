@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,9 @@ public class FocusFragment
 
     @BindView(R.id.fragment_today_add_fab)
     FloatingActionButton addFab;
+
+    @BindView(R.id.fragment_focus_lonely_container)
+    RelativeLayout lonelyImageContainer;
 
 //    private TaskRecyclerViewAdapter taskRecyclerViewAdapter;
     GoalFragment.TaskActionListener activityListener;
@@ -73,6 +77,10 @@ public class FocusFragment
     @Override
     public void setActionButtonVisibility(boolean isVisible) {
         addFab.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public void showLonelyImage(boolean show) {
+        lonelyImageContainer.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     public interface FocusActivityListener {

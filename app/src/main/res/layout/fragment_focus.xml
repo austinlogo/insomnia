@@ -21,6 +21,21 @@
 
     </LinearLayout>
 
+
+    <RelativeLayout
+        android:id="@+id/fragment_focus_lonely_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+        <ImageView
+            android:src="@drawable/lonely"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/largeSpace"
+            android:scaleType="fitCenter"
+            android:layout_width="400dp"
+            android:layout_height="match_parent"/>
+
+    </RelativeLayout>
     <android.support.design.widget.FloatingActionButton
         style="@style/AppTheme.Fab"
         android:src="@drawable/ic_add_white_36dp"
