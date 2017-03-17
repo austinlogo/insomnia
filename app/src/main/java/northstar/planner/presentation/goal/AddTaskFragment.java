@@ -51,6 +51,9 @@ public class AddTaskFragment
     @BindView(R.id.fragment_add_task_committed_value)
     EditText committedValue;
 
+    @BindView(R.id.fragment_add_task_successcriteria_icon)
+    ImageButton metricIcon;
+
     @BindView(R.id.fragment_add_task_committed_icon)
     ImageButton committedIcon;
 
@@ -188,6 +191,7 @@ public class AddTaskFragment
         selectedMetric = null;
         scValues.setAdapter(successCriteriasAdapter);
         this.successCriteriaSpinnerAdapter = successCriteriasAdapter;
+        metricIcon.setVisibility(View.VISIBLE);
         committedIcon.setVisibility(View.GONE);
 
         addTaskTitle.requestFocus();
@@ -195,6 +199,7 @@ public class AddTaskFragment
 
     public void updateFragmentValuesForTodayTask(String newTaskTitle) {
         updateFragmentValues(null);
+        metricIcon.setVisibility(View.GONE);
         isScratch = true;
         selectedDate = DateUtils.today();
         committedValue.setText("");

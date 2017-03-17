@@ -18,6 +18,7 @@ import northstar.planner.R;
 import northstar.planner.models.Goal;
 import northstar.planner.models.Theme;
 import northstar.planner.models.drawer.ThemeItem;
+import northstar.planner.utils.ViewAnimationUtils;
 
 
 public class DrawerAdapter extends ArrayAdapter<String> {
@@ -99,7 +100,7 @@ public class DrawerAdapter extends ArrayAdapter<String> {
         goals.setAdapter(new DrawerGoalAdapter(context, android.R.layout.simple_list_item_1, drawerItems.get(position).getGoals(), listener));
         text.setText(getItem(position));
 
-//        ViewAnimationUtils.setListViewHeightBasedOnChildren(goals);
+        ViewAnimationUtils.setListViewHeightBasedOnChildren(goals);
 
         return convertView;
     }

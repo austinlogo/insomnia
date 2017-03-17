@@ -65,6 +65,18 @@ public class TaskActivity
     }
 
     @Override
+    protected void updateActivity() {
+        Task updatedTask = getDao().getTask(currentTask.getId());
+
+        if (updatedTask == null) {
+            finish();
+            return;
+        }
+        currentTask = updatedTask;
+        mFragment.initUI(currentTask);
+    }
+
+    @Override
     protected void deleteAction() {
         dao.removeTask(currentTask.getId());
         finish();

@@ -59,10 +59,25 @@ public class ThemeActivity
     @Override
     public void onResume() {
         super.onResume();
-        currentTheme.setGoals(getDao().getGoalsByThemeId(currentTheme.getId()));
-        mFragment.initGoalsList(currentTheme.getGoals());
 
+    }
+
+    @Override
+    protected void updateActivity() {
+
+        Theme updatedTheme = getDao().getTheme(currentTheme.getId());
+        if (isDeletedTheme(updatedTheme)) {
+            finish();
+        } else if (updatedTheme != null) { //
+            currentTheme = updatedTheme;
+        }
+
+        mFragment.initGoalsList(currentTheme.getGoals());
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    private boolean isDeletedTheme(Theme updatedTheme) {
+        return updatedTheme == null && !currentTheme.isNew();
     }
 
     @Override
@@ -70,8 +85,6 @@ public class ThemeActivity
         View v = super.onCreateView(name, context, attrs);
 
         if (optionsMenu != null && currentTheme.isNew()) {
-//            toggleEditIcon(optionsMenu.getItem(EDIT_MENUITEM_INDEX));
-//            mFragment.toggleEditing();
             editAction();
         }
 

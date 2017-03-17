@@ -53,6 +53,9 @@ public class ListThemesActivity extends BaseActivity
     }
 
     @Override
+    protected void updateActivity() {}
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
     }

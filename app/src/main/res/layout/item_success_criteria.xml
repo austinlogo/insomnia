@@ -5,12 +5,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <ImageView
-        android:src="@drawable/ic_equalizer_black_36dp"
-        android:padding="@dimen/smallSpace"
-        android:layout_width="@dimen/icon_width"
-        android:layout_height="@dimen/icon_width"/>
-
     <TextView
         android:id="@+id/item_success_criteria_title"
         android:layout_width="match_parent"

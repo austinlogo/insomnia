@@ -96,8 +96,6 @@ public class ThemeFragment
         newGoalText.setOnKeyListener(this);
 
         if (currentTheme.isNew()) {
-//            toggleEditing();
-//            getBaseActivity().editAction();
             doneButton.setVisibility(View.VISIBLE);
         } else {
             doneButton.setVisibility(View.GONE);

@@ -39,6 +39,10 @@ public class FocusActivity
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void updateActivity() {
         List<Task> focusTasks = getDao().getTodaysTasks();
         getDao().getTasksByPriority();
         determineIfWeShowHelperImage(focusTasks);

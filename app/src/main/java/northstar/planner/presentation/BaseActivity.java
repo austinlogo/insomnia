@@ -75,6 +75,7 @@ public abstract class BaseActivity
 
     protected abstract void deleteAction();
     public abstract void editAction();
+    protected abstract void updateActivity();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,6 +121,7 @@ public abstract class BaseActivity
                 });
 
         themeList.setAdapter(drawerAdapter);
+        updateActivity();
     }
 
 

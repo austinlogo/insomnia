@@ -119,6 +119,9 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
     }
 
     private Theme constructThemeFromCursor(Cursor c) {
+        if (c.isAfterLast()) {
+            return null;
+        }
         Theme result = new Theme(c);
         result.setGoals(getGoalsByThemeId(result.getId()));
         return result;
@@ -130,9 +133,18 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
         Cursor c = db.query(GoalTable.TABLE_NAME, GoalTable.projection, selection, selectionArgs, null, null, null);
         c.moveToFirst();
-        Goal result = new Goal(c);
-        result.setChildren(getMetrics(goalId), getTasksByGoalId(goalId));
+        Goal result = constructGoalFromCursor(c);
         c.close();
+        return result;
+    }
+
+    private Goal constructGoalFromCursor(Cursor c) {
+        if (c.isAfterLast()) {
+            return null;
+        }
+
+        Goal result = new Goal(c);
+        result.setChildren(getMetrics(result.getId()), getTasksByGoalId(result.getId()));
         return result;
     }
 
@@ -146,6 +158,10 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
     }
 
     private Task constructTaskFromCursor(Cursor c) {
+        if (c.isAfterLast()) {
+            return null;
+        }
+
         Task result = new Task(c);
         result.setMetric(getMetric(result.getCompletes()));
         return result;
@@ -302,7 +318,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         c.moveToFirst();
 
         while (!c.isAfterLast()) {
-            results.add(new Goal(c));
+            results.add(constructGoalFromCursor(c));
             c.moveToNext();
         }
 

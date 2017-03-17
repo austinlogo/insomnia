@@ -45,10 +45,15 @@ public class GoalActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        currentGoal = getDao().getGoal(currentGoal.getId());
-        goalFragment.initViews(currentGoal);
+    protected void updateActivity() {
+        Goal updatedGoal = getDao().getGoal(currentGoal.getId());
+
+        if (updatedGoal != null) {
+            currentGoal = updatedGoal;
+            goalFragment.initViews(currentGoal);
+        } else {
+            finish();
+        }
     }
 
     @Override
