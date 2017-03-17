@@ -183,6 +183,11 @@ public class TaskFragment
         setter.selectTime();
     }
 
+    @OnClick(R.id.fragment_task_done)
+    public void onDoneClicked() {
+        getActivity().finish();
+    }
+
     @OnClick(R.id.fragment_task_snooze_container)
     public void onSnoozeClicked() {
         DateTimeSetter setter = new DateTimeSetter(getActivity(), new DateTimeSetterCallback() {

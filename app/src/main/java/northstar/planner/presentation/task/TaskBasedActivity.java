@@ -120,6 +120,7 @@ public abstract class TaskBasedActivity
     public void completeTask(Task t) {
         Metric updatedMetric = getDao().completeTask(t);
         mainFragment.updateMetric(updatedMetric);
+        cancelNotification(t);
     }
 
     public void attachAddOverlayToActivity() {

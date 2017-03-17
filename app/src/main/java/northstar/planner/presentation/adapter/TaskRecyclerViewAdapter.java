@@ -95,7 +95,7 @@ public class TaskRecyclerViewAdapter
 
     @Override
     public void onItemComplete(int position) {
-        Task removedTask = tasks.remove(position); // temp delete, needs a little more ... body.
+        Task removedTask = tasks.remove(position);
         notifyItemRemoved(position);
 
         activityListener.completeTask(removedTask);

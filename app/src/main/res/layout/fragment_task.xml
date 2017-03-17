@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               style="@style/AppTheme.Fragment">
 
@@ -8,6 +8,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:visibility="gone"
+        android:layout_alignParentTop="true"
         android:layout_height="wrap_content">
 
         <ImageView
@@ -29,6 +30,7 @@
 
     <LinearLayout
         android:id="@+id/fragment_task_due_container"
+        android:layout_below="@id/fragment_task_title_container"
         android:layout_width="match_parent"
         android:layout_gravity="center_horizontal"
         android:background="?selectableItemBackground"
@@ -50,6 +52,7 @@
 
     <LinearLayout
         android:id="@+id/fragment_task_snooze_container"
+        android:layout_below="@id/fragment_task_due_container"
         android:layout_width="match_parent"
         android:layout_gravity="center_horizontal"
         android:background="?selectableItemBackground"
@@ -72,6 +75,7 @@
 
     <LinearLayout
         android:id="@+id/fragment_task_reminder_container"
+        android:layout_below="@id/fragment_task_snooze_container"
         android:layout_width="match_parent"
         android:layout_gravity="center_horizontal"
         android:background="?selectableItemBackground"
@@ -94,6 +98,7 @@
 
     <LinearLayout
         android:id="@+id/fragment_task_goal_container"
+        android:layout_below="@id/fragment_task_reminder_container"
         android:layout_width="match_parent"
         android:layout_gravity="center_horizontal"
         android:background="?selectableItemBackground"
@@ -117,6 +122,7 @@
 
     <RelativeLayout
         android:id="@+id/fragment_task_metric_container"
+        android:layout_below="@id/fragment_task_goal_container"
         android:orientation="horizontal"
         android:paddingEnd="@dimen/standardSpace"
         android:layout_width="match_parent"
@@ -149,4 +155,17 @@
             android:layout_height="wrap_content" />
     </RelativeLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/fragment_task_done"
+            android:src="@drawable/ic_done_white_36dp"
+            android:background="?selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</RelativeLayout>

@@ -281,13 +281,7 @@ public abstract class BaseActivity
     }
 
     public void scheduleNotification(Task task) {
-        Notification notification = getNotification(task);
-
-        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, task.getId());
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) task.getId(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
+        PendingIntent pendingIntent = constructNotificationPendingIntent(task);
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -309,26 +303,25 @@ public abstract class BaseActivity
 
         Intent result = new Intent(this, TaskActivity.class);
         result.putExtra(TaskTable.TABLE_NAME, task);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , result, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, (int) task.getId() , result, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(pendingIntent);
 
         return builder.build();
     }
 
+    private PendingIntent constructNotificationPendingIntent(Task task) {
+        Notification notification = getNotification(task);
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
 
-//    public void fireNotification(String title, String content) {
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-//        builder.setSmallIcon(R.drawable.logo_nobackground);
-//        builder.setContentTitle("title").setContentText("content");
-//
-//        Intent result = new Intent(this, FocusActivity.class);
-//        PendingIntent pendingIntent = PendingIntent.getActivities(this, 0 , new Intent[]{result}, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//        builder.setContentIntent(pendingIntent);
-//        builder.setAutoCancel(true);
-//
-//
-//        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(001, builder.build());
-//    }
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, task.getId());
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+
+        return PendingIntent.getBroadcast(this, (int) task.getId(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public void cancelNotification(Task item) {
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(constructNotificationPendingIntent(item));
+    }
 }
