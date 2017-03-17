@@ -1,6 +1,7 @@
 package northstar.planner.presentation.swipe;
 
 import android.graphics.Canvas;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -23,8 +24,13 @@ public class TaskListTouchHelperCallback extends ItemTouchHelper.Callback {
         float length = ctx.getResources().getDimension(R.dimen.slide_list_icon_length);
         activity = ctx;
 
-        doneIcon = new SlideListSquareIcon(ctx.getDrawable(R.drawable.ic_done_white_36dp), activity.getResources().getColor(R.color.green), Gravity.START, length);
-        deleteIcon = new SlideListSquareIcon(ctx.getDrawable(R.drawable.ic_delete_white_36dp), activity.getResources().getColor(R.color.red), Gravity.END, length);
+        if (Build.VERSION.SDK_INT >= 21) {
+            doneIcon = new SlideListSquareIcon(ctx.getDrawable(R.drawable.ic_done_white_36dp), activity.getResources().getColor(R.color.green), Gravity.START, length);
+            deleteIcon = new SlideListSquareIcon(ctx.getDrawable(R.drawable.ic_delete_white_36dp), activity.getResources().getColor(R.color.red), Gravity.END, length);
+        } else {
+            doneIcon = new SlideListSquareIcon(ctx.getResources().getDrawable(R.drawable.ic_done_white_36dp), activity.getResources().getColor(R.color.green), Gravity.START, length);
+            deleteIcon = new SlideListSquareIcon(ctx.getResources().getDrawable(R.drawable.ic_delete_white_36dp), activity.getResources().getColor(R.color.red), Gravity.END, length);
+        }
     }
 
     @Override
