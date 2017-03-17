@@ -65,17 +65,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <EditText
-        android:id="@+id/fragment_theme_edit_new_goal_text"
-        android:layout_below="@id/fragment_theme_edit_active_hours"
-        style="@style/AppTheme.addItem"
+    <LinearLayout
+        android:id="@+id/fragment_theme_edit_new_goal_container"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:textSize="16sp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:inputType="text"
-        android:hint="@string/no_goals_hint"
-        android:text=""/>
+        android:layout_below="@id/fragment_theme_edit_active_hours">
+
+        <ImageView
+            android:src="@drawable/goal_icon"
+            android:padding="@dimen/smallSpace"
+            android:layout_gravity="center_vertical"
+            android:layout_width="36dp"
+            android:scaleType="fitCenter"
+            android:layout_height="36dp"/>
+
+        <EditText
+            android:id="@+id/fragment_theme_edit_new_goal_text"
+            style="@style/AppTheme.addItem"
+            android:layout_width="match_parent"
+            android:textSize="16sp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:inputType="text"
+            android:hint="@string/no_goals_hint"
+            android:text=""/>
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/fragment_theme_done_container"
@@ -95,7 +112,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_theme_edit_goals"
-        android:layout_below="@id/fragment_theme_edit_new_goal_text"
+        android:layout_below="@id/fragment_theme_edit_new_goal_container"
         android:layout_above="@id/fragment_theme_done_container"
         android:animateLayoutChanges="false"
         android:layout_width="match_parent"

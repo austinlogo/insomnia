@@ -86,7 +86,7 @@ public class TaskActivity
     @Override
     public void navigateToGoal() {
         Intent i = new Intent(this, GoalActivity.class);
-        i.putExtra(GoalTable._ID, currentTask.getGoal());
+        i.putExtra(GoalTable.TABLE_NAME, currentTask.getGoal());
         startActivity(i);
     }
 

@@ -85,10 +85,12 @@ public class AddMetricFragment
 
         attachedActivity.addandStoreMetric(newMetric);
 
+        // Cleanup
         addMetricTitle.setText("");
         metricType = MetricType.DECREMENTAL;
         onClickType();
         addMetricCommittedValue.setText("");
+        setVisible(addMetricTitle);
     }
 
     private void setVisible(View visibleView) {

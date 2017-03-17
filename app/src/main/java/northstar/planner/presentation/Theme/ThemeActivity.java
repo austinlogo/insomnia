@@ -25,6 +25,7 @@ public class ThemeActivity
         extends BaseActivity
         implements ThemeFragment.ThemeFragmentListener {
 
+    private static final int EDIT_ICON_INDEX = 1;
     @BindView(R.id.activity_theme_edit_drawer_layout)
     DrawerLayout mDrawerLayout;
 
@@ -69,8 +70,9 @@ public class ThemeActivity
         View v = super.onCreateView(name, context, attrs);
 
         if (optionsMenu != null && currentTheme.isNew()) {
-            toggleEditIcon(optionsMenu.getItem(EDIT_MENUITEM_INDEX));
-            mFragment.toggleEditing();
+//            toggleEditIcon(optionsMenu.getItem(EDIT_MENUITEM_INDEX));
+//            mFragment.toggleEditing();
+            editAction();
         }
 
         return v;
@@ -102,7 +104,8 @@ public class ThemeActivity
     @Override
     public void editAction() {
         getSupportActionBar().setTitle(mFragment.getNewThemeValues().getTitle());
-        mFragment.toggleEditing();
+        boolean isEditing = mFragment.toggleEditing();
+        setEditIcon(isEditing);
     }
 
     @Override
@@ -126,7 +129,7 @@ public class ThemeActivity
     public void openGoal(Goal goal) {
 
         Intent i = new Intent(this, GoalActivity.class);
-        i.putExtra(GoalTable._ID, goal.getId());
+        i.putExtra(GoalTable.TABLE_NAME, goal.getId());
         startActivity(i);
     }
 

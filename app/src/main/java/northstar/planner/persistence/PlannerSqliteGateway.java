@@ -137,11 +137,6 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
     }
 
     public Task getTask(long taskId) {
-        String selection = TaskTable._ID + EQUALSQ;
-        String[] selectionArgs = { Long.toString(taskId) };
-
-//        Cursor c = db.query(TaskTable.TABLE_NAME, TaskTable.projection, selection, selectionArgs, null, null, null);
-//        c.moveToFirst();
         String query = constructTaskQuery(TaskTable._ID + " = " + taskId);
         Cursor c = db.rawQuery(query, null);
         c.moveToFirst();

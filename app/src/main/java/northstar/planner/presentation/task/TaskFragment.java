@@ -12,6 +12,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -57,13 +58,16 @@ public class TaskFragment
     LinearLayout taskGoalContainer;
 
     @BindView(R.id.item_success_criteria_title)
-    TextView successCriteriaTitle;
+    TextView metricTitle;
 
     @BindView(R.id.item_success_criteria_progress)
-    TextView successCriteriaProgress;
+    TextView metricProgress;
 
     @BindView(R.id.fragment_task_goal)
     TextView goalTitle;
+
+    @BindView(R.id.fragment_task_metric_container)
+    RelativeLayout metricContainer;
 
     Task currentTask;
     PlannerSqliteGateway dao;
@@ -131,8 +135,11 @@ public class TaskFragment
 
     private void setMetricProgressRow() {
         if (currentTask.getCompletes() > 0) {
-            successCriteriaTitle.setText(currentTask.getMetric().getTitle());
-            successCriteriaProgress.setText(currentTask.getMetric().getProgressString());
+            metricContainer.setVisibility(View.VISIBLE);
+            metricTitle.setText(currentTask.getMetric().getTitle());
+            metricProgress.setText(currentTask.getMetric().getProgressString());
+        } else {
+            metricContainer.setVisibility(View.INVISIBLE);
         }
     }
 

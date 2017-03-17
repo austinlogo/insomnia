@@ -36,6 +36,7 @@
             android:layout_height="match_parent"/>
 
     </RelativeLayout>
+
     <android.support.design.widget.FloatingActionButton
         style="@style/AppTheme.Fab"
         android:src="@drawable/ic_add_white_36dp"

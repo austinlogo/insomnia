@@ -69,7 +69,6 @@ public abstract class TaskBasedActivity
     protected void onResume() {
         super.onResume();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     public TaskBasedFragment setMainFragment(String tableName) {
@@ -101,7 +100,6 @@ public abstract class TaskBasedActivity
     }
 
     public void setFragmentVisible(FrameLayout fragmentVisible) {
-//        mainFragmentLayout.setVisibility(mainFragmentLayout.getId() == fragmentVisible.getId() ? View.VISIBLE : View.GONE);
         mainFragment.setActionButtonVisibility(mainFragmentLayout.getId() == fragmentVisible.getId());
         addTaskLayout.setVisibility(addTaskLayout.getId() == fragmentVisible.getId() ? View.VISIBLE : View.GONE);
     }

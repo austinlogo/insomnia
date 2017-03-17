@@ -18,7 +18,6 @@ import northstar.planner.R;
 import northstar.planner.models.Goal;
 import northstar.planner.models.Theme;
 import northstar.planner.models.drawer.ThemeItem;
-import northstar.planner.utils.ViewAnimationUtils;
 
 
 public class DrawerAdapter extends ArrayAdapter<String> {
@@ -81,7 +80,7 @@ public class DrawerAdapter extends ArrayAdapter<String> {
         final ListView goals = (ListView) convertView.findViewById(R.id.item_drawer_goals);
         ImageButton button = (ImageButton) convertView.findViewById(R.id.item_drawer_theme_collapse_icon);
 
-        int buttonVisibility = drawerItems.get(position).getGoals().isEmpty() ? View.GONE : View.VISIBLE;
+        int buttonVisibility = drawerItems.get(position).getGoals().isEmpty() ? View.INVISIBLE : View.VISIBLE;
         button.setVisibility(buttonVisibility);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +99,7 @@ public class DrawerAdapter extends ArrayAdapter<String> {
         goals.setAdapter(new DrawerGoalAdapter(context, android.R.layout.simple_list_item_1, drawerItems.get(position).getGoals(), listener));
         text.setText(getItem(position));
 
-        ViewAnimationUtils.setListViewHeightBasedOnChildren(goals);
+//        ViewAnimationUtils.setListViewHeightBasedOnChildren(goals);
 
         return convertView;
     }

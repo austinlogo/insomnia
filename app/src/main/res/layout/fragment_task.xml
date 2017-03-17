@@ -102,7 +102,7 @@
             android:padding="@dimen/smallSpace"
             android:layout_width="@dimen/icon_width"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/sprout_black"
+            android:src="@drawable/goal_icon"
             android:scaleType="fitCenter"
             android:layout_height="@dimen/icon_width"/>
 
@@ -114,6 +114,6 @@
 
     </LinearLayout>
 
-    <include layout="@layout/item_success_criteria"/>
+    <include android:id="@+id/fragment_task_metric_container" layout="@layout/item_success_criteria"/>
 
 </LinearLayout>

@@ -39,13 +39,15 @@ public class FocusActivity
     @Override
     protected void onResume() {
         super.onResume();
-        List<Task> scratchTasks = getDao().getTodaysTasks();
+        List<Task> focusTasks = getDao().getTodaysTasks();
         getDao().getTasksByPriority();
-        determineIfWeShowHelperImage(scratchTasks);
+        determineIfWeShowHelperImage(focusTasks);
     }
 
     private void determineIfWeShowHelperImage(List<Task> focusTasks) {
-        mFragment.showLonelyImage(isEmptyApp(focusTasks));
+        boolean showLonelyImage = themes.isEmpty() && focusTasks.isEmpty();
+
+        mFragment.showLonelyImage(showLonelyImage);
         mFragment.initViews(focusTasks);
     }
 

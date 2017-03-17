@@ -53,7 +53,7 @@ public abstract class BaseActivity
     public static final int EDIT_MENUITEM_INDEX = 1;
 
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    protected Toolbar toolbar;
 
     @BindView(R.id.activity_drawer_list_theme_head)
     TextView themeHead;
@@ -152,7 +152,6 @@ public abstract class BaseActivity
 
     @OnItemClick(R.id.activity_drawer_list_themes)
     public void onThemeListItemSelected(int position) {
-//        closeDrawers();
         long selectedThemeId = drawerAdapter.getItemModel(position).getTheme().getId();
         startThemeActivity(selectedThemeId);
     }
@@ -210,16 +209,20 @@ public abstract class BaseActivity
     }
 
     protected void toggleEditIcon(MenuItem menuItem) {
-        if(menuItem.getTitle().equals(getString(R.string.action_edit))) {
+        boolean isEditable = menuItem.getTitle().equals(getString(R.string.action_edit));
+        setEditIcon(!isEditable);
+        editAction();
+    }
+
+    protected void setEditIcon(boolean editable) {
+        MenuItem menuItem = toolbar.getMenu().getItem(EDIT_MENUITEM_INDEX);
+        if (editable) {
             menuItem.setTitle(getString(R.string.action_save));
             menuItem.setIcon(getResources().getDrawable(R.drawable.ic_done_white_36dp));
-
         } else {
             menuItem.setTitle(getString(R.string.action_edit));
             menuItem.setIcon(getResources().getDrawable(R.drawable.ic_mode_edit_white_36dp));
         }
-
-        editAction();
     }
 
     @Override

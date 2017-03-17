@@ -96,7 +96,8 @@ public class ThemeFragment
         newGoalText.setOnKeyListener(this);
 
         if (currentTheme.isNew()) {
-            toggleEditing();
+//            toggleEditing();
+//            getBaseActivity().editAction();
             doneButton.setVisibility(View.VISIBLE);
         } else {
             doneButton.setVisibility(View.GONE);
@@ -154,7 +155,7 @@ public class ThemeFragment
         getActivity().finish();
     }
 
-    public void toggleEditing() {
+    public boolean toggleEditing() {
         boolean isEditable = titleContainer.getVisibility() != View.VISIBLE;
         int inputType = isEditable
                 ? InputType.TYPE_CLASS_TEXT
@@ -176,6 +177,8 @@ public class ThemeFragment
         if (isEditable) {
             editTitle.requestFocus();
         }
+
+        return isEditable;
     }
 
 //    @OnClick
