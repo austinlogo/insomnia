@@ -34,7 +34,7 @@
             android:id="@+id/activity_drawer_list_today"
             style="@style/AppTheme.DrawerItem"
             android:layout_gravity="center_vertical"
-            android:text="@string/drawer_item_today"
+            android:text="@string/drawer_item_focus"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>

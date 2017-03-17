@@ -35,6 +35,8 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
         db.execSQL(TaskTable.SQL_CREATE_QUERY);
         db.execSQL(MetricTable.SQL_CREATE_QUERY);
         db.execSQL(ActiveHoursTable.SQL_CREATE_QUERY);
+
+//        db.execSQL("ALTER TABLE " + TaskTable.TABLE_NAME + " ADD " + TaskTable.REMINDER_COLUMN + " NUMERIC;");
     }
 
     public static void clearAll(SQLiteDatabase db) {

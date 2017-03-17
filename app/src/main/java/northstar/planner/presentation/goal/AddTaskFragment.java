@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +30,8 @@ import northstar.planner.models.Task;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.presentation.BaseFragment;
 import northstar.planner.presentation.adapter.SuccessCriteriaSpinnerAdapter;
+import northstar.planner.utils.DateTimeSetter;
+import northstar.planner.utils.DateTimeSetterCallback;
 import northstar.planner.utils.DateUtils;
 import northstar.planner.utils.NumberUtils;
 
@@ -72,7 +75,6 @@ public class AddTaskFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_add_task, container, false);
         ButterKnife.bind(this, v);
-
         updateFragmentValues(successCriteriaSpinnerAdapter);
         return v;
     }
@@ -91,19 +93,15 @@ public class AddTaskFragment
     @OnClick(R.id.fragment_add_task_datepicker_icon)
     public void openDatePicker(View v) {
         setVisible(datePickerValue);
-        selectedDate = selectedDate == null
-                ? DateUtils.today()
-                : selectedDate;
+        new DateTimeSetter(getActivity(), new DateTimeSetterCallback() {
+            @Override
+            public void onValuesSet(Date time) {
 
-        DatePickerDialog dialog = new DatePickerDialog(
-                getActivity(),
-                this,
-                selectedDate.get(Calendar.YEAR),
-                selectedDate.get(Calendar.MONTH),
-                selectedDate.get(Calendar.DAY_OF_MONTH));
-
-        dialog.getDatePicker().setMinDate(DateUtils.today().getTime().getTime());
-        dialog.show();
+                selectedDate = Calendar.getInstance();
+                selectedDate.setTime(time);
+                datePickerValue.setText( Task.getDateString(time));
+            }
+        }).selectTime();
     }
 
     @OnClick(R.id.fragment_add_task_successcriteria_icon)
@@ -114,6 +112,7 @@ public class AddTaskFragment
     @OnItemSelected(R.id.fragment_add_task_successcriteria_value)
     public void onSuccessCriteriaSelected(Spinner spinner, int position) {
         selectedMetric = successCriteriaSpinnerAdapter.getItem(position);
+        spinner.setSelection(position);
 
         if (position == 0 || (selectedMetric != null && !selectedMetric.needsCommitmentInput())) {
             committedIcon.setVisibility(View.GONE);
@@ -183,7 +182,10 @@ public class AddTaskFragment
     public void updateFragmentValues(SuccessCriteriaSpinnerAdapter successCriteriasAdapter) {
         isScratch = false;
         setVisible(addTaskTitle);
+        datePickerValue.setText("");
+        selectedDate = null;
         addTaskTitle.setText("");
+        selectedMetric = null;
         scValues.setAdapter(successCriteriasAdapter);
         this.successCriteriaSpinnerAdapter = successCriteriasAdapter;
         committedIcon.setVisibility(View.GONE);

@@ -1,18 +1,11 @@
 package northstar.planner.presentation.task;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
-import android.widget.TimePicker;
-
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +19,7 @@ import northstar.planner.presentation.goal.GoalActivity;
 
 public class TaskActivity
         extends BaseActivity
-        implements TaskFragment.TaskFragmentListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+        implements TaskFragment.TaskFragmentListener {
 
     @BindView(R.id.activity_task_drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -34,11 +27,6 @@ public class TaskActivity
     PlannerSqliteGateway dao;
     Task currentTask;
     TaskFragment mFragment;
-
-    DatePickerDialog calendarDialog;
-    Calendar selectedDate;
-    TimePickerDialog timePickerDialog;
-    Calendar selectedTime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,16 +37,6 @@ public class TaskActivity
         currentTask = (Task) getIntent().getExtras().getSerializable(TaskTable.TABLE_NAME);
         currentTask = getDao().getTask(currentTask.getId());
         mFragment = TaskFragment.newInstance(getIntent().getExtras());
-
-        Calendar today = Calendar.getInstance();
-        calendarDialog = new DatePickerDialog(
-                this,
-                this,
-                today.get(Calendar.YEAR),
-                today.get(Calendar.MONTH),
-                today.get(Calendar.DAY_OF_MONTH));
-
-        timePickerDialog = new TimePickerDialog(this, this, today.get(Calendar.HOUR_OF_DAY), today.get(Calendar.MINUTE), true);
 
         getFragmentManager()
                 .beginTransaction()
@@ -94,24 +72,9 @@ public class TaskActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_snooze, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         optionsMenu = menu;
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (R.id.main_menu_snooze == item.getItemId()) {
-            snoozeAction();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void snoozeAction() {
-        calendarDialog.show();
     }
 
     @Override
@@ -124,25 +87,23 @@ public class TaskActivity
     public void navigateToGoal() {
         Intent i = new Intent(this, GoalActivity.class);
         i.putExtra(GoalTable._ID, currentTask.getGoal());
-//        i.putExtra(GoalTable.THEME_COLUMN, goal.getTheme());
-//        i.putExtra(GoalTable.TITLE_COLUMN, goal.getTitle());
         startActivity(i);
     }
 
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        selectedDate = Calendar.getInstance();
-        selectedDate.set(year, monthOfYear, dayOfMonth);
-        timePickerDialog.show();
-    }
-
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        selectedDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        selectedDate.set(Calendar.MINUTE, minute);
-
-        dao.snooze(currentTask.getId(), selectedDate.getTime());
-        currentTask.setSnooze(selectedDate.getTime());
-        mFragment.initUI(currentTask);
-    }
+//    @Override
+//    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//        selectedDate = Calendar.getInstance();
+//        selectedDate.set(year, monthOfYear, dayOfMonth);
+//        timePickerDialog.show();
+//    }
+//
+//    @Override
+//    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+//        selectedDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
+//        selectedDate.set(Calendar.MINUTE, minute);
+//
+//        dao.snooze(currentTask.getId(), selectedDate.getTime());
+//        currentTask.setSnooze(selectedDate.getTime());
+//        mFragment.initUI(currentTask);
+//    }
 }

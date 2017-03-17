@@ -3,6 +3,7 @@ package northstar.planner.presentation.today;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,47 +22,39 @@ import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.goal.GoalFragment;
 import northstar.planner.presentation.task.TaskBasedFragment;
 
-public class TodayFragment
+public class FocusFragment
         extends TaskBasedFragment {
 
     @BindView(R.id.fragment_today_tasks)
     RecyclerView taskList;
 
+    @BindView(R.id.fragment_today_add_fab)
+    FloatingActionButton addFab;
+
 //    private TaskRecyclerViewAdapter taskRecyclerViewAdapter;
     GoalFragment.TaskActionListener activityListener;
-    TodayActivityListener todayActivityListener;
+    FocusActivityListener todayActivityListener;
 
-    public static TodayFragment newInstance() {
-        TodayFragment fragment = new TodayFragment();
+    public static FocusFragment newInstance() {
+        FocusFragment fragment = new FocusFragment();
         return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_today, container, false);
+        View v = inflater.inflate(R.layout.fragment_focus, container, false);
         ButterKnife.bind(this, v);
 
         taskListAdapter = new TaskRecyclerViewAdapter(new ArrayList<Task>(), activityListener);
         initRecyclerView(taskList, taskListAdapter);
 
-//        addTask.setOnEditorActionListener(this);
         return v;
     }
 
     public void initViews(List<Task> scratchTasks) {
         taskListAdapter.updateList(scratchTasks);
     }
-
-//    @Override
-//    public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) {
-//        if (actionId == EditorInfo.IME_ACTION_DONE) {
-//            todayActivityListener.openAddTaskWorkflow(v.getText().toString());
-//            v.setText("");
-//            getBaseActivity().hideKeyboard();
-//        }
-//        return false;
-//    }
 
     @OnClick(R.id.fragment_today_add_fab)
     public void onClick() {
@@ -72,12 +65,17 @@ public class TodayFragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         activityListener = (GoalFragment.TaskActionListener) activity;
-        todayActivityListener = (TodayActivityListener) activity;
+        todayActivityListener = (FocusActivityListener) activity;
     }
 
     @Override protected void updateMetric(Metric sc) { /* NOOP */ }
 
-    public interface TodayActivityListener {
+    @Override
+    public void setActionButtonVisibility(boolean isVisible) {
+        addFab.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public interface FocusActivityListener {
         void openAddTaskWorkflow(String newTaskTitle);
     }
 }

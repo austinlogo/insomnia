@@ -81,9 +81,14 @@ public class AddMetricFragment
     public void onDoneIconClicked() {
         String metricTitle = addMetricTitle.getText().toString();
         int committedValue = NumberUtils.parseInt(addMetricCommittedValue.getText().toString());
-        Metric newMetric = Metric.newInstance(metricTitle, committedValue);
+        Metric newMetric = Metric.newInstance(metricTitle, committedValue, metricType);
 
         attachedActivity.addandStoreMetric(newMetric);
+
+        addMetricTitle.setText("");
+        metricType = MetricType.DECREMENTAL;
+        onClickType();
+        addMetricCommittedValue.setText("");
     }
 
     private void setVisible(View visibleView) {

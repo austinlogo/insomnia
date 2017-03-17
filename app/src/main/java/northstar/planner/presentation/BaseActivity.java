@@ -1,9 +1,13 @@
 package northstar.planner.presentation;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
@@ -29,12 +33,15 @@ import northstar.planner.models.Goal;
 import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
 import northstar.planner.models.Theme;
+import northstar.planner.models.tables.TaskTable;
 import northstar.planner.models.tables.ThemeTable;
+import northstar.planner.notification.NotificationPublisher;
 import northstar.planner.persistence.PlannerSqliteGateway;
 import northstar.planner.presentation.Theme.ListThemesActivity;
 import northstar.planner.presentation.Theme.ThemeActivity;
 import northstar.planner.presentation.adapter.ThemeListAdapter;
-import northstar.planner.presentation.today.TodayActivity;
+import northstar.planner.presentation.task.TaskActivity;
+import northstar.planner.presentation.today.FocusActivity;
 
 public abstract class BaseActivity
         extends AppCompatActivity
@@ -109,24 +116,23 @@ public abstract class BaseActivity
     }
 
     @OnClick(R.id.activity_drawer_list_today)
-    public void OnTodayClicked() {
-        startActivity(new Intent(this, TodayActivity.class));
+    public void OnFocusClicked() {
+        startActivity(new Intent(this, FocusActivity.class));
     }
 
-    @OnClick(R.id.activity_drawer_list_theme_head)
-    public void onClickTheme(TextView view) {
+    @OnLongClick(R.id.activity_drawer_list_theme_head)
+    public boolean onThemeLongClick(TextView view) {
         if (themeList.getVisibility() == View.VISIBLE) {
             themeList.setVisibility(View.GONE);
         } else {
             themeList.setVisibility(View.VISIBLE);
         }
+        return true;
     }
 
-    @OnLongClick(R.id.activity_drawer_list_theme_head)
-    public boolean OnThemeLongClick() {
-//        closeDrawers();
+    @OnClick(R.id.activity_drawer_list_theme_head)
+    public void OnThemeClick() {
         startActivity(new Intent(this, ListThemesActivity.class));
-        return true;
     }
 
     @OnItemClick(R.id.activity_drawer_list_themes)
@@ -207,25 +213,16 @@ public abstract class BaseActivity
         }
     }
 
-
     @Override
     public void onDrawerSlide(View drawerView, float slideOffset) {
         hideKeyboard();
     }
 
-    @Override
-    public void onDrawerOpened(View drawerView) {
-    }
+    @Override public void onDrawerOpened(View drawerView) {}
 
-    @Override
-    public void onDrawerClosed(View drawerView) {
+    @Override public void onDrawerClosed(View drawerView) {}
 
-    }
-
-    @Override
-    public void onDrawerStateChanged(int newState) {
-
-    }
+    @Override public void onDrawerStateChanged(int newState) {}
 
     public PlannerSqliteGateway getDao() {
         return dao;
@@ -254,4 +251,56 @@ public abstract class BaseActivity
     public void removeFromDb(Metric sc) {
         getDao().removeTheme(sc.getId());
     }
+
+    public void scheduleNotification(Task task) {
+        Notification notification = getNotification(task);
+
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, task.getId());
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) task.getId(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, task.getReminder().getTime(), pendingIntent);
+        } else {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, task.getReminder().getTime(), pendingIntent);
+        }
+    }
+
+    private Notification getNotification(Task task) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Task Reminder");
+        builder.setContentText(task.getTitle());
+        builder.setAutoCancel(true);
+        builder.setPriority(Notification.PRIORITY_HIGH);
+        builder.setColor(getResources().getColor(R.color.colorPrimary));
+        builder.setVibrate(new long[]{0,100,100,100});
+        builder.setSmallIcon(R.drawable.logo_nobackground);
+
+        Intent result = new Intent(this, TaskActivity.class);
+        result.putExtra(TaskTable.TABLE_NAME, task);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , result, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentIntent(pendingIntent);
+
+        return builder.build();
+    }
+
+
+//    public void fireNotification(String title, String content) {
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+//        builder.setSmallIcon(R.drawable.logo_nobackground);
+//        builder.setContentTitle("title").setContentText("content");
+//
+//        Intent result = new Intent(this, FocusActivity.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivities(this, 0 , new Intent[]{result}, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        builder.setContentIntent(pendingIntent);
+//        builder.setAutoCancel(true);
+//
+//
+//        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(001, builder.build());
+//    }
 }

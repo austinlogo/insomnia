@@ -46,6 +46,9 @@ public class ThemeFragment
     @BindView(R.id.fragment_theme_edit_goals)
     RecyclerView goalsRecyclerView;
 
+    @BindView(R.id.fragment_theme_done_container)
+    LinearLayout doneButton;
+
     private ThemeFragmentListener activityListener;
 
     public static northstar.planner.presentation.Theme.ThemeFragment newInstance(Theme newTheme) {
@@ -66,6 +69,7 @@ public class ThemeFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_theme, container, false);
         ButterKnife.bind(this, v);
+
         return v;
     }
 
@@ -92,8 +96,10 @@ public class ThemeFragment
         newGoalText.setOnKeyListener(this);
 
         if (currentTheme.isNew()) {
-//            toggleEditing();
-
+            toggleEditing();
+            doneButton.setVisibility(View.VISIBLE);
+        } else {
+            doneButton.setVisibility(View.GONE);
         }
     }
 
@@ -104,7 +110,8 @@ public class ThemeFragment
     }
 
     public Theme getNewThemeValues() {
-        return new Theme(editTitle.getText().toString(), editDescription.getText().toString());
+        String themeTitle = editTitle.getText().toString().isEmpty() ? getString(R.string.theme_title_hint) : editTitle.getText().toString();
+        return new Theme(themeTitle, editDescription.getText().toString());
     }
 
     @Override
@@ -142,6 +149,11 @@ public class ThemeFragment
         }
     }
 
+    @OnClick(R.id.fragment_theme_done_button)
+    public void onDoneClicked() {
+        getActivity().finish();
+    }
+
     public void toggleEditing() {
         boolean isEditable = titleContainer.getVisibility() != View.VISIBLE;
         int inputType = isEditable
@@ -165,6 +177,8 @@ public class ThemeFragment
             editTitle.requestFocus();
         }
     }
+
+//    @OnClick
 
     public void addedGoal(Goal newGoal) {
 //        goalsListAdapter.add(newGoal);

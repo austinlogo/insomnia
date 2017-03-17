@@ -57,4 +57,8 @@
     <string name="day">Day</string>
     <string name="active_hours">active hours</string>
     <string name="action_snooze">snooze</string>
+    <string name="reminder_not_set">reminder not set</string>
+    <string name="snooze_not_set">snooze not set</string>
+    <string name="due_date_not_set">due date not set</string>
+    <string name="drawer_item_focus">Focus</string>
 </resources>

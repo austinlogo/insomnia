@@ -139,9 +139,14 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         String query = constructTaskQuery(TaskTable._ID + " = " + taskId);
         Cursor c = db.rawQuery(query, null);
         c.moveToFirst();
+        Task result = constructTaskFromCursor(c);
+        c.close();
+        return result;
+    }
+
+    private Task constructTaskFromCursor(Cursor c) {
         Task result = new Task(c);
         result.setMetric(getMetric(result.getCompletes()));
-        c.close();
         return result;
     }
 
@@ -185,7 +190,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
         List<Task> result = new ArrayList<>();
         while(!c.isAfterLast()) {
-            result.add(new Task(c));
+            result.add(constructTaskFromCursor(c));
             c.moveToNext();
         }
         c.close();
@@ -214,7 +219,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
         List<Task> result = new ArrayList<>();
         while(!c.isAfterLast()) {
-            result.add(new Task(c));
+            result.add(constructTaskFromCursor(c));
             c.moveToNext();
         }
         return result;
@@ -261,12 +266,12 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         return i == 1;
     }
 
-    public boolean removeSuccessCriteria(Metric metric) {
+    public boolean removeMetric(int metricId) {
         String whereClause = MetricTable._ID + EQUALSQ;
-        String[] whereArgs = { Long.toString(metric.getId()) };
+        String[] whereArgs = { Long.toString(metricId) };
 
         int i = db.delete(MetricTable.TABLE_NAME, whereClause, whereArgs);
-        removeTasksBySuccessCriteriaId(metric.getId());
+        removeTasksBySuccessCriteriaId(metricId);
 
         return i == 1;
     }
@@ -366,6 +371,15 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
             newValues.put(TaskTable.DUE_COLUMN, task.getDue().getTime());
         }
 
+        if (task.getSnooze() != null) {
+            newValues.put(TaskTable.SNOOZE_COLUMN, task.getSnooze().getTime());
+        }
+
+
+        if (task.getReminder() != null) {
+            newValues.put(TaskTable.REMINDER_COLUMN, task.getReminder().getTime());
+        }
+
         newValues.put(TaskTable.TITLE_COLUMN, task.getTitle());
         newValues.put(TaskTable.GOAL_COLUMN, task.getGoal());
         newValues.put(TaskTable.COMPLETES_COLUMN, task.getCompletes());
@@ -430,7 +444,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
         List<Task> tasks = new ArrayList<>();
         while (!c.isAfterLast()) {
-            tasks.add(new Task(c));
+            tasks.add(constructTaskFromCursor(c));
             c.moveToNext();
         }
 
@@ -535,15 +549,5 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         }
 
         return checkBoxGroups;
-    }
-
-    public void snooze(long taskId, Date snoozeTime) {
-        ContentValues cv = new ContentValues();
-        cv.put(TaskTable.SNOOZE_COLUMN, snoozeTime.getTime());
-
-        String whereClause = TaskTable._ID + " = " + taskId;
-
-        db.update(TaskTable.TABLE_NAME, cv, whereClause, null);
-        return;
     }
 }

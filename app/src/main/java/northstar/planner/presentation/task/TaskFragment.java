@@ -26,6 +26,8 @@ import northstar.planner.models.Task;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.persistence.PlannerSqliteGateway;
 import northstar.planner.presentation.BaseFragment;
+import northstar.planner.utils.DateTimeSetter;
+import northstar.planner.utils.DateTimeSetterCallback;
 import northstar.planner.utils.DateUtils;
 import northstar.planner.utils.StringUtils;
 
@@ -44,6 +46,9 @@ public class TaskFragment
 
     @BindView(R.id.fragment_task_snooze)
     TextView snooze;
+
+    @BindView(R.id.fragment_reminder_snooze)
+    TextView reminder;
 
     @BindView(R.id.fragment_task_snooze_container)
     LinearLayout snoozeContainer;
@@ -106,6 +111,7 @@ public class TaskFragment
         setGoalTitleRow();
         setSnoozeRow();
         setMetricProgressRow();
+        setReminderRow();
     }
 
     private void setGoalTitleRow() {
@@ -115,14 +121,10 @@ public class TaskFragment
             taskGoalContainer.setVisibility(View.VISIBLE);
             goalTitle.setText(currentTask.getGoalTitle());
         }
-
     }
 
     private void setSnoozeRow() {
-        if (!currentTask.hasSnoozed()) {
-            snoozeContainer.setVisibility(View.GONE);
-        } else {
-            snoozeContainer.setVisibility(View.VISIBLE);
+        if (currentTask.hasSnoozed()) {
             snooze.setText(currentTask.getSnoozeString());
         }
     }
@@ -134,24 +136,63 @@ public class TaskFragment
         }
     }
 
+    private void setReminderRow() {
+        if (currentTask.getReminder() != null) {
+            reminder.setText(currentTask.getReminderString());
+        }
+    }
+
     @OnClick(R.id.fragment_task_due_container)
     public void onClickDueContainer() {
-        Calendar cal = Calendar.getInstance();
-        Date initDate = currentTask.getDue() != null
-                ? currentTask.getDue()
-                : DateUtils.today().getTime();
+        DateTimeSetter setter = new DateTimeSetter(getActivity(), new DateTimeSetterCallback() {
 
-        cal.setTime(initDate);
-         new DatePickerDialog(getActivity(),
-                this,
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)).show();
+            @Override
+            public void onValuesSet(Date selectedDate) {
+                currentTask.setDueDate(selectedDate);
+                saveAndUpdateTask(currentTask);
+                return;
+            }
+        });
+        setter.selectTime();
     }
 
     @OnClick(R.id.fragment_task_goal_container)
     public void onGoalTitleClicked() {
         attachedActivity.navigateToGoal();
+    }
+
+    @OnClick(R.id.fragment_task_reminder_container)
+    public void onReminderClicked() {
+        DateTimeSetter setter = new DateTimeSetter(getActivity(), new DateTimeSetterCallback() {
+
+            @Override
+            public void onValuesSet(Date selectedDate) {
+                currentTask.setReminder(selectedDate);
+                getBaseActivity().scheduleNotification(currentTask);
+                saveAndUpdateTask(currentTask);
+                return;
+            }
+        });
+        setter.selectTime();
+    }
+
+    @OnClick(R.id.fragment_task_snooze_container)
+    public void onSnoozeClicked() {
+        DateTimeSetter setter = new DateTimeSetter(getActivity(), new DateTimeSetterCallback() {
+
+            @Override
+            public void onValuesSet(Date selectedDate) {
+                currentTask.setSnooze(selectedDate);
+                saveAndUpdateTask(currentTask);
+                return;
+            }
+        });
+        setter.selectTime();
+    }
+
+    private void saveAndUpdateTask(Task task) {
+        initUI(task);
+        dao.updateTask(task);
     }
 
     @OnEditorAction(R.id.fragment_task_title)

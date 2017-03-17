@@ -13,7 +13,7 @@
             android:src="@drawable/ic_title_black_24dp"
             android:padding="@dimen/smallSpace"
             android:layout_width="@dimen/icon_width"
-            android:layout_height="wrap_content"/>
+            android:layout_height="@dimen/icon_width"/>
         <EditText
             android:id="@+id/fragment_task_title"
             style="@style/AppTheme.EditText.NoMargin"
@@ -35,11 +35,12 @@
         <ImageView
             android:padding="@dimen/smallSpace"
             android:layout_width="@dimen/icon_width"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/icon_width"
             android:src="@drawable/ic_date_range_black_24dp"/>
 
         <TextView
             android:id="@+id/fragment_task_due"
+            android:hint="@string/due_date_not_set"
             android:layout_width="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"/>
@@ -52,14 +53,38 @@
         android:layout_gravity="center_horizontal"
         android:background="?selectableItemBackground"
         android:layout_height="wrap_content">
+
         <ImageView
             android:padding="@dimen/smallSpace"
             android:layout_width="@dimen/icon_width"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/icon_width"
             android:src="@drawable/ic_snooze_black_36dp"/>
 
         <TextView
             android:id="@+id/fragment_task_snooze"
+            android:hint="@string/snooze_not_set"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fragment_task_reminder_container"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="?selectableItemBackground"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:padding="@dimen/smallSpace"
+            android:layout_width="@dimen/icon_width"
+            android:layout_height="@dimen/icon_width"
+            android:src="@drawable/ic_alarm_black_36dp"/>
+
+        <TextView
+            android:id="@+id/fragment_reminder_snooze"
+            android:hint="@string/reminder_not_set"
             android:layout_width="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"/>
@@ -79,7 +104,7 @@
             android:layout_gravity="center_vertical"
             android:src="@drawable/sprout_black"
             android:scaleType="fitCenter"
-            android:layout_height="@dimen/addIconRowHeight"/>
+            android:layout_height="@dimen/icon_width"/>
 
         <TextView
             android:id="@+id/fragment_task_goal"

@@ -22,6 +22,7 @@ public class Task extends BaseModel {
     private Metric metric;
     private Date due;
     private Date snooze;
+    private Date reminderTime;
     private TaskStatus taskStatus;
 
     public Task() {
@@ -40,6 +41,7 @@ public class Task extends BaseModel {
         completes = getColumnLong(c, TaskTable.COMPLETES_COLUMN);
         due = getColumnDate(c, TaskTable.DUE_COLUMN);
         snooze = getColumnDate(c, TaskTable.SNOOZE_COLUMN);
+        reminderTime = getColumnDate(c, TaskTable.REMINDER_COLUMN);
         taskStatus = TaskStatus.valueOf(getColumnString(c, TaskTable.STATUS_COLUMN));
     }
 
@@ -138,7 +140,7 @@ public class Task extends BaseModel {
         return getDateString(due);
     }
 
-    private String getDateString(Date date) {
+    public static String getDateString(Date date) {
         if (date == null) {
             return "";
         }
@@ -146,7 +148,11 @@ public class Task extends BaseModel {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         String todayString = PlannerApplication.getInstance().getString(R.string.today);
-        return DateUtils.getDateString(todayString, cal);
+
+        SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm");
+        String time = localDateFormat.format(date);
+
+        return DateUtils.getDateString(todayString, cal) + ", " + time;
     }
 
     public void setTaskStatus(TaskStatus taskStatus) {
@@ -158,14 +164,7 @@ public class Task extends BaseModel {
     }
 
     public String getSnoozeString() {
-        if (snooze == null) {
-            return null;
-        }
-
-        SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm");
-        String time = localDateFormat.format(snooze);
-
-        return getDateString(snooze) + ", " + time;
+        return getDateString(snooze);
     }
 
     public void setSnooze(Date snooze) {
@@ -178,5 +177,17 @@ public class Task extends BaseModel {
 
     public Date getSnooze() {
         return snooze;
+    }
+
+    public Date getReminder() {
+        return reminderTime;
+    }
+
+    public String getReminderString() {
+        return getDateString(reminderTime);
+    }
+
+    public void setReminder(Date reminder) {
+        this.reminderTime = reminder;
     }
 }

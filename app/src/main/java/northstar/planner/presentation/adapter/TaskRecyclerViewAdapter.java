@@ -50,7 +50,7 @@ public class TaskRecyclerViewAdapter
         }
 
         if (currentTask.getDue() != null
-                && currentTask.getDue().getTime() < DateUtils.getStartOfDay(DateUtils.today()).getTimeInMillis()) {
+                && currentTask.getDue().getTime() < DateUtils.today().getTimeInMillis()) {
             holder.due.setTextColor(Color.RED);
         } else {
             holder.due.setTextColor(Color.BLACK);
@@ -120,6 +120,10 @@ public class TaskRecyclerViewAdapter
     public void undoDeletion(Task item, int position) {
         tasks.add(position, item);
         notifyItemInserted(position);
+    }
+
+    public boolean isEmpty() {
+        return tasks.isEmpty();
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {

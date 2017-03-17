@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="northstar.planner">
 
-
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
@@ -12,6 +11,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+
+        <receiver android:name=".notification.NotificationPublisher" android:enabled="true">
+
+        </receiver>
 
         <activity
             android:name=".presentation.Theme.ListThemesActivity"
@@ -37,7 +40,7 @@
             android:windowSoftInputMode="adjustPan"/>
 
         <activity
-            android:name=".presentation.today.TodayActivity"
+            android:name=".presentation.today.FocusActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize">

@@ -26,8 +26,8 @@ public abstract class Metric extends BaseModel{
         } else return new IncrementalMetric(c);
     }
 
-    public static Metric newInstance(String title, int committed) {
-        if (committed == 0) {
+    public static Metric newInstance(String title, int committed, MetricType metricType) {
+        if (MetricType.DECREMENTAL.equals(metricType)) {
             return new DecrementalMetric(title);
         } else {
             return new IncrementalMetric(title, committed);

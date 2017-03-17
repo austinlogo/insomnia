@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import northstar.planner.R;
 import northstar.planner.models.IncrementalMetric;
 import northstar.planner.models.Metric;
 
-public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<Metric> {
+public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<Metric> implements SpinnerAdapter {
     private List<Metric> metrics;
 
     public SuccessCriteriaSpinnerAdapter(Context context, List<Metric> metrics) {
@@ -32,25 +33,28 @@ public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<Metric> {
     }
 
 
+
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-//        return super.getView(position, convertView, parent);
-
         convertView = (convertView == null)
-                ? LayoutInflater.from(getContext()).inflate(R.layout.item_default, parent, false)
+                ? LayoutInflater.from(getContext()).inflate(android.R.layout.simple_spinner_item, parent, false)
                 : convertView;
 
-        TextView text = (TextView) convertView.findViewById(R.id.item_default_text);
-
+        TextView text = (TextView) convertView.findViewById(android.R.id.text1);
         text.setText(metrics.get(position).getTitle());
-
         return convertView;
     }
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        return getView(position, convertView, parent);
+        convertView = (convertView == null)
+                ? LayoutInflater.from(getContext()).inflate(R.layout.item_default, parent, false)
+                : convertView;
+
+        TextView text = (TextView) convertView.findViewById(R.id.item_default_text);
+        text.setText(metrics.get(position).getTitle());
+        return convertView;
     }
 
     @Override

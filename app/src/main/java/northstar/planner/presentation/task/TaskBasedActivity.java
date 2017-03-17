@@ -22,7 +22,7 @@ import northstar.planner.presentation.BaseFragment;
 import northstar.planner.presentation.goal.AddTaskFragment;
 import northstar.planner.presentation.goal.GoalFragment;
 import northstar.planner.presentation.today.AddOverlayFragment;
-import northstar.planner.presentation.today.TodayFragment;
+import northstar.planner.presentation.today.FocusFragment;
 
 public abstract class TaskBasedActivity
         extends BaseActivity
@@ -79,7 +79,7 @@ public abstract class TaskBasedActivity
                 mainModel = currentGoal;
                 return GoalFragment.newInstance(currentGoal);
             case TaskTable.TABLE_NAME:
-                return TodayFragment.newInstance();
+                return FocusFragment.newInstance();
         }
         return null;
     }
@@ -101,7 +101,8 @@ public abstract class TaskBasedActivity
     }
 
     public void setFragmentVisible(FrameLayout fragmentVisible) {
-        mainFragmentLayout.setVisibility(mainFragmentLayout.getId() == fragmentVisible.getId() ? View.VISIBLE : View.GONE);
+//        mainFragmentLayout.setVisibility(mainFragmentLayout.getId() == fragmentVisible.getId() ? View.VISIBLE : View.GONE);
+        mainFragment.setActionButtonVisibility(mainFragmentLayout.getId() == fragmentVisible.getId());
         addTaskLayout.setVisibility(addTaskLayout.getId() == fragmentVisible.getId() ? View.VISIBLE : View.GONE);
     }
 

@@ -4,25 +4,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/fragment_add_metric_title_value"
-        style="@style/AppTheme.EditText.Add"
-        android:hint="add metric"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <EditText
-        android:id="@+id/fragment_add_metric_committed_value"
-        android:visibility="gone"
-        android:hint="@string/hint_metric_amount"
-        android:inputType="number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:background="@color/colorPrimary"
-        android:layout_height="@dimen/addIconRowHeight">
+        android:layout_height="45dp">
 
         <ImageButton
             android:id="@+id/fragment_add_metric_title_icon"
@@ -52,10 +37,15 @@
             android:layout_toEndOf="@id/fragment_add_metric_type_icon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
 
         <ImageButton
             android:id="@+id/fragment_add_metric_done_icon"
-            android:src="@drawable/ic_done_white_36dp"
+            android:src="@drawable/ic_done_black_36dp"
             android:maxHeight="8dp"
             android:layout_alignParentEnd="true"
             android:scaleType="fitCenter"
@@ -63,6 +53,21 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
 
-    </RelativeLayout>
+        <EditText
+            android:id="@+id/fragment_add_metric_title_value"
+            style="@style/AppTheme.EditText.Add"
+            android:hint="add metric"
+            android:layout_toLeftOf="@id/fragment_add_metric_done_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
+        <EditText
+            android:id="@+id/fragment_add_metric_committed_value"
+            android:visibility="gone"
+            android:hint="@string/hint_metric_amount"
+            android:inputType="number"
+            android:layout_toLeftOf="@id/fragment_add_metric_done_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 </LinearLayout>

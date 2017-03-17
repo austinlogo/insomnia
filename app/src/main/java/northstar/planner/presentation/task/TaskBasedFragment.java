@@ -12,6 +12,7 @@ import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 public abstract class TaskBasedFragment extends BaseFragment {
 
     protected abstract void updateMetric(Metric sc);
+    public abstract void setActionButtonVisibility(boolean isVisible);
 
     protected TaskRecyclerViewAdapter taskListAdapter;
 

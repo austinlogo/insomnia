@@ -14,14 +14,17 @@ import northstar.planner.models.Goal;
 import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.GoalTable;
-import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.success.AddMetricFragment;
 import northstar.planner.presentation.task.TaskBasedActivity;
 import northstar.planner.presentation.today.AddOverlayFragment;
 
 public class GoalActivity
-        extends TaskBasedActivity
-        implements GoalFragment.GoalFragmentListener, AddTaskFragment.AddTaskFragmentListener, GoalFragment.TaskActionListener, AddMetricFragment.AddMetricFragmentListener, AddOverlayFragment.AddOverlayListener {
+        extends     TaskBasedActivity
+        implements  GoalFragment.GoalFragmentListener,
+                    AddTaskFragment.AddTaskFragmentListener,
+                    GoalFragment.TaskActionListener,
+                    AddMetricFragment.AddMetricFragmentListener,
+                    AddOverlayFragment.AddOverlayListener {
 
     @BindView(R.id.activity_goal_add_overlay)
     FrameLayout addOverlay;
@@ -64,24 +67,22 @@ public class GoalActivity
         addOverlay.requestFocus();
     }
 
-//    @Override
-//    public Metric startAddMetricWorkflow(Metric sc) {
-//        setAddFragment(addMetricFragment);
-//        return null;
-//    }
-
     @Override
-    public boolean removeMetric(Metric sc) {
-        currentGoal.getMetrics().remove(sc);
-        goalFragment.initViews(currentGoal);
-        return getDao().removeSuccessCriteria(sc);
+    public void removeMetricWorkflow(final Metric currentMetric) {
+        DeleteMetricDialogFragment dialogFragment = DeleteMetricDialogFragment.newInstance(currentMetric.getId(), new DialogFragmentOnDismissCallback() {
+            @Override
+            public void onDismiss() {
+                currentGoal.getMetrics().remove(currentMetric);
+                refreshGoal();
+            }
+        });
+        dialogFragment.show(getFragmentManager(), "");
     }
 
-//    @Override
-//    public void createTask(String newTaskTitle, SuccessCriteriaSpinnerAdapter successCriteriasAdapter) {
-//        addTaskFragment.updateFragmentValues(newTaskTitle, successCriteriasAdapter);
-//        setAddFragment(addTaskFragment);
-//    }
+    private void refreshGoal() {
+        currentGoal = getDao().getGoal(currentGoal.getId());
+        goalFragment.initViews(currentGoal);
+    }
 
     @Override
     protected void deleteAction() {
@@ -104,10 +105,10 @@ public class GoalActivity
 
         newTask.setGoal(currentGoal);
         newTask = getDao().addTask(newTask);
-        currentGoal.getTasks().add(0, newTask);
+        currentGoal.getTasks().add(newTask);
+        goalFragment.initViews(currentGoal);
 
-
-        ((TaskRecyclerViewAdapter) goalFragment.tasksRecyclerView.getAdapter()).addItem(newTask);
+//        ((TaskRecyclerViewAdapter) goalFragment.tasksRecyclerView.getAdapter()).addItem(newTask);
     }
 
     private void setAddFragment(Fragment fragmentToBeVisible) {
@@ -132,7 +133,6 @@ public class GoalActivity
     @Override
     public void showAddTaskWorkflow() {
         removeAddOverlayFromActivity();
-//        addOverlay.setVisibility(View.INVISIBLE);
         setAddFragment(addTaskFragment);
         addTaskFragment.updateFragmentValues(goalFragment.getMetricsSpinnerAdapter());
 
@@ -141,7 +141,6 @@ public class GoalActivity
     @Override
     public void showAddMetricWorkflow() {
         removeAddOverlayFromActivity();
-//        addOverlay.setVisibility(View.GONE);
         setAddFragment(addMetricFragment);
     }
 

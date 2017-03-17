@@ -13,7 +13,8 @@ import northstar.planner.presentation.Theme.ThemeFragment;
 import northstar.planner.presentation.adapter.GoalRecyclerViewAdapter;
 import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.adapter.ThemeRecyclerViewAdapter;
-import northstar.planner.presentation.swipe.GenericListTouchHelperCallback;
+import northstar.planner.presentation.swipe.SortableListTouchHelperCallback;
+import northstar.planner.presentation.swipe.TaskListTouchHelperCallback;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -24,11 +25,9 @@ public abstract class BaseFragment extends Fragment {
     public void initRecyclerView(RecyclerView recView, ThemeRecyclerViewAdapter adapter) {
         recView.setHasFixedSize(true);
         recView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-//        ThemeRecyclerViewAdapter adapter = new ThemeRecyclerViewAdapter(ts, activityListener);
         recView.setAdapter(adapter);
 
-        ItemTouchHelper.Callback callback = new GenericListTouchHelperCallback(adapter, getBaseActivity());
+        ItemTouchHelper.Callback callback = new SortableListTouchHelperCallback(adapter, getBaseActivity());
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(recView);
     }
@@ -38,10 +37,9 @@ public abstract class BaseFragment extends Fragment {
         recView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         GoalRecyclerViewAdapter adapter = new GoalRecyclerViewAdapter(goalList, activityListener);
-//        adapter.setHasStableIds(true);
         recView.setAdapter(adapter);
 
-        ItemTouchHelper.Callback callback = new GenericListTouchHelperCallback(adapter, getBaseActivity());
+        ItemTouchHelper.Callback callback = new SortableListTouchHelperCallback(adapter, getBaseActivity());
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(recView);
     }
@@ -49,11 +47,9 @@ public abstract class BaseFragment extends Fragment {
     public void initRecyclerView(RecyclerView recView, TaskRecyclerViewAdapter adapter) {
         recView.setHasFixedSize(false);
         recView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-//        TaskRecyclerViewAdapter adapter = new TaskRecyclerViewAdapter(taskList, activityListener);
         recView.setAdapter(adapter);
 
-        ItemTouchHelper.Callback callback = new GenericListTouchHelperCallback(adapter, getBaseActivity());
+        ItemTouchHelper.Callback callback = new TaskListTouchHelperCallback(adapter, getBaseActivity());
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(recView);
     }

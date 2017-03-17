@@ -11,14 +11,14 @@ import northstar.planner.R;
 import northstar.planner.models.drawable.SlideListSquareIcon;
 import northstar.planner.presentation.BaseActivity;
 
-public class GenericListTouchHelperCallback extends ItemTouchHelper.Callback {
+public class SortableListTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private SlideListSquareIcon deleteIcon;
     private BaseActivity activity;
     private SlideListSquareIcon doneIcon;
     private final ItemTouchHelperAdapter itemTouchHelperAdapter;
 
-    public GenericListTouchHelperCallback(ItemTouchHelperAdapter ad, BaseActivity ctx) {
+    public SortableListTouchHelperCallback(ItemTouchHelperAdapter ad, BaseActivity ctx) {
         itemTouchHelperAdapter = ad;
         float length = ctx.getResources().getDimension(R.dimen.slide_list_icon_length);
         activity = ctx;
@@ -30,7 +30,7 @@ public class GenericListTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-        int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+        int swipeFlags = 0; // No swiping
         return makeMovementFlags(dragFlags, swipeFlags);
     }
 

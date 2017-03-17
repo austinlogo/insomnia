@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -44,6 +45,9 @@ public class GoalFragment
 
     @BindView(R.id.fragment_goal_description)
     EditText editDescription;
+
+    @BindView(R.id.fragment_goal_add_fab)
+    FloatingActionButton addFab;
 
     @BindView(R.id.fragment_goal_success_criteria)
     ListView metrics;
@@ -91,7 +95,6 @@ public class GoalFragment
     @Override
     public void onResume() {
         super.onResume();
-        initListeners();
     }
 
     public void initViews(Goal currentGoal) {
@@ -102,19 +105,22 @@ public class GoalFragment
         metricsListAdapter.registerDataSetObserver(new ListObserver());
         metrics.setAdapter(metricsListAdapter);
 
+        metricsSpinnerAdapter = new SuccessCriteriaSpinnerAdapter(getActivity(), currentGoal.getMetrics());
+        taskListAdapter.updateList(currentGoal.getTasks());
+
+        initViews();
+    }
+
+    public void initViews() {
         int headerVisible = metricsListAdapter.isEmpty()
                 ? View.GONE
                 : View.VISIBLE;
         metricHeaderContainer.setVisibility(headerVisible);
 
-        metricsSpinnerAdapter = new SuccessCriteriaSpinnerAdapter(getActivity(), currentGoal.getMetrics());
-
-        taskListAdapter.updateList(currentGoal.getTasks());
-    }
-
-    private void initListeners() {
-//        successCriteriaCommittedValue.setOnEditorActionListener(this);
-//        newTaskTitle.setOnEditorActionListener(this);
+        int taskHeaderVisible = taskListAdapter.isEmpty()
+                ? View.GONE
+                : View.VISIBLE;
+        taskHeaderContainer.setVisibility(taskHeaderVisible);
     }
 
     @Override
@@ -129,30 +135,14 @@ public class GoalFragment
         super.onPause();
     }
 
-//    @Override
-//    public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) {
-//        if (actionId == EditorInfo.IME_ACTION_DONE) {
-////            getBaseActivity().hideKeyboard();
-//            switch (v.getId()) {
-////                case R.id.fragment_goal_new_success_criteria_committed:
-////                    addMetric();
-////                    successCriteriaTitle.setText("");
-////                    successCriteriaCommittedValue.setText("");
-////                    successCriteriaTitle.requestFocus();
-////                    return true;
-////                case R.id.item_new_task_title:
-////                    attachedActivity.createTask(v.getText().toString(), metricsSpinnerAdapter);
-//////                    newTaskTitle.setText("");
-////                    return true;
-//            }
-//        }
-//        return false;
-//    }
-
     @OnItemLongClick(R.id.fragment_goal_success_criteria)
     public boolean longClickSuccessCriteria(int position) {
-        return attachedActivity.removeMetric(metricsListAdapter.getItem(position));
-//        return metricsListAdapter.remove(position);
+        Metric metric = metricsListAdapter.getItem(position);
+
+        if (metric != null) {
+            attachedActivity.removeMetricWorkflow(metric);
+        }
+        return true;
     }
 
     @OnEditorAction(R.id.fragment_goal_title)
@@ -169,29 +159,18 @@ public class GoalFragment
         return metricsSpinnerAdapter;
     }
 
-//    public boolean addMetric() {
-//        String newSuccessCriteriaTitle = successCriteriaTitle.getText().toString();
-//        int newSuccessCriteriaCommitted = StringUtils.getIntFromEditText(successCriteriaCommittedValue);
-//
-//        if (newSuccessCriteriaCommitted == 0 || newSuccessCriteriaTitle.isEmpty()) {
-//            return false;
-//        }
-//
-//        storeAndPropagateNewSuccessCriteria(newSuccessCriteriaTitle, newSuccessCriteriaCommitted);
-//        return true;
-//    }
-
+    @Override
     public void updateMetric(Metric sc) {
         if (sc != null) {
             metricsListAdapter.updateSuccessCriteria(sc);
         }
+        initViews();
     }
 
-//    private void storeAndPropagateNewSuccessCriteria(String newSuccessCriteriaTitle, int newSuccessCriteriaCommitted) {
-//        Metric sc = new Metric(newSuccessCriteriaTitle, newSuccessCriteriaCommitted);
-//        attachedActivity.startAddMetricWorkflow(sc);
-//        metricsListAdapter.notifyDataSetChanged();
-//    }
+    @Override
+    public void setActionButtonVisibility(boolean isVisible) {
+        addFab.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+    }
 
     public Goal getNewGoalValues() {
         Goal updatedGoalValues = new Goal(BaseModel.NEW_ID, editTitle.getText().toString(), editDescription.getText().toString());
@@ -231,9 +210,7 @@ public class GoalFragment
 
     public interface GoalFragmentListener {
         void startAddWorkflow();
-//        Metric startAddMetricWorkflow(Metric sc);
-        boolean removeMetric(Metric sc);
-//        void createTask(String newTask, SuccessCriteriaSpinnerAdapter adapter);
+        void removeMetricWorkflow(Metric sc);
     }
 
     public interface TaskActionListener {
@@ -241,7 +218,6 @@ public class GoalFragment
         void removeTask(int position, Task t);
         void completeTask(Task t);
     }
-
 
     private class ListObserver extends DataSetObserver {
 

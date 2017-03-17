@@ -118,7 +118,7 @@ public class ThemeActivity
     private void storeThemeIfItDoesNotYesExist() {
         if (currentTheme.isNew()) {
             currentTheme.updateTheme(mFragment.getNewThemeValues());
-            getDao().addTheme(currentTheme, 0);
+            currentTheme = getDao().addTheme(currentTheme, 0);
         }
     }
 
@@ -132,6 +132,7 @@ public class ThemeActivity
 
     @Override
     public void openActiveHoursDialog() {
+        storeThemeIfItDoesNotYesExist();
         ActiveHoursDialogFragment.newInstance(currentTheme.getId()).show(getFragmentManager(), "TAG");
     }
 }

@@ -27,7 +27,7 @@ public class AddOverlayFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_today_add_submenue, container, false);
+        View v = inflater.inflate(R.layout.fragment_goal_add_submenue, container, false);
         ButterKnife.bind(this, v);
         return v;
     }

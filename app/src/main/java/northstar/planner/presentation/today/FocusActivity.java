@@ -16,19 +16,18 @@ import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.goal.GoalFragment;
 import northstar.planner.presentation.task.TaskBasedActivity;
 
-public class TodayActivity
+public class FocusActivity
         extends TaskBasedActivity
-        implements GoalFragment.TaskActionListener, TodayFragment.TodayActivityListener {
+        implements GoalFragment.TaskActionListener, FocusFragment.FocusActivityListener {
 
-    TodayFragment mFragment;
-//    AddTaskFragment addTaskFragment;
+    FocusFragment mFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        mFragment = (TodayFragment) super.onCreate(savedInstanceState, TaskTable.TABLE_NAME);
+        mFragment = (FocusFragment) super.onCreate(savedInstanceState, TaskTable.TABLE_NAME);
         ButterKnife.bind(this);
 
-        finishDrawerInit(this, (DrawerLayout) getRootView(), getString(R.string.today));
+        finishDrawerInit(this, (DrawerLayout) getRootView(), getString(R.string.drawer_item_focus));
     }
 
     @Override
@@ -42,7 +41,6 @@ public class TodayActivity
         super.onResume();
         List<Task> scratchTasks = getDao().getTodaysTasks();
         getDao().getTasksByPriority();
-//        getDao().getTasksByGoalId(BaseModel.SCRATCH_ID);
         mFragment.initViews(scratchTasks);
     }
 
@@ -63,10 +61,5 @@ public class TodayActivity
     public void openAddTaskWorkflow(String newTaskTitle) {
         setFragmentVisible(addTaskLayout);
         addTaskFragment.updateFragmentValuesForTodayTask(newTaskTitle);
-    }
-
-    @Override
-    public void completeTask(Task t) {
-        getDao().completeTask(t);
     }
 }
