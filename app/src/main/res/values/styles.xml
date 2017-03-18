@@ -6,6 +6,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorTertiary">#999</item>
+
+        <item name="android:background">#EEE</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColorHint">#000</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
@@ -31,11 +36,13 @@
     <style name="AppTheme.DrawerItem">
         <item name="android:paddingTop">20dp</item>
         <item name="android:paddingBottom">20dp</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:background">?selectableItemBackground</item>
     </style>
 
     <style name="AppTheme.EditText">
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="AppTheme.EditText.NoMargin" parent="AppTheme.EditText">
@@ -79,6 +86,7 @@
         <item name="android:background">?selectableItemBackground</item>
         <item name="android:paddingStart">@dimen/standardSpace</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColorPrimaryInverse">@color/red</item>
     </style>
 
     <style name="AppTheme.TextViewItem.NoPaddingTop" parent="AppTheme.TextViewItem">

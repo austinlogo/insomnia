@@ -74,6 +74,7 @@
             android:layout_width="match_parent"
             android:inputType="text"
             android:imeOptions="actionDone"
+            android:textColor="@android:color/black"
             android:layout_toLeftOf="@id/fragment_add_task_done_icon"
             android:layout_height="match_parent"/>
 
@@ -81,6 +82,7 @@
             android:id="@+id/fragment_add_task_datepicker_value"
             android:visibility="gone"
             android:padding="@dimen/smallSpace"
+            android:textColor="@android:color/black"
             android:layout_toLeftOf="@id/fragment_add_task_done_icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -95,6 +97,7 @@
         <EditText
             android:id="@+id/fragment_add_task_committed_value"
             android:hint="@string/add_task"
+            android:textColor="@android:color/black"
             android:layout_toLeftOf="@id/fragment_add_task_done_icon"
             android:layout_width="match_parent"
             android:inputType="number"

@@ -297,9 +297,13 @@ public abstract class BaseActivity
         builder.setContentText(task.getTitle());
         builder.setAutoCancel(true);
         builder.setPriority(Notification.PRIORITY_HIGH);
-        builder.setColor(getResources().getColor(R.color.colorPrimary));
         builder.setVibrate(new long[]{0,100,100,100});
         builder.setSmallIcon(R.drawable.logo_nobackground);
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            builder.setColor(getResources().getColor(R.color.colorPrimary));
+        }
+
 
         Intent result = new Intent(this, TaskActivity.class);
         result.putExtra(TaskTable.TABLE_NAME, task);
