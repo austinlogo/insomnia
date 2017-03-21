@@ -79,7 +79,7 @@ public class DateUtils {
         return c;
     }
 
-    public static long getLongTime(int hourOfDay, int minute) {
+    public static long getTimeOfDay(int hourOfDay, int minute) {
         return (hourOfDay * MINUTES_IN_HOUR) + minute;
     }
 

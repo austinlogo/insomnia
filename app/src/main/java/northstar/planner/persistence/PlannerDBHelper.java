@@ -1,6 +1,7 @@
 package northstar.planner.persistence;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -14,6 +15,7 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
 
     public static final String DB_FILENAME = "PlannerApplication.db";
     private static final int DB_VERSION = 1;
+    public static int newInstall = 0;
     private static PlannerDBHelper instance;
 
     public PlannerDBHelper(Context context) {
@@ -22,7 +24,7 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
         onCreate(getWritableDatabase());
     }
 
-    public static SQLiteDatabase getInstance() {
+    public static SQLiteDatabase getDbInstance() {
         return instance == null
                 ? null
                 : instance.getWritableDatabase();
@@ -30,16 +32,17 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        newInstall += doesTableExists(ThemeTable.TABLE_NAME, db) ? 0 : 1;
+
         db.execSQL(ThemeTable.SQL_CREATE_QUERY);
         db.execSQL(GoalTable.SQL_CREATE_QUERY);
         db.execSQL(TaskTable.SQL_CREATE_QUERY);
         db.execSQL(MetricTable.SQL_CREATE_QUERY);
         db.execSQL(ActiveHoursTable.SQL_CREATE_QUERY);
-
-//        db.execSQL("ALTER TABLE " + TaskTable.TABLE_NAME + " ADD " + TaskTable.REMINDER_COLUMN + " NUMERIC;");
     }
 
     public static void clearAll(SQLiteDatabase db) {
+
         db.execSQL(ThemeTable.getDropTableQuery());
         db.execSQL(GoalTable.getDropTableQuery());
         db.execSQL(TaskTable.getDropTableQuery());
@@ -50,5 +53,19 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         clearAll(db);
         onCreate(db);
+    }
+
+    private boolean doesTableExists(String tableName, SQLiteDatabase mDatabase) {
+
+
+        Cursor cursor = mDatabase.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+tableName+"'", null);
+        if(cursor!=null) {
+            if(cursor.getCount()>0) {
+                cursor.close();
+                return true;
+            }
+            cursor.close();
+        }
+        return false;
     }
 }

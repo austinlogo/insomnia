@@ -22,8 +22,8 @@ android {
         applicationId "northstar.planner"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 6
-        versionName "1.1.03"
+        versionCode 7
+        versionName "1.1.04"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

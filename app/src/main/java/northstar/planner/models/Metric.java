@@ -67,7 +67,7 @@ public abstract class Metric extends BaseModel{
         return committed;
     }
 
-    public void setGoal(Goal goal) {
-        this.goal = goal.getId();
+    public void setGoal(long goalId) {
+        this.goal = goalId;
     }
 }

@@ -87,10 +87,10 @@ public class CheckboxGroup
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
         if (activePicker.getId() == start.getId()) {
-            startTime = DateUtils.getLongTime(hourOfDay, minute);
+            startTime = DateUtils.getTimeOfDay(hourOfDay, minute);
             activePicker.setText(DateUtils.getStringTime(startTime));
         } else {
-            endTime = DateUtils.getLongTime(hourOfDay, minute);
+            endTime = DateUtils.getTimeOfDay(hourOfDay, minute);
             activePicker.setText(DateUtils.getStringTime(endTime));
         }
 

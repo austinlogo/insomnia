@@ -75,8 +75,32 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/fragment_task_reminder_container"
+        android:layout_below="@+id/fragment_task_snooze_container"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="?selectableItemBackground"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:padding="@dimen/smallSpace"
+            android:layout_width="@dimen/icon_width"
+            android:layout_height="@dimen/icon_width"
+            android:src="@drawable/ic_alarm_black_36dp"/>
+
+        <TextView
+            android:id="@+id/fragment_reminder_snooze"
+            android:hint="@string/reminder_not_set"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/fragment_task_goal_container"
-        android:layout_below="@id/fragment_task_snooze_container"
+        android:layout_below="@id/fragment_task_reminder_container"
         android:layout_width="match_parent"
         android:layout_gravity="center_horizontal"
         android:background="?selectableItemBackground"
@@ -145,29 +169,5 @@
             android:background="?selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/fragment_task_reminder_container"
-        android:layout_width="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:background="?selectableItemBackground"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fragment_task_snooze_container"
-        android:layout_alignParentStart="true">
-
-        <ImageView
-            android:padding="@dimen/smallSpace"
-            android:layout_width="@dimen/icon_width"
-            android:layout_height="@dimen/icon_width"
-            android:src="@drawable/ic_alarm_black_36dp"/>
-
-        <TextView
-            android:id="@+id/fragment_reminder_snooze"
-            android:hint="@string/reminder_not_set"
-            android:layout_width="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_height="wrap_content"/>
-
     </LinearLayout>
 </RelativeLayout>

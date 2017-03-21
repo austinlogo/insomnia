@@ -2,7 +2,9 @@ package northstar.planner;
 
 import android.app.Application;
 
+import northstar.planner.persistence.PlannerDBHelper;
 import northstar.planner.persistence.PlannerSqliteGateway;
+import northstar.planner.persistence.fresh.FreshInstallData;
 
 public class PlannerApplication extends Application{
 
@@ -12,7 +14,13 @@ public class PlannerApplication extends Application{
     public void onCreate() {
         super.onCreate();
         context = this;
-        new PlannerSqliteGateway(getApplicationContext());
+        PlannerSqliteGateway dao = new PlannerSqliteGateway(getApplicationContext());
+
+        if (PlannerDBHelper.newInstall == 1) {
+            FreshInstallData freshInstallData = new FreshInstallData(context);
+            freshInstallData.professionalThemeConstructor(dao);
+            freshInstallData.personalThemeConstructor(dao);
+        }
     }
 
     public static Application getInstance() {

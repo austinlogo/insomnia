@@ -34,11 +34,15 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
     public PlannerSqliteGateway(Context ctx) {
         new PlannerDBHelper(ctx);
-        db = PlannerDBHelper.getInstance();
+        db = PlannerDBHelper.getDbInstance();
+    }
+
+    public PlannerSqliteGateway(SQLiteDatabase db) {
+        this.db = db;
     }
 
     public PlannerSqliteGateway() {
-        db = PlannerDBHelper.getInstance();
+        db = PlannerDBHelper.getDbInstance();
     }
 
     public Theme addTheme(Theme newTheme, int position) {
@@ -263,14 +267,6 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         return i == 1;
     }
 
-    public boolean removeTheme(String title) {
-        String whereClause = ThemeTable.TITLE_COLUMN + EQUALSQ;
-        String[] whereArgs = { title };
-
-        int i = db.delete(ThemeTable.TABLE_NAME, whereClause, whereArgs);
-        return i > 0 ;
-    }
-
     public boolean removeGoal(long goalId) {
         String whereClause = GoalTable._ID + EQUALSQ;
         String[] whereArgs = { Long.toString(goalId) };
@@ -427,7 +423,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
     public List<Task> getTasksByPriority() {
         Date now = new Date();
-        long timeOfDay = DateUtils.getLongTime(now.getHours(), now.getMinutes());
+        long timeOfDay = DateUtils.getTimeOfDay(now.getHours(), now.getMinutes());
 
         String query = "Select ta.*, g." + GoalTable.TITLE_COLUMN + " as " + GoalTable.uniqueTitle() + " from " + TaskTable.TABLE_NAME + " ta"
                 + " LEFT JOIN " + GoalTable.TABLE_NAME + " g on"
@@ -530,12 +526,27 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         }
     }
 
+    public void updateActiveHour(long themeId, long day, long start, long end) {
+        insertActiveHour(themeId, day, start, end);
+    }
+
     private void updateActiveHour(long themeId, CheckboxGroup.CheckboxGroupIndex index, CheckboxGroup currentGroup) {
+        insertActiveHour(themeId, index.getValue(), currentGroup.getStartTime(), currentGroup.getEndTime());
+//        ContentValues cv = new ContentValues();
+//        cv.put(ActiveHoursTable.THEME_COLUMN, themeId);
+//        cv.put(ActiveHoursTable.DAY_COLUMN, index.getValue());
+//        cv.put(ActiveHoursTable.START_COLUMN, currentGroup.getStartTime());
+//        cv.put(ActiveHoursTable.END_COLUMN, currentGroup.getEndTime());
+//
+//        db.insertWithOnConflict(ActiveHoursTable.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    private void insertActiveHour(long themeId, long day, long start, long end) {
         ContentValues cv = new ContentValues();
         cv.put(ActiveHoursTable.THEME_COLUMN, themeId);
-        cv.put(ActiveHoursTable.DAY_COLUMN, index.getValue());
-        cv.put(ActiveHoursTable.START_COLUMN, currentGroup.getStartTime());
-        cv.put(ActiveHoursTable.END_COLUMN, currentGroup.getEndTime());
+        cv.put(ActiveHoursTable.DAY_COLUMN, day);
+        cv.put(ActiveHoursTable.START_COLUMN, start);
+        cv.put(ActiveHoursTable.END_COLUMN, end);
 
         db.insertWithOnConflict(ActiveHoursTable.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
     }

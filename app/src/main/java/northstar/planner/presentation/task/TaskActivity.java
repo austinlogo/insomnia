@@ -104,7 +104,7 @@ public class TaskActivity
 
 //    @Override
 //    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-//        selectedDate = Calendar.getInstance();
+//        selectedDate = Calendar.getDbInstance();
 //        selectedDate.set(year, monthOfYear, dayOfMonth);
 //        timePickerDialog.show();
 //    }

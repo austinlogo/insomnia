@@ -128,7 +128,7 @@ public class GoalActivity
     public Metric addandStoreMetric(Metric sc) {
         setFragmentVisible(mainFragmentLayout);
 
-        sc.setGoal(currentGoal);
+        sc.setGoal(currentGoal.getId());
         sc = getDao().addMetric(sc);
         currentGoal.addMetric(sc);
         goalFragment.initViews(currentGoal);

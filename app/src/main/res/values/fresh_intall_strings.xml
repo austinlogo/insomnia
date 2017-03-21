@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="professional_title">Professional</string>
+    <string name="professional_description">Everything that makes me money</string>
+    <string name="professional_goal_article_title">finish writing weekly article</string>
+    <string name="professional_goal_article_description">my thoughts on the podcast industry</string>
+    <string name="professional_metric_article_title">Necessary Approvals Remaining</string>
+    <string name="professional_metric_article_title_2">quotes from colleagues</string>
+    <string name="professional_task_quote_andy">get Andy\'s quote</string>
+    <string name="professional_task_approval">get okay from Chris</string>
+    <string name="personal_title">Personal</string>
+    <string name="personal_description">for me</string>
+    <string name="personal_goal_guitar_title">Learn Guitar</string>
+    <string name="personal_goal_reading_title">Reading</string>
+    <string name="personal_task_strings_title">Get new strings</string>
+    <string name="personal_task_practice_title">practice 30 mins</string>
+    <string name="personal_task_reading_title">finish Mistborn</string>
+</resources>
