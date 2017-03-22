@@ -98,14 +98,18 @@ public class GoalFragment
     }
 
     public void initViews(Goal currentGoal) {
+        updateViews(getActivity(), currentGoal);
+    }
+
+    public void updateViews(Activity activity, Goal currentGoal) {
         editTitle.setText(currentGoal.getTitle());
         editDescription.setText(currentGoal.getDescription());
 
-        metricsListAdapter = new MetricsListAdapter(getActivity(), currentGoal.getMetrics());
+        metricsListAdapter = new MetricsListAdapter(activity, currentGoal.getMetrics());
         metricsListAdapter.registerDataSetObserver(new ListObserver());
         metrics.setAdapter(metricsListAdapter);
 
-        metricsSpinnerAdapter = new SuccessCriteriaSpinnerAdapter(getActivity(), currentGoal.getMetrics());
+        metricsSpinnerAdapter = new SuccessCriteriaSpinnerAdapter(activity, currentGoal.getMetrics());
         taskListAdapter.updateList(currentGoal.getTasks());
 
         initViews();

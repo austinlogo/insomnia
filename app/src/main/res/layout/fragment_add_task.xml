@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              style="@style/AppTheme"
               android:orientation="vertical"
               android:focusableInTouchMode="true"
               android:background="@color/white"
@@ -79,15 +80,16 @@
             android:layout_height="match_parent"/>
 
         <TextView
+            style="@style/AppTheme.TextView"
             android:id="@+id/fragment_add_task_datepicker_value"
             android:visibility="gone"
             android:padding="@dimen/smallSpace"
-            android:textColor="@android:color/black"
             android:layout_toLeftOf="@id/fragment_add_task_done_icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <Spinner
+            style="@style/AppTheme.Spinner"
             android:id="@+id/fragment_add_task_successcriteria_value"
             android:visibility="gone"
             android:layout_toLeftOf="@id/fragment_add_task_done_icon"
@@ -95,6 +97,7 @@
             android:layout_height="match_parent"/>
 
         <EditText
+            style="@style/AppTheme.EditText"
             android:id="@+id/fragment_add_task_committed_value"
             android:hint="@string/add_task"
             android:textColor="@android:color/black"

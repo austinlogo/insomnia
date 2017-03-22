@@ -22,7 +22,7 @@ public class GoalActivity
         extends     TaskBasedActivity
         implements  GoalFragment.GoalFragmentListener,
                     AddTaskFragment.AddTaskFragmentListener,
-                    GoalFragment.TaskActionListener,
+//                    GoalFragment.TaskActionListener,
                     AddMetricFragment.AddMetricFragmentListener,
                     AddOverlayFragment.AddOverlayListener {
 
@@ -91,6 +91,7 @@ public class GoalActivity
 
     @Override
     protected void deleteAction() {
+
         getDao().removeGoal(currentGoal.getId());
         finish();
     }
@@ -111,17 +112,20 @@ public class GoalActivity
         newTask.setGoal(currentGoal);
         newTask = getDao().addTask(newTask);
         currentGoal.getTasks().add(newTask);
-        goalFragment.initViews(currentGoal);
-
-//        ((TaskRecyclerViewAdapter) goalFragment.tasksRecyclerView.getAdapter()).addItem(newTask);
+        goalFragment.updateViews(this, currentGoal);
     }
 
     private void setAddFragment(Fragment fragmentToBeVisible) {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.activity_goal_add_task, fragmentToBeVisible)
-                .commit();
-
+        addFragmentIfNotAlreadyAdded(fragmentToBeVisible);
         setFragmentVisible(addTaskLayout);
+    }
+
+    private void addFragmentIfNotAlreadyAdded(Fragment fragmentToBeVisible) {
+        if (!fragmentToBeVisible.isAdded()) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.activity_goal_add_task, fragmentToBeVisible)
+                    .commit();
+        }
     }
 
     @Override
@@ -140,7 +144,6 @@ public class GoalActivity
         removeAddOverlayFromActivity();
         setAddFragment(addTaskFragment);
         addTaskFragment.updateFragmentValues(goalFragment.getMetricsSpinnerAdapter());
-
     }
 
     @Override
@@ -152,5 +155,17 @@ public class GoalActivity
     @Override
     public void dismissOverlay() {
         removeAddOverlayFromActivity();
+    }
+
+    @Override
+    public void completeTask(Task t) {
+        super.completeTask(t);
+        currentGoal.getTasks().remove(t);
+    }
+
+    @Override
+    public void removeTask(int position, Task t) {
+        super.removeTask(position, t);
+        currentGoal.getTasks().remove(t);
     }
 }

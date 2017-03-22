@@ -13,7 +13,7 @@
         android:layout_height="match_parent"/>
     <TextView
         android:padding="@dimen/smallSpace"
-        android:textSize="@dimen/addIconRowHeight"
+        android:textSize="@dimen/icon_width"
         android:text="@string/action_delete"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

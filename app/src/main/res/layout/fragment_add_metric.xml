@@ -63,6 +63,7 @@
             android:layout_height="wrap_content"/>
 
         <EditText
+            style="@style/AppTheme.EditText"
             android:id="@+id/fragment_add_metric_committed_value"
             android:visibility="gone"
             android:hint="@string/hint_metric_amount"

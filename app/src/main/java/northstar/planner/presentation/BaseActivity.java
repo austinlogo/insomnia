@@ -200,6 +200,7 @@ public abstract class BaseActivity
                 return true;
             case R.id.main_menu_edit:
                 toggleEditIcon(item);
+
                 return true;
         }
 
@@ -212,7 +213,7 @@ public abstract class BaseActivity
 
     protected void toggleEditIcon(MenuItem menuItem) {
         boolean isEditable = menuItem.getTitle().equals(getString(R.string.action_edit));
-        setEditIcon(!isEditable);
+        setEditIcon(isEditable);
         editAction();
     }
 

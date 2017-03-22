@@ -24,11 +24,11 @@
 
         <ImageView
             android:id="@+id/activity_drawer_list_theme_icon"
-            android:layout_width="@dimen/addIconRowHeight"
+            android:layout_width="@dimen/icon_width"
+            android:layout_height="@dimen/icon_width"
             android:padding="5dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_today_black_24dp"
-            android:layout_height="match_parent"/>
+            android:src="@drawable/ic_today_black_24dp"/>
 
         <TextView
             android:id="@+id/activity_drawer_list_today"
@@ -36,7 +36,7 @@
             android:layout_gravity="center_vertical"
             android:text="@string/drawer_item_focus"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <LinearLayout
@@ -46,12 +46,12 @@
 
         <ImageView
             android:id="@+id/item_drawer_icon"
-            android:layout_width="@dimen/addIconRowHeight"
+            android:layout_width="@dimen/icon_width"
+            android:layout_height="@dimen/icon_width"
             android:padding="5dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/tree_black"
-            android:scaleType="fitCenter"
-            android:layout_height="match_parent"/>
+            android:scaleType="fitCenter"/>
         <TextView
             android:id="@+id/activity_drawer_list_theme_head"
             style="@style/AppTheme.DrawerItem"

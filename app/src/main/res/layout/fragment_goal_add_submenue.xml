@@ -19,6 +19,7 @@
             android:layout_height="wrap_content">
 
             <TextView
+                style="@style/AppTheme.TextView"
                 android:text="@string/metric"
                 android:gravity="center_vertical"
                 android:layout_marginEnd="@dimen/standardSpace"
@@ -40,6 +41,7 @@
             android:layout_height="wrap_content">
 
             <TextView
+                style="@style/AppTheme.TextView"
                 android:text="@string/task"
                 android:gravity="center_vertical"
                 android:layout_marginEnd="@dimen/standardSpace"

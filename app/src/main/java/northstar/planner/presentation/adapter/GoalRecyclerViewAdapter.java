@@ -87,6 +87,7 @@ public class GoalRecyclerViewAdapter
 
     @Override
     public void onItemDeleted(int position) {
+        goals.remove(position);
         notifyItemRemoved(position);
     }
 

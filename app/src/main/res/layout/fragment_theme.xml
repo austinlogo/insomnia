@@ -11,10 +11,8 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:src="@drawable/ic_title_black_24dp"
-            android:padding="@dimen/smallSpace"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            style="@style/AppTheme.LeftIcon"
+            android:src="@drawable/ic_title_black_24dp"/>
 
         <EditText
             android:id="@+id/fragment_theme_edit_title"
@@ -39,10 +37,8 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:src="@drawable/ic_short_text_black_24dp"
-            android:padding="@dimen/smallSpace"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            style="@style/AppTheme.LeftIcon"
+            android:src="@drawable/ic_short_text_black_24dp"/>
 
         <EditText
             android:id="@+id/fragment_theme_edit_description"
@@ -55,41 +51,49 @@
             android:hint="@string/theme_description_hint"/>
     </LinearLayout>
 
-
-    <TextView
+    <LinearLayout
+        android:id="@+id/fragment_theme_active_hours_container"
         android:layout_below="@id/fragment_theme_description_container"
-        android:padding="@dimen/smallSpace"
-        android:background="?selectableItemBackground"
-        android:id="@+id/fragment_theme_edit_active_hours"
-        android:text="@string/active_hours"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+
+        <ImageView
+            style="@style/AppTheme.LeftIcon"
+            android:src="@drawable/ic_timelapse_black_36dp"/>
+
+        <TextView
+            style="@style/AppTheme.TextView"
+            android:padding="@dimen/smallSpace"
+            android:background="?selectableItemBackground"
+            android:id="@+id/fragment_theme_edit_active_hours"
+            android:text="@string/active_hours"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/fragment_theme_edit_new_goal_container"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/fragment_theme_edit_active_hours">
+        android:layout_below="@id/fragment_theme_active_hours_container">
 
         <ImageView
-            android:src="@drawable/goal_icon"
-            android:padding="@dimen/smallSpace"
-            android:layout_gravity="center_vertical"
-            android:layout_width="36dp"
-            android:scaleType="fitCenter"
-            android:layout_height="36dp"/>
+            style="@style/AppTheme.LeftIcon"
+            android:src="@drawable/goal_icon"/>
 
         <EditText
             android:id="@+id/fragment_theme_edit_new_goal_text"
             style="@style/AppTheme.addItem"
+            android:paddingStart="@dimen/smallSpace"
             android:layout_width="match_parent"
-            android:textSize="16sp"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
             android:gravity="center_vertical"
             android:inputType="text"
-            android:hint="@string/no_goals_hint"
-            android:text=""/>
+            android:hint="@string/no_goals_hint"/>
 
 
     </LinearLayout>

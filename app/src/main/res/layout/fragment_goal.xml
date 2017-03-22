@@ -71,6 +71,7 @@
             android:layout_height="wrap_content">
 
             <TextView
+                style="@style/AppTheme.TextView"
                 android:id="@+id/fragment_goal_metric_header"
                 android:text="@string/metric"
                 android:layout_width="wrap_content"
@@ -103,6 +104,7 @@
             android:layout_height="wrap_content">
 
             <TextView
+                style="@style/AppTheme.TextView"
                 android:id="@+id/fragment_goal_task_header"
                 android:text="@string/task"
                 android:layout_width="wrap_content"

@@ -149,6 +149,11 @@ public class ThemeActivity
     @Override
     public void openActiveHoursDialog() {
         storeThemeIfItDoesNotYesExist();
-        ActiveHoursDialogFragment.newInstance(currentTheme.getId()).show(getFragmentManager(), "TAG");
+        ActiveHoursDialogFragment fragment = ActiveHoursDialogFragment.newInstance(currentTheme.getId());
+        fragment.show(getFragmentManager(), "TAG");
+    }
+
+    public void setActiveHours(long start, long end) {
+
     }
 }

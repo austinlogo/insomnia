@@ -42,6 +42,7 @@
             android:src="@drawable/ic_date_range_black_24dp"/>
 
         <TextView
+            style="@style/AppTheme.TextView"
             android:id="@+id/fragment_task_due"
             android:hint="@string/due_date_not_set"
             android:layout_width="match_parent"
@@ -65,6 +66,7 @@
             android:src="@drawable/ic_snooze_black_36dp"/>
 
         <TextView
+            style="@style/AppTheme.TextView"
             android:id="@+id/fragment_task_snooze"
             android:hint="@string/snooze_not_set"
             android:layout_width="match_parent"
@@ -90,6 +92,7 @@
             android:src="@drawable/ic_alarm_black_36dp"/>
 
         <TextView
+            style="@style/AppTheme.TextView"
             android:id="@+id/fragment_reminder_snooze"
             android:hint="@string/reminder_not_set"
             android:layout_width="match_parent"
@@ -115,6 +118,7 @@
             android:layout_height="@dimen/icon_width"/>
 
         <TextView
+            style="@style/AppTheme.TextView"
             android:id="@+id/fragment_task_goal"
             android:layout_width="match_parent"
             android:layout_gravity="center_vertical"
@@ -139,6 +143,7 @@
             android:layout_height="@dimen/icon_width"/>
 
         <TextView
+            style="@style/AppTheme.TextView"
             android:id="@+id/item_success_criteria_title"
             android:layout_toEndOf="@id/fragment_task_metric_row_icon"
             android:text="hello"
@@ -148,6 +153,7 @@
             android:layout_height="wrap_content" />
 
         <TextView
+            style="@style/AppTheme.TextView"
             android:id="@+id/item_success_criteria_progress"
             android:layout_width="match_parent"
             android:layout_alignParentEnd="true"
