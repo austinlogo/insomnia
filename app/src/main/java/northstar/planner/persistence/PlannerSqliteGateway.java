@@ -389,8 +389,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         newValues.put(TaskTable.TASK_COMMITMENT_COLUMN, task.getTaskCommitment());
         newValues.put(TaskTable.STATUS_COLUMN, task.getTaskStatus().toString());
 
-        long result = db.update(TaskTable.TABLE_NAME, newValues, whereClause, whereArgs);
-        task.setId(result);
+        db.update(TaskTable.TABLE_NAME, newValues, whereClause, whereArgs);
     }
 
     public void updateOrder(String tableName, List<? extends BaseModel> list) {
