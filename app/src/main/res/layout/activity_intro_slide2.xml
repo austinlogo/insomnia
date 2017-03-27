@@ -44,7 +44,7 @@
             <ImageView
                 android:src="@drawable/tree_black"
                 android:scaleType="fitXY"
-                android:layout_width="@dimen/small_icon_width"
+                android:layout_width="32dp"
                 android:layout_height="@dimen/small_icon_width"/>
 
             <TextView

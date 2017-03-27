@@ -37,8 +37,8 @@ public class FocusActivity
 
         finishDrawerInit(this, (DrawerLayout) getRootView(), getString(R.string.drawer_item_focus));
 
-        if (true) {
-            prefManager.setFirstTimeLaunch(true);
+        if (prefManager.isFirstTimeLaunch()) {
+            prefManager.setFirstTimeLaunch(false);
             Intent i = new Intent(this, IntroActivity.class);
             startActivity(i);
         }

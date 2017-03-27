@@ -79,6 +79,7 @@ public class DrawerAdapter extends ArrayAdapter<String> {
         });
 
         final ListView goals = (ListView) convertView.findViewById(R.id.item_drawer_goals);
+        goals.canScrollList(1);
         ImageButton button = (ImageButton) convertView.findViewById(R.id.item_drawer_theme_collapse_icon);
 
         int buttonVisibility = drawerItems.get(position).getGoals().isEmpty() ? View.INVISIBLE : View.VISIBLE;

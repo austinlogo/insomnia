@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="250dp"
@@ -12,15 +12,19 @@
     android:orientation="vertical">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:id="@+id/include_drawer_list_header"
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/colorPrimary" />
 
     <LinearLayout
+        android:id="@+id/include_drawer_list_focus_container"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/include_drawer_list_header">
 
         <ImageView
             android:id="@+id/activity_drawer_list_theme_icon"
@@ -40,6 +44,8 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/include_drawer_list_theme_container"
+        android:layout_below="@id/include_drawer_list_focus_container"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -60,15 +66,11 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/activity_drawer_list_themes"
-        android:divider="@android:color/transparent"
-        android:animateLayoutChanges="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
     <LinearLayout
         android:id="@+id/activity_drawer_list_getting_started_container"
+        android:layout_alignParentBottom="true"
+        android:background="#EEE"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -79,8 +81,9 @@
             android:layout_height="@dimen/small_icon_width"
             android:padding="5dp"
             android:layout_gravity="center_vertical"
-            android:src="@null"
+            android:src="@drawable/ic_settings_black_36dp"
             android:scaleType="fitCenter"/>
+
         <TextView
             android:id="@+id/item_getting_started_text"
             style="@style/AppTheme.DrawerItem"
@@ -89,4 +92,21 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-</LinearLayout>
+    <View
+        android:layout_above="@id/activity_drawer_list_getting_started_container"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black"/>
+
+
+    <ListView
+        android:id="@+id/activity_drawer_list_themes"
+        android:layout_below="@id/include_drawer_list_theme_container"
+        android:layout_above="@id/activity_drawer_list_getting_started_container"
+        android:divider="@android:color/transparent"
+        android:scrollbars="vertical"
+        android:animateLayoutChanges="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>
