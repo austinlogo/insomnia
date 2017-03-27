@@ -7,6 +7,7 @@
     android:layout_height="wrap_content">
 
     <TextView
+        android:textColor="@android:color/darker_gray"
         android:id="@+id/item_task_goal_title"
         android:textSize="6pt"
         android:paddingStart="@dimen/standardSpace"

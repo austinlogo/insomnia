@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 style="@style/AppTheme.Fragment"
-              android:orientation="vertical"
-              android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:animateLayoutChanges="true"
                 android:background="#EEE"
-              android:focusable="true"
-              android:focusableInTouchMode="true"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_alignParentTop="true"
@@ -28,6 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white">
+
         <ImageView
             android:src="@drawable/lonely"
             android:layout_centerInParent="true"
@@ -40,6 +42,9 @@
 
     <android.support.design.widget.FloatingActionButton
         style="@style/AppTheme.Fab"
+        app:backgroundTint="@color/colorAccent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@drawable/ic_add_white_36dp"
         android:id="@+id/fragment_today_add_fab"/>
 </RelativeLayout>

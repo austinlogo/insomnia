@@ -24,8 +24,8 @@
 
         <ImageView
             android:id="@+id/activity_drawer_list_theme_icon"
-            android:layout_width="@dimen/icon_width"
-            android:layout_height="@dimen/icon_width"
+            android:layout_width="@dimen/small_icon_width"
+            android:layout_height="@dimen/small_icon_width"
             android:padding="5dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_today_black_24dp"/>
@@ -46,8 +46,8 @@
 
         <ImageView
             android:id="@+id/item_drawer_icon"
-            android:layout_width="@dimen/icon_width"
-            android:layout_height="@dimen/icon_width"
+            android:layout_width="@dimen/small_icon_width"
+            android:layout_height="@dimen/small_icon_width"
             android:padding="5dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/tree_black"
@@ -66,5 +66,27 @@
         android:animateLayoutChanges="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:id="@+id/activity_drawer_list_getting_started_container"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/item_getting_started_icon"
+            android:layout_width="@dimen/small_icon_width"
+            android:layout_height="@dimen/small_icon_width"
+            android:padding="5dp"
+            android:layout_gravity="center_vertical"
+            android:src="@null"
+            android:scaleType="fitCenter"/>
+        <TextView
+            android:id="@+id/item_getting_started_text"
+            style="@style/AppTheme.DrawerItem"
+            android:text="@string/drawer_item_gettting_started"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
 </LinearLayout>

@@ -21,7 +21,7 @@
     <string name="new_task">new task</string>
     <string name="success_criteria_commited_hint">amount</string>
     <string name="add_task">add a new task</string>
-    <string name="select_a_success_criteria">Select a metrci</string>
+    <string name="select_a_success_criteria">Select a metric</string>
     <string name="click_to_set_date">click to set a date</string>
     <string name="action_delete">delete</string>
     <string name="action_edit">edit</string>
@@ -61,4 +61,5 @@
     <string name="snooze_not_set">snooze not set</string>
     <string name="due_date_not_set">due date not set</string>
     <string name="drawer_item_focus">Focus</string>
+    <string name="drawer_item_gettting_started">getting started</string>
 </resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:orientation="vertical"
                 android:animateLayoutChanges="true"
                 android:focusable="true"
@@ -55,7 +56,7 @@
 
             <EditText
                 android:id="@+id/fragment_goal_description"
-                style="@style/AppTheme.EditText"
+                style="@style/AppTheme.EditText.NoMargin"
                 android:layout_width="match_parent"
                 android:inputType="none"
                 android:focusableInTouchMode="false"
@@ -131,5 +132,6 @@
 
     <android.support.design.widget.FloatingActionButton
         style="@style/AppTheme.Fab"
+        app:backgroundTint="@color/colorAccent"
         android:id="@+id/fragment_goal_add_fab"/>
 </RelativeLayout>

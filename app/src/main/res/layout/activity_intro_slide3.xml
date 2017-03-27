@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_gravity="bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/android_intro_slide1_img_container"
+        android:gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="0dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:paddingStart="@dimen/smallSpace"
+            android:paddingEnd="@dimen/smallSpace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/activity_intro_slide_goal_03" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/android_intro_slide1_text_container"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/android_intro_slide1_img_container"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/goal_icon"
+                android:scaleType="fitXY"
+                android:layout_width="@dimen/small_icon_width"
+                android:layout_height="@dimen/small_icon_width"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/standardSpace"
+                android:text="@string/goal_title"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/slide_title"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="@dimen/desc_padding"
+            android:paddingRight="@dimen/desc_padding"
+            android:text="@string/goal_description"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/slide_desc" />
+
+    </LinearLayout>
+</RelativeLayout>

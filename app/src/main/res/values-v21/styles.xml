@@ -10,47 +10,6 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
-
-    <style name="AppTheme.Fragment">
-        <item name="android:orientation">vertical</item>
-        <item name="android:animateLayoutChanges">true</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="AppTheme.LeftIcon">
-        <item name="android:padding">@dimen/smallSpace</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_height">@dimen/icon_width</item>
-        <item name="android:layout_width">@dimen/icon_width</item>
-        <item name="android:scaleType">fitCenter</item>
-    </style>
-
-    <style name="AppTheme.addItem">
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:padding">@dimen/standardSpace</item>
-    </style>
-
-    <style name="AppTheme.DrawerItem">
-        <item name="android:paddingTop">20dp</item>
-        <item name="android:paddingBottom">20dp</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:background">?selectableItemBackground</item>
-    </style>
-
-    <style name="AppTheme.EditText">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:textColor">@android:color/black</item>
-    </style>
-
-    <style name="AppTheme.EditText.NoMargin" parent="AppTheme.EditText">
-        <item name="android:layout_marginTop">0dp</item>
-        <item name="android:background">@android:color/transparent</item>
-    </style>
-
     <style name="AppTheme.Fab">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -59,50 +18,5 @@
         <item name="android:layout_marginEnd">@dimen/standardSpace</item>
         <item name="android:layout_marginBottom">@dimen/fab_margin</item>
         <item name="android:src">@drawable/ic_add_white_36dp</item>
-    </style>
-
-    <style name="AppTheme.TextView" parent="android:TextAppearance.Widget.TextView">
-        <item name="android:textColor">#000</item>
-    </style>
-
-    <style name="AppTheme.EditText.Add">
-        <item name="android:hint">@string/add_task</item>
-        <item name="android:background">?editTextBackground</item>
-        <item name="android:inputType">text</item>
-        <item name="android:visibility">visible</item>
-        <item name="android:imeOptions">actionDone</item>
-        <item name="android:focusable">true</item>
-        <item name="android:focusableInTouchMode">true</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="AppTheme.Button">
-        <item name="android:background">?selectableItemBackground</item>
-        <item name="android:padding">@dimen/smallSpace</item>
-        <item name="android:layout_margin">@dimen/standardSpace</item>
-    </style>
-
-    <style name="AppTheme.TextViewItem">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:textColor">#000</item>
-        <item name="android:paddingTop">20dp</item>
-        <item name="android:paddingBottom">20dp</item>
-        <item name="android:background">?selectableItemBackground</item>
-        <item name="android:paddingStart">@dimen/standardSpace</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColorPrimaryInverse">@color/red</item>
-    </style>
-
-    <style name="AppTheme.TextViewItem.NoPaddingTop" parent="AppTheme.TextViewItem">
-        <item name="android:paddingTop">0dp</item>
-    </style>
-
-    <style name="AppTheme.addIconLayout">
-        <item name="android:orientation">horizontal</item>
-        <item name="android:background">@color/colorPrimary</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:animateLayoutChanges">true</item>
-        <item name="android:layout_height">48dp</item>
     </style>
 </resources>

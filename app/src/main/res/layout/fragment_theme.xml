@@ -42,7 +42,7 @@
 
         <EditText
             android:id="@+id/fragment_theme_edit_description"
-            style="@style/AppTheme.EditText"
+            style="@style/AppTheme.EditText.NoMargin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:focusable="false"

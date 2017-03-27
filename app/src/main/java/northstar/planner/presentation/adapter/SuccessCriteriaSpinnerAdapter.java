@@ -38,7 +38,7 @@ public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<Metric> implemen
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = (convertView == null)
-                ? LayoutInflater.from(getContext()).inflate(android.R.layout.simple_spinner_item, parent, false)
+                ? LayoutInflater.from(getContext()).inflate(R.layout.simple_spinner_item, parent, false)
                 : convertView;
 
         TextView text = (TextView) convertView.findViewById(android.R.id.text1);

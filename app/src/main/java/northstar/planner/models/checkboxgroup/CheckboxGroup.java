@@ -86,6 +86,10 @@ public class CheckboxGroup
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
+        if (activePicker == null) {
+            return; // API 19 Bug
+        }
+
         if (activePicker.getId() == start.getId()) {
             startTime = DateUtils.getTimeOfDay(hourOfDay, minute);
             activePicker.setText(DateUtils.getStringTime(startTime));

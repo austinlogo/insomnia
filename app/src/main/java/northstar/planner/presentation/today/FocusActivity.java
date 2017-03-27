@@ -1,5 +1,6 @@
 package northstar.planner.presentation.today;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
@@ -12,13 +13,18 @@ import northstar.planner.R;
 import northstar.planner.models.BaseModel;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.TaskTable;
+import northstar.planner.persistence.PrefManager;
 import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.goal.GoalFragment;
+import northstar.planner.presentation.intro.IntroActivity;
 import northstar.planner.presentation.task.TaskBasedActivity;
 
 public class FocusActivity
         extends TaskBasedActivity
         implements GoalFragment.TaskActionListener, FocusFragment.FocusActivityListener {
+
+//    @Inject
+    public PrefManager prefManager;
 
     FocusFragment mFragment;
 
@@ -27,7 +33,15 @@ public class FocusActivity
         mFragment = (FocusFragment) super.onCreate(savedInstanceState, TaskTable.TABLE_NAME);
         ButterKnife.bind(this);
 
+        prefManager = new PrefManager(this);
+
         finishDrawerInit(this, (DrawerLayout) getRootView(), getString(R.string.drawer_item_focus));
+
+        if (true) {
+            prefManager.setFirstTimeLaunch(true);
+            Intent i = new Intent(this, IntroActivity.class);
+            startActivity(i);
+        }
     }
 
     @Override

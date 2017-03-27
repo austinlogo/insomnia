@@ -18,6 +18,7 @@
         android:layout_height="match_parent"/>
 
     <TextView
+        style="@style/AppTheme.TextView"
         android:id="@+id/item_new_task_date"
         android:visibility="gone"
         android:hint="@string/click_to_set_date"
@@ -35,6 +36,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <TextView
+            style="@style/AppTheme.TextView"
             android:text="@string/select_a_success_criteria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

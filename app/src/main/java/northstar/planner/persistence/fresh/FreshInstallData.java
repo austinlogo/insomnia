@@ -93,7 +93,7 @@ public class FreshInstallData {
         task.setGoal(goalId);
         task.setTitle(title);
         task.setMetric(metric);
-
+        task.setDueDate(null);
         return task;
     }
 
@@ -104,7 +104,7 @@ public class FreshInstallData {
         task.setGoal(goalId);
         task.setTitle(title);
         task.setMetric(metric);
-
+        task.setDueDate(null);
         return task;
     }
 
@@ -151,6 +151,7 @@ public class FreshInstallData {
         Task task = new Task();
         task.setGoal(goalId);
         task.setTitle(title);
+        task.setDueDate(null);
         return task;
     }
 
@@ -159,6 +160,7 @@ public class FreshInstallData {
         Task task = new Task();
         task.setGoal(goalId);
         task.setTitle(title);
+        task.setDueDate(null);
         return task;
     }
 
@@ -168,6 +170,7 @@ public class FreshInstallData {
         Task task = new Task();
         task.setGoal(goalId);
         task.setTitle(title);
+        task.setDueDate(null);
         return task;
     }
 }

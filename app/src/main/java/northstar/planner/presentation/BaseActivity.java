@@ -10,6 +10,8 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,6 +46,7 @@ import northstar.planner.presentation.Theme.ThemeActivity;
 import northstar.planner.presentation.adapter.DrawerAdapter;
 import northstar.planner.presentation.adapter.DrawerListeners;
 import northstar.planner.presentation.goal.GoalActivity;
+import northstar.planner.presentation.intro.IntroActivity;
 import northstar.planner.presentation.task.TaskActivity;
 import northstar.planner.presentation.today.FocusActivity;
 
@@ -81,6 +85,10 @@ public abstract class BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dao = new PlannerSqliteGateway();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            adjustStatusThemeColor();
+        }
     }
 
     protected void finishDrawerInit(Activity act, DrawerLayout mDrawerLayout, String actionBarTitle) {
@@ -98,6 +106,12 @@ public abstract class BaseActivity
         getSupportActionBar().setTitle(actionBarTitle);
         mActionBarDrawerToggle.syncState();
         ((DrawerLayout) getRootView()).setDrawerListener(this);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void adjustStatusThemeColor() {
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
     }
 
     @Override
@@ -167,6 +181,12 @@ public abstract class BaseActivity
     private void startGoalActivity(long goalId) {
         Intent i = new Intent(this, GoalActivity.class);
         i.putExtra(GoalTable.TABLE_NAME, goalId);
+        startActivity(i);
+    }
+
+    @OnClick(R.id.activity_drawer_list_getting_started_container)
+    public void onClickGettingStarted() {
+        Intent i = new Intent(this, IntroActivity.class);
         startActivity(i);
     }
 
