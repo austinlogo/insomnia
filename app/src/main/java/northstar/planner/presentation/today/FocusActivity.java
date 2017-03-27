@@ -17,6 +17,7 @@ import northstar.planner.persistence.PrefManager;
 import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.goal.GoalFragment;
 import northstar.planner.presentation.intro.IntroActivity;
+import northstar.planner.presentation.rate.RateDialogFragment;
 import northstar.planner.presentation.task.TaskBasedActivity;
 
 public class FocusActivity
@@ -28,6 +29,7 @@ public class FocusActivity
 
     FocusFragment mFragment;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         mFragment = (FocusFragment) super.onCreate(savedInstanceState, TaskTable.TABLE_NAME);
@@ -37,11 +39,6 @@ public class FocusActivity
 
         finishDrawerInit(this, (DrawerLayout) getRootView(), getString(R.string.drawer_item_focus));
 
-        if (prefManager.isFirstTimeLaunch()) {
-            prefManager.setFirstTimeLaunch(false);
-            Intent i = new Intent(this, IntroActivity.class);
-            startActivity(i);
-        }
     }
 
     @Override
@@ -53,6 +50,21 @@ public class FocusActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        boolean isFirstTimeLaunch = prefManager.isFirstTimeLaunch();
+
+        if (isFirstTimeLaunch) {
+            prefManager.setLastRatedAsked();
+            prefManager.setFirstTimeLaunch(false);
+            Intent i = new Intent(this, IntroActivity.class);
+            startActivity(i);
+        }
+
+
+        if (!prefManager.hasRated() && prefManager.isTimeToRate()) {
+            RateDialogFragment.nweInstance().show(getFragmentManager(), "Dialog");
+            prefManager.setLastRatedAsked();
+        }
     }
 
     @Override

@@ -98,7 +98,6 @@
         android:layout_height="1dp"
         android:background="@android:color/black"/>
 
-
     <ListView
         android:id="@+id/activity_drawer_list_themes"
         android:layout_below="@id/include_drawer_list_theme_container"
