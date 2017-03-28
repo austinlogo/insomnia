@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_gravity="bottom"
+                android:padding="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/android_intro_slide0_img_container"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="0dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/too_many_tasks" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/android_intro_slide4_text_container"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/android_intro_slide0_img_container"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="What's the point of making to do lists"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/slide_title"
+            android:textStyle="bold"
+            android:layout_weight="0.58"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="if all you do is manage them"
+        android:textAlignment="center"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/slide_title"
+        android:textStyle="bold"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/android_intro_slide0_img_container"/>
+
+
+</RelativeLayout>

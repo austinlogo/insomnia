@@ -43,6 +43,7 @@ public class IntroActivity
         ButterKnife.bind(this);
 
         layouts = new int[]{
+                R.layout.activity_intro_slide0,
                 R.layout.activity_intro_slide1,
                 R.layout.activity_intro_slide2,
                 R.layout.activity_intro_slide3,

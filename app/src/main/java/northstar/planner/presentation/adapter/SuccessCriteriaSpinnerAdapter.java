@@ -23,7 +23,7 @@ public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<Metric> implemen
         super(context, R.layout.item_default);
         List<Metric> spinnerSCList = new ArrayList<>(metrics);
 
-        spinnerSCList.add(0, new IncrementalMetric("Select an Success Criteria", 0));
+        spinnerSCList.add(0, new IncrementalMetric(context.getResources().getString(R.string.select_a_success_criteria), 0));
         this.metrics = spinnerSCList;
     }
 

@@ -97,7 +97,6 @@ public class TaskRecyclerViewAdapter
     public void onItemComplete(int position) {
         Task removedTask = tasks.remove(position);
         notifyItemRemoved(position);
-
         activityListener.completeTask(removedTask);
     }
 

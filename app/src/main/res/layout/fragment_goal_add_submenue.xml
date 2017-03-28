@@ -31,6 +31,7 @@
             <android.support.design.widget.FloatingActionButton
                 style="@style/AppTheme.Fab"
                 android:src="@drawable/ic_equalizer_white_24dp"
+                android:backgroundTint="@color/colorAccent"
                 android:layout_marginBottom="@dimen/standardSpace"
                 android:id="@+id/fragment_today_add_submenu_add_metric"/>
         </LinearLayout>
@@ -52,7 +53,8 @@
 
             <android.support.design.widget.FloatingActionButton
                 style="@style/AppTheme.Fab"
-                android:src="@drawable/seed"
+                android:src="@drawable/seed_white"
+                android:backgroundTint="@color/colorAccent"
                 android:id="@+id/fragment_today_add_submenu_add_task"/>
         </LinearLayout>
 

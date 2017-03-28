@@ -424,7 +424,8 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         Date now = new Date();
         long timeOfDay = DateUtils.getTimeOfDay(now.getHours(), now.getMinutes());
 
-        String query = "Select ta.*, g." + GoalTable.TITLE_COLUMN + " as " + GoalTable.uniqueTitle() + " from " + TaskTable.TABLE_NAME + " ta"
+        String query = "Select ta.*, g." + GoalTable.TITLE_COLUMN + " as " + GoalTable.uniqueTitle()
+                + " from " + TaskTable.TABLE_NAME + " ta"
                 + " LEFT JOIN " + GoalTable.TABLE_NAME + " g on"
                     + " ta." + TaskTable.GOAL_COLUMN + " = g." + GoalTable._ID
                 + " LEFT JOIN " + ThemeTable.TABLE_NAME + " th on"
