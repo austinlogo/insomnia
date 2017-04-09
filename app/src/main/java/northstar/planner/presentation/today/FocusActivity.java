@@ -13,7 +13,6 @@ import northstar.planner.R;
 import northstar.planner.models.BaseModel;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.TaskTable;
-import northstar.planner.persistence.PrefManager;
 import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.goal.GoalFragment;
 import northstar.planner.presentation.intro.IntroActivity;
@@ -24,18 +23,12 @@ public class FocusActivity
         extends TaskBasedActivity
         implements GoalFragment.TaskActionListener, FocusFragment.FocusActivityListener {
 
-//    @Inject
-    public PrefManager prefManager;
-
     FocusFragment mFragment;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         mFragment = (FocusFragment) super.onCreate(savedInstanceState, TaskTable.TABLE_NAME);
         ButterKnife.bind(this);
-
-        prefManager = new PrefManager(this);
 
         finishDrawerInit(this, (DrawerLayout) getRootView(), getString(R.string.drawer_item_focus));
 
@@ -68,9 +61,9 @@ public class FocusActivity
     }
 
     @Override
-    protected void updateActivity() {
+    public void updateActivity() {
         List<Task> focusTasks = getDao().getTodaysTasks();
-        getDao().getTasksByPriority();
+//        getDao().getTasksByPriority();
         determineIfWeShowHelperImage(focusTasks);
     }
 

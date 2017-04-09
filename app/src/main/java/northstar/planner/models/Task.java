@@ -9,6 +9,7 @@ import java.util.Date;
 
 import northstar.planner.PlannerApplication;
 import northstar.planner.R;
+import northstar.planner.models.drawer.ShallowModel;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.utils.DateUtils;
@@ -24,6 +25,7 @@ public class Task extends BaseModel {
     private Date snooze;
     private Date reminderTime;
     private TaskStatus taskStatus;
+    private ShallowModel dependentTask;
 
     public Task() {
         _id = NEW_ID;
@@ -190,5 +192,13 @@ public class Task extends BaseModel {
 
     public void setReminder(Date reminder) {
         this.reminderTime = reminder;
+    }
+
+    public void setDependentTask(ShallowModel dependentTask) {
+        this.dependentTask = dependentTask;
+    }
+
+    public ShallowModel getDependentTask() {
+        return dependentTask;
     }
 }

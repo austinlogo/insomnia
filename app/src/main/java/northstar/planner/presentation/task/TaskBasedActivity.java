@@ -119,8 +119,10 @@ public abstract class TaskBasedActivity
     @Override
     public void completeTask(Task t) {
         Metric updatedMetric = getDao().completeTask(t);
-        mainFragment.updateMetric(updatedMetric);
+        mainFragment.updateMetricOnUI(updatedMetric);
+        getDao().updateDependencyOnComplete(t.getId());
         cancelNotification(t);
+        updateActivity();
     }
 
     public void attachAddOverlayToActivity() {

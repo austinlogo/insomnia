@@ -22,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
+import butterknife.OnLongClick;
 import northstar.planner.R;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.TaskTable;
@@ -30,6 +31,7 @@ import northstar.planner.presentation.BaseFragment;
 import northstar.planner.utils.DateTimeSetter;
 import northstar.planner.utils.DateTimeSetterCallback;
 import northstar.planner.utils.DateUtils;
+import northstar.planner.utils.NotificationType;
 import northstar.planner.utils.StringUtils;
 
 public class TaskFragment
@@ -52,7 +54,7 @@ public class TaskFragment
     TextView reminder;
 
     @BindView(R.id.fragment_task_snooze_container)
-    LinearLayout snoozeContainer;
+    RelativeLayout snoozeContainer;
 
     @BindView(R.id.fragment_task_goal_container)
     LinearLayout taskGoalContainer;
@@ -69,9 +71,11 @@ public class TaskFragment
     @BindView(R.id.fragment_task_metric_container)
     RelativeLayout metricContainer;
 
+    @BindView(R.id.fragment_task_blocked_on_task)
+    TextView blockingTask;
+
     Task currentTask;
     PlannerSqliteGateway dao;
-
     TaskFragmentListener attachedActivity;
 
     public static TaskFragment newInstance(Bundle b) {
@@ -91,6 +95,7 @@ public class TaskFragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.fragment_task, container, false);
         ButterKnife.bind(this, v);
 
@@ -116,6 +121,15 @@ public class TaskFragment
         setSnoozeRow();
         setMetricProgressRow();
         setReminderRow();
+        setDependentTask();
+    }
+
+    private void setDependentTask() {
+        if (currentTask.getDependentTask() != null) {
+            blockingTask.setText(currentTask.getDependentTask().getTitle());
+        } else {
+            blockingTask.setText("");
+        }
     }
 
     private void setGoalTitleRow() {
@@ -157,7 +171,9 @@ public class TaskFragment
             public void onValuesSet(Date selectedDate) {
                 currentTask.setDueDate(selectedDate);
                 saveAndUpdateTask(currentTask);
-                return;
+                if (prefs.remindWhenDue()) {
+                    getBaseActivity().scheduleNotification(currentTask, NotificationType.DUE_NOTIFICATION);
+                }
             }
         });
         setter.selectTime();
@@ -175,9 +191,8 @@ public class TaskFragment
             @Override
             public void onValuesSet(Date selectedDate) {
                 currentTask.setReminder(selectedDate);
-                getBaseActivity().scheduleNotification(currentTask);
+                getBaseActivity().scheduleNotification(currentTask, NotificationType.REMINDER_NOTIFICATION);
                 saveAndUpdateTask(currentTask);
-                return;
             }
         });
         setter.selectTime();
@@ -188,7 +203,7 @@ public class TaskFragment
         getActivity().finish();
     }
 
-    @OnClick(R.id.fragment_task_snooze_container)
+    @OnClick(R.id.fragment_task_snooze)
     public void onSnoozeClicked() {
         DateTimeSetter setter = new DateTimeSetter(getActivity(), new DateTimeSetterCallback() {
 
@@ -196,11 +211,43 @@ public class TaskFragment
             public void onValuesSet(Date selectedDate) {
                 currentTask.setSnooze(selectedDate);
                 saveAndUpdateTask(currentTask);
-                return;
+
+                if (prefs.remindWhenDue()) {
+                    getBaseActivity().scheduleNotification(currentTask, NotificationType.SNOOZE_NOTIFICATION);
+                }
             }
         });
         setter.selectTime();
     }
+
+    @OnClick(R.id.fragment_task_blocked_on_container)
+    public void onClickBlocked() {
+        attachedActivity.addTaskDependency();
+    }
+
+    @OnLongClick(R.id.fragment_task_blocked_on_container)
+    public boolean onLongClick() {
+        attachedActivity.removeDependency();
+        return true;
+    }
+
+//    @OnClick(R.id.fragment_task_add_alert_due)
+//    public void onClickAddAlertOnDue() {
+//        Date due = currentTask.getDue();
+//
+//        if (due != null) {
+//            getBaseActivity().scheduleNotification(currentTask, NotificationType.DUE_NOTIFICATION);
+//        }
+//    }
+
+//    @OnClick(R.id.fragment_task_add_alert_snooze)
+//    public void onClickAddSnoozeTask() {
+//        Date snoozeDate = currentTask.getSnooze();
+//
+//        if (snoozeDate != null) {
+//            getBaseActivity().scheduleNotification(currentTask, NotificationType.SNOOZE_NOTIFICATION);
+//        }
+//    }
 
     private void saveAndUpdateTask(Task task) {
         initUI(task);
@@ -248,5 +295,7 @@ public class TaskFragment
 
     public interface TaskFragmentListener {
         void navigateToGoal();
+        void addTaskDependency();
+        void removeDependency();
     }
 }

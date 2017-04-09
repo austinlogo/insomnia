@@ -24,8 +24,6 @@ public class NotificationPublisher extends BroadcastReceiver {
 
         int id = (int) intent.getLongExtra(NOTIFICATION_ID, 0L);
 
-
-
         notificationManager.cancel(id);
         notificationManager.notify(id, notification);
 

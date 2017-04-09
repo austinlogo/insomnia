@@ -1,14 +1,23 @@
 package northstar.planner.presentation;
 
 import android.app.Fragment;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import northstar.planner.PlannerApplication;
 import northstar.planner.models.Goal;
+import northstar.planner.persistence.PrefManager;
 import northstar.planner.presentation.Theme.ThemeFragment;
 import northstar.planner.presentation.adapter.GoalRecyclerViewAdapter;
 import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
@@ -18,8 +27,18 @@ import northstar.planner.presentation.swipe.TaskListTouchHelperCallback;
 
 public abstract class BaseFragment extends Fragment {
 
+    @Inject
+    protected PrefManager prefs;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ((PlannerApplication) getActivity().getApplication()).getComponent().inject(this);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
     public BaseActivity getBaseActivity() {
-        return (BaseActivity)getActivity();
+        return (BaseActivity) getActivity();
     }
 
     public void initRecyclerView(RecyclerView recView, ThemeRecyclerViewAdapter adapter) {

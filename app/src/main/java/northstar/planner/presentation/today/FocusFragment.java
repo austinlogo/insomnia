@@ -72,7 +72,7 @@ public class FocusFragment
         todayActivityListener = (FocusActivityListener) activity;
     }
 
-    @Override protected void updateMetric(Metric sc) { /* NOOP */ }
+    @Override protected void updateMetricOnUI(Metric sc) { /* NOOP */ }
 
     @Override
     public void setActionButtonVisibility(boolean isVisible) {

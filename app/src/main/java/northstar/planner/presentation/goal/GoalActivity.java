@@ -45,7 +45,7 @@ public class GoalActivity
     }
 
     @Override
-    protected void updateActivity() {
+    public void updateActivity() {
         Goal updatedGoal = getDao().getGoal(currentGoal.getId());
 
         if (updatedGoal != null) {
@@ -106,7 +106,7 @@ public class GoalActivity
     protected void storeNewTask(Task newTask) {
         if (newTask.getMetric() != null) {
             newTask.getMetric().adjustProgress();
-            goalFragment.updateMetric(newTask.getMetric());
+            goalFragment.updateMetricOnUI(newTask.getMetric());
         }
 
         newTask.setGoal(currentGoal);

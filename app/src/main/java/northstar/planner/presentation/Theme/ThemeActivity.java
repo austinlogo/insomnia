@@ -63,7 +63,7 @@ public class ThemeActivity
     }
 
     @Override
-    protected void updateActivity() {
+    public void updateActivity() {
 
         Theme updatedTheme = getDao().getTheme(currentTheme.getId());
         if (isDeletedTheme(updatedTheme)) {

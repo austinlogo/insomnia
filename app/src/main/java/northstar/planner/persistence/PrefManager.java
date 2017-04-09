@@ -11,6 +11,8 @@ import java.util.Date;
 public class PrefManager {
     private static final String LAST_TIME_RATED = "last_time_rated";
     private static final String HAS_RATED = "HAS_RATED";
+    private static final String SNOOZE_REMINDER  = "SNOOZE_REMINDER";
+    private static final String DUE_REMINDER = "DUE_REMINDER";
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     Context _context;
@@ -63,4 +65,19 @@ public class PrefManager {
         return pref.getBoolean(HAS_RATED, false);
     }
 
+    public void remindAfterSnooze(boolean remindAfterSnooze) {
+        editor.putBoolean(SNOOZE_REMINDER, remindAfterSnooze).commit();
+    }
+
+    public boolean remindAfterSnooze() {
+        return pref.getBoolean(SNOOZE_REMINDER, false);
+    }
+
+    public void remindWhenDue(boolean remindWhenDue) {
+        editor.putBoolean(DUE_REMINDER, remindWhenDue);
+    }
+
+    public boolean remindWhenDue() {
+        return pref.getBoolean(DUE_REMINDER, false);
+    }
 }

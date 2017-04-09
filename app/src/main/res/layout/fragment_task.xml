@@ -28,14 +28,16 @@
     </LinearLayout>
 
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/fragment_task_due_container"
         android:layout_below="@id/fragment_task_title_container"
         android:layout_width="match_parent"
         android:layout_gravity="center_horizontal"
         android:background="?selectableItemBackground"
         android:layout_height="wrap_content">
+
         <ImageView
+            android:id="@+id/fragment_task_due_icon"
             android:padding="@dimen/smallSpace"
             android:layout_width="@dimen/icon_width"
             android:layout_height="@dimen/icon_width"
@@ -44,22 +46,25 @@
         <TextView
             style="@style/AppTheme.TextView"
             android:id="@+id/fragment_task_due"
+            android:layout_toEndOf="@id/fragment_task_due_icon"
+            android:layout_centerVertical="true"
             android:hint="@string/due_date_not_set"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/fragment_task_snooze_container"
         android:layout_below="@id/fragment_task_due_container"
         android:layout_width="match_parent"
-        android:layout_gravity="center_horizontal"
         android:background="?selectableItemBackground"
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/fragment_task_snooze_icon"
+            android:layout_alignParentStart="true"
             android:padding="@dimen/smallSpace"
             android:layout_width="@dimen/icon_width"
             android:layout_height="@dimen/icon_width"
@@ -67,14 +72,16 @@
 
         <TextView
             style="@style/AppTheme.TextView"
+            android:layout_toEndOf="@id/fragment_task_snooze_icon"
+            android:layout_centerVertical="true"
             android:id="@+id/fragment_task_snooze"
             android:hint="@string/snooze_not_set"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
             />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/fragment_task_reminder_container"
@@ -126,9 +133,36 @@
 
     </LinearLayout>
 
+
+    <LinearLayout
+        android:id="@+id/fragment_task_blocked_on_container"
+        android:layout_below="@id/fragment_task_goal_container"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="?selectableItemBackground"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:padding="@dimen/smallSpace"
+            android:layout_width="@dimen/icon_width"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_block_black_48dp"
+            android:scaleType="fitCenter"
+            android:layout_height="@dimen/icon_width"/>
+
+        <TextView
+            style="@style/AppTheme.TextView"
+            android:id="@+id/fragment_task_blocked_on_task"
+            android:hint="@string/choose_dependent_task"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/fragment_task_metric_container"
-        android:layout_below="@id/fragment_task_goal_container"
+        android:layout_below="@id/fragment_task_blocked_on_container"
         android:orientation="horizontal"
         android:paddingEnd="@dimen/standardSpace"
         android:layout_width="match_parent"
@@ -146,7 +180,7 @@
             style="@style/AppTheme.TextView"
             android:id="@+id/item_success_criteria_title"
             android:layout_toEndOf="@id/fragment_task_metric_row_icon"
-            android:text="hello"
+            android:text=""
             android:layout_centerVertical="true"
             android:layout_width="match_parent"
             android:textColor="#000"

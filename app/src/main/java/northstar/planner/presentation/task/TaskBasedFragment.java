@@ -11,7 +11,7 @@ import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 
 public abstract class TaskBasedFragment extends BaseFragment {
 
-    protected abstract void updateMetric(Metric sc);
+    protected abstract void updateMetricOnUI(Metric sc);
     public abstract void setActionButtonVisibility(boolean isVisible);
 
     protected TaskRecyclerViewAdapter taskListAdapter;
@@ -36,6 +36,9 @@ public abstract class TaskBasedFragment extends BaseFragment {
                         } else {
                             getBaseActivity().removeFromDb(item);
                             getBaseActivity().cancelNotification(item);
+                            // TODO: UPDATE METRICS
+                            getBaseActivity().updateActivity();
+                            updateMetricOnUI(item.getMetric());
                         }
                     }
 

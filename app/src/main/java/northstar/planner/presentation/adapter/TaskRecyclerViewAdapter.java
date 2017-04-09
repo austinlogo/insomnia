@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import northstar.planner.R;
@@ -107,9 +107,22 @@ public class TaskRecyclerViewAdapter
         notifyItemRemoved(position);
     }
 
+    /**
+     * Just trust me. The UI code has issues with doing this quickly
+     * @param newTasks
+     */
     public void updateList(List<Task> newTasks) {
-        tasks = new ArrayList<>(newTasks);
-        notifyDataSetChanged();
+        Iterator<Task> iterator = tasks.iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
+            iterator.remove();
+            notifyItemRemoved(0);
+        }
+
+        for (Task t  : newTasks) {
+            tasks.add(t);
+            notifyItemInserted(tasks.size());
+        }
     }
 
     public List<Task> getList() {

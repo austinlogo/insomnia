@@ -61,5 +61,9 @@
     <string name="snooze_not_set">snooze not set</string>
     <string name="due_date_not_set">due date not set</string>
     <string name="drawer_item_focus">Focus</string>
-    <string name="drawer_item_gettting_started">getting started</string>
+    <string name="drawer_item_settings">Settings </string>
+    <string name="notify_when_due">Notify when task is due</string>
+    <string name="notify_when_snooze_ends">Notify when snooze has finished</string>
+    <string name="getting_started">getting started</string>
+    <string name="choose_dependent_task">Choose dependent task</string>
 </resources>

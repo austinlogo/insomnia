@@ -9,6 +9,8 @@ public class TaskTable extends BaseTable{
     public static final String REMINDER_COLUMN = "Reminder_Time";
     public static final String SNOOZE_COLUMN = "Snooze_Time";
     public static final String STATUS_COLUMN = "TaskStatus";
+    public static final String SNOOZE_REMINDER_COLUMN = "SNOOZE_REMINDER_COLUMN";
+    public static final String DUE_REMINDER_COLUMN = "DUE_REMINDER_COLUMN";
 
     public static final String[] projection = {
             _ID,
@@ -33,6 +35,8 @@ public class TaskTable extends BaseTable{
             SNOOZE_COLUMN + " NUMERIC, " +
             REMINDER_COLUMN + " NUMERIC, " +
             ORDER_COLUMN + " INTEGER, " +
+            SNOOZE_REMINDER_COLUMN + " INTEGER" +
+            DUE_REMINDER_COLUMN + " INTEGER" +
             STATUS_COLUMN +" STATUS_COLUMN)";
 
     public static String getDropTableQuery() {

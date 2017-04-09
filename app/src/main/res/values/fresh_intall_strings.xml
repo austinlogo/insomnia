@@ -16,20 +16,22 @@
     <string name="personal_task_strings_title">Get new strings</string>
     <string name="personal_task_practice_title">practice 30 mins</string>
     <string name="personal_task_reading_title">finish Mistborn</string>
+
+    <!-- Intro Strings -->
     <string name="focus_title">focus page</string>
-    <string name="focus_description">Stop managing to do lists. Insomnia tells you what you need to be doing now and hides everything you don\'t need to think about right now.</string>
+    <string name="focus_description">Stop managing to do lists. Insomnia arranges everything you should be doing right now and orders the tasks for you.</string>
     <string name="theme_page">Themes</string>
-    <string name="drawer_title">Drawer</string>
-    <string name="theme_title">Themes</string>
+    <string name="theme_description">Organize any part of your life into themes. You can define different goals for each theme</string>
     <string name="goal_title">Goals</string>
+    <string name="goal_description">Define goals for each theme and use metrics to help track your progress.</string>
+    <string name="theme_title">Themes</string>
     <string name="task_metric_title">Tasks</string>
+    <string name="task_metric_description">Break goals down into tasks. Snooze tasks until you can start on them, and set reminders to keep you on track.</string>
     <string name="active_title">Active Hours</string>
+    <string name="active_hours_description">Themes are not always relevant all day. Be sure to set when you care about each theme.</string>
+    <string name="drawer_title">Drawer</string>
+    <string name="drawer_description">Handy drawer navigation gives you quick access to all your goals</string>
 
     <string name="next">next</string>
     <string name="skip">skip</string>
-    <string name="drawer_description">Handy drawer navigation gives you quick access to all your goals</string>
-    <string name="theme_description">Organize any part of your life into themes. You can define different goals for each theme</string>
-    <string name="goal_description">keep track of you goals in each theme and sort how important they are to you.</string>
-    <string name="task_metric_description">Work towards each goals to accomplish and metrics you can track to show progress.</string>
-    <string name="active_hours_description">Define when you want to work on certain themes.</string>
 </resources>

@@ -164,7 +164,7 @@ public class GoalFragment
     }
 
     @Override
-    public void updateMetric(Metric sc) {
+    public void updateMetricOnUI(Metric sc) {
         if (sc != null) {
             metricsListAdapter.updateSuccessCriteria(sc);
         }

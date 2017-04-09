@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import northstar.planner.models.tables.ActiveHoursTable;
+import northstar.planner.models.tables.DependencyTable;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.MetricTable;
 import northstar.planner.models.tables.TaskTable;
@@ -34,11 +35,14 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         newInstall += doesTableExists(ThemeTable.TABLE_NAME, db) ? 0 : 1;
 
+        db.execSQL(DependencyTable.getDropTableQuery());
+
         db.execSQL(ThemeTable.SQL_CREATE_QUERY);
         db.execSQL(GoalTable.SQL_CREATE_QUERY);
         db.execSQL(TaskTable.SQL_CREATE_QUERY);
         db.execSQL(MetricTable.SQL_CREATE_QUERY);
         db.execSQL(ActiveHoursTable.SQL_CREATE_QUERY);
+        db.execSQL(DependencyTable.SQL_CREATE_QUERY);
     }
 
     public static void clearAll(SQLiteDatabase db) {

@@ -22,10 +22,10 @@ android {
         applicationId "northstar.planner"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 11
-        versionName "1.1.10.01"
-
+        versionCode 14
+        versionName "1.1.14"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -48,11 +48,13 @@ dependencies {
     compile 'com.android.support:design:23.4.0'
     compile 'org.apache.commons:commons-collections4:4.1'
     compile 'org.apache.commons:commons-lang3:3.5'
+    compile 'sk.upjs.paz:graph:1.0.0'
 
     // Dagger 2
     compile 'com.google.dagger:dagger:2.7'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.7'
     provided 'javax.annotation:jsr250-api:1.0'
+
     // Butterknife
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
@@ -69,4 +71,16 @@ dependencies {
     testCompile 'org.powermock:powermock-module-junit4-rule:1.6.4'
     testCompile 'org.powermock:powermock-api-mockito:1.6.4'
     testCompile 'org.powermock:powermock-classloading-xstream:1.6.4'
+
+    // aws
+    compile 'com.amazonaws:aws-android-sdk-core:2.4.0'
+    compile 'com.amazonaws:aws-android-sdk-ddb:2.4.0'
+    compile 'com.amazonaws:aws-android-sdk-cognito:2.4.0'
+    compile 'com.amazonaws:aws-android-sdk-mobileanalytics:2.4.0'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.bouncycastle:bcprov-jdk16:1.46'
+    }
 }

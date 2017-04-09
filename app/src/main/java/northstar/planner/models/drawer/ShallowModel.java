@@ -1,11 +1,10 @@
 package northstar.planner.models.drawer;
 
+import java.io.Serializable;
+
 import northstar.planner.models.BaseModel;
 
-/**
- * Created by Austin on 3/16/2017.
- */
-public class ShallowModel {
+public class ShallowModel implements Serializable {
     private long id;
     private String title;
 

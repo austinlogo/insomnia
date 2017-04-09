@@ -6,20 +6,26 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import northstar.planner.models.BaseModel;
+import northstar.planner.models.DependencyRecord;
+import northstar.planner.models.DependencyStatus;
 import northstar.planner.models.Goal;
 import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
 import northstar.planner.models.TaskStatus;
 import northstar.planner.models.Theme;
 import northstar.planner.models.checkboxgroup.CheckboxGroup;
+import northstar.planner.models.drawer.ShallowModel;
 import northstar.planner.models.tables.ActiveHoursTable;
 import northstar.planner.models.tables.BaseTable;
+import northstar.planner.models.tables.DependencyTable;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.MetricTable;
 import northstar.planner.models.tables.TaskTable;
@@ -85,7 +91,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
     public Task addTask(Task task) {
         ContentValues newValues = new ContentValues();
 
-        updateMetric(task.getMetric());
+        updateMetricInDb(task.getMetric());
 
         if (task.getDue() != null) {
             newValues.put(TaskTable.DUE_COLUMN, task.getDue().getTime());
@@ -152,8 +158,17 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         return result;
     }
 
+    public Task getShallowTask(long taskId) {
+        String query = constructAllTaskQuery(TaskTable._ID + " = " + taskId);
+        Cursor c = db.rawQuery(query, null);
+        c.moveToFirst();
+        Task result = new Task(c);
+        c.close();
+        return result;
+    }
+
     public Task getTask(long taskId) {
-        String query = constructTaskQuery(TaskTable._ID + " = " + taskId);
+        String query = constructOpenTaskQuery(TaskTable._ID + " = " + taskId);
         Cursor c = db.rawQuery(query, null);
         c.moveToFirst();
         Task result = constructTaskFromCursor(c);
@@ -168,6 +183,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
         Task result = new Task(c);
         result.setMetric(getMetric(result.getCompletes()));
+        result.setDependentTask(getDependentTask(result.getId()));
         return result;
     }
 
@@ -204,7 +220,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
     }
 
     public List<Task> getTasksByGoalId(long goalId) {
-        String query = constructTaskQuery(TaskTable.GOAL_COLUMN + " = " + goalId);
+        String query = constructOpenTaskQuery(TaskTable.GOAL_COLUMN + " = " + goalId);
 
         Cursor c = db.rawQuery(query, null);
         c.moveToFirst();
@@ -233,7 +249,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
     public List<Task> getTasksBeforeDueDate(Calendar cal) {
         Calendar endOfDay = DateUtils.getEndOfDay(cal);
-        String query = constructTaskQuery(TaskTable.DUE_COLUMN + " < " + endOfDay.getTime().getTime());
+        String query = constructOpenTaskQuery(TaskTable.DUE_COLUMN + " < " + endOfDay.getTime().getTime());
 
         Cursor c = db.rawQuery(query, null);
         c.moveToFirst();
@@ -246,12 +262,20 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         return result;
     }
 
-    private String constructTaskQuery(String criteria) {
+    private String constructOpenTaskQuery(String criteria) {
         // TODO: Consolidate this select
         return "Select t.*, g.Title as " + GoalTable.uniqueTitle() + " from " + TaskTable.TABLE_NAME + " t LEFT JOIN " + GoalTable.TABLE_NAME + " g"
                 + " ON t." + TaskTable.GOAL_COLUMN + " = g." + GoalTable._ID
                 + " WHERE t." + TaskTable.STATUS_COLUMN + " != '" + TaskStatus.DONE.toString() + "'"
                 + " AND t." + criteria
+                + " ORDER BY " + TaskTable.ORDER_COLUMN + " ASC";
+    }
+
+    private String constructAllTaskQuery(String criteria) {
+        // TODO: Consolidate this select
+        return "Select t.*, g.Title as " + GoalTable.uniqueTitle() + " from " + TaskTable.TABLE_NAME + " t LEFT JOIN " + GoalTable.TABLE_NAME + " g"
+                + " ON t." + TaskTable.GOAL_COLUMN + " = g." + GoalTable._ID
+                + " WHERE t." + criteria
                 + " ORDER BY " + TaskTable.ORDER_COLUMN + " ASC";
     }
 
@@ -274,7 +298,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
         int i = db.delete(GoalTable.TABLE_NAME, whereClause, whereArgs);
         for (Task task : goalTask) {
-            removeTask(task.getId());
+            deleteTask(task);
         }
         return i == 1;
     }
@@ -297,7 +321,13 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
     }
     
 
-    public boolean removeTask(long taskId) {
+    public boolean deleteTask(Task task) {
+        boolean result = removeTaskFromDb(task.getId());
+        updateMetricInDb(task);
+        return result;
+    }
+
+    private boolean removeTaskFromDb(long taskId) {
         String whereClause = TaskTable._ID + EQUALSQ;
         String[] whereArgs = { Long.toString(taskId) };
 
@@ -433,11 +463,16 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
                 + " LEFT JOIN " + ActiveHoursTable.TABLE_NAME + " ah on"
                     + " th." + ThemeTable._ID + " = ah." + ActiveHoursTable.THEME_COLUMN
                     + " AND ah." + ActiveHoursTable.DAY_COLUMN + " = " + DateUtils.today().get(Calendar.DAY_OF_WEEK)
+                + " LEFT JOIN " + DependencyTable.TABLE_NAME + " dep on"
+                    + " ta." + TaskTable._ID + " = dep." + DependencyTable._ID
                 + " WHERE ta." + TaskTable.GOAL_COLUMN + " >= 0"
                     + " AND ta." + TaskTable.STATUS_COLUMN + " != '" + TaskStatus.DONE + "'"
                     + " AND ta." + TaskTable.SNOOZE_COLUMN + " < " + now.getTime()
                     + " AND ah." + ActiveHoursTable.START_COLUMN + " < " + timeOfDay
                     + " AND ah." + ActiveHoursTable.END_COLUMN + " > " + timeOfDay
+                    + " AND ("
+                        + " ifnull(dep." + DependencyTable.DEPENDENCY_STATUS + ", '') = ''"
+                        + " OR dep." + DependencyTable.DEPENDENCY_STATUS + " != '" + DependencyStatus.BLOCKED + "')"
                 + " ORDER BY th." + ThemeTable.ORDER_COLUMN
                 + " , g." + GoalTable.ORDER_COLUMN
                 + " , ta." + TaskTable.ORDER_COLUMN
@@ -456,7 +491,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
     public Metric completeTask(Task completedTask) {
         setTask(completedTask, TaskStatus.DONE);
-        return updateMetric(completedTask);
+        return updateMetricInDb(completedTask);
     }
 
     private void setTask(Task currentTask, TaskStatus taskStatus) {
@@ -468,7 +503,7 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         db.update(TaskTable.TABLE_NAME, cv, whereClause, null);
     }
 
-    private Metric updateMetric(Task t) {
+    public Metric updateMetricInDb(Task t) {
         Metric currentMetric = t.getMetric();
 
         if (currentMetric == null) {
@@ -476,11 +511,10 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         }
 
         currentMetric.updateProgress(t.getTaskCommitment());
-
-        return updateMetric(currentMetric);
+        return updateMetricInDb(currentMetric);
     }
 
-    private Metric updateMetric(Metric currentMetric) {
+    private Metric updateMetricInDb(Metric currentMetric) {
         if (currentMetric == null) {
             return currentMetric;
         }
@@ -532,13 +566,6 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
     private void updateActiveHour(long themeId, CheckboxGroup.CheckboxGroupIndex index, CheckboxGroup currentGroup) {
         insertActiveHour(themeId, index.getValue(), currentGroup.getStartTime(), currentGroup.getEndTime());
-//        ContentValues cv = new ContentValues();
-//        cv.put(ActiveHoursTable.THEME_COLUMN, themeId);
-//        cv.put(ActiveHoursTable.DAY_COLUMN, index.getValue());
-//        cv.put(ActiveHoursTable.START_COLUMN, currentGroup.getStartTime());
-//        cv.put(ActiveHoursTable.END_COLUMN, currentGroup.getEndTime());
-//
-//        db.insertWithOnConflict(ActiveHoursTable.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
     private void insertActiveHour(long themeId, long day, long start, long end) {
@@ -567,5 +594,79 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         }
 
         return checkBoxGroups;
+    }
+
+    public void updateDependencyTable(Task currentTask, Task dependentTask) {
+        ContentValues cv = new ContentValues();
+        cv.put(DependencyTable._ID, currentTask.getId());
+        cv.put(DependencyTable.DEPENDS_ON, dependentTask.getId());
+        cv.put(DependencyTable.DEPENDENCY_STATUS, DependencyStatus.BLOCKED.value());
+
+        db.insertWithOnConflict(DependencyTable.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    public ShallowModel getDependentTask(long taskId) {
+        ContentValues cv = new ContentValues();
+        cv.put(TaskTable._ID, taskId);
+
+        String selection = TaskTable._ID + EQUALSQ;
+        String[] selectionArgs = { Long.toString(taskId) };
+
+        Cursor c = db.query(DependencyTable.TABLE_NAME, DependencyTable.projection, selection, selectionArgs, null, null, null);
+
+        c.moveToFirst();
+
+        while (!c.isAfterLast()) {
+            DependencyRecord dependencyRecord = new DependencyRecord(c);
+            Task t = getShallowTask(dependencyRecord.getDependsOn());
+            return new ShallowModel(t);
+        }
+        return null;
+    }
+
+    public void removeDependency(long task) {
+        String whereClause = DependencyTable._ID + EQUALSQ;
+        String[] whereArgs = new String[]{ Long.toString(task)};
+
+        db.delete(DependencyTable.TABLE_NAME, whereClause, whereArgs);
+    }
+
+    public void removeBlockers(long task) {
+        String whereClause = DependencyTable.DEPENDS_ON + EQUALSQ;
+        String[] whereArgs = new String[]{ Long.toString(task)};
+
+        db.delete(DependencyTable.TABLE_NAME, whereClause, whereArgs);
+    }
+
+    public int updateDependencyOnComplete(long dependency) {
+        ContentValues cv = new ContentValues();
+        cv.put(DependencyTable.DEPENDENCY_STATUS, DependencyStatus.UNBLOCKED.value());
+
+        String whereClause = DependencyTable.DEPENDS_ON + EQUALSQ;
+        String[] whereArgs = new String[]{ Long.toString(dependency)};
+
+        int i = db.updateWithOnConflict(DependencyTable.TABLE_NAME, cv, whereClause, whereArgs, SQLiteDatabase.CONFLICT_REPLACE);
+        return i;
+    }
+
+    public Map<Long, List<DependencyRecord>> buildDependencyGraph() {
+        Cursor  cursor = db.rawQuery("select * from " + DependencyTable.TABLE_NAME,null);
+        cursor.moveToFirst();
+        List<DependencyRecord> records = new ArrayList<>();
+        Map<Long, List<DependencyRecord>> dependencies = new HashMap<>();
+
+        while(!cursor.isAfterLast()) {
+            DependencyRecord dependencyRecord = new DependencyRecord(cursor);
+
+            if (dependencies.containsKey(dependencyRecord.getId())) {
+                dependencies.get(dependencyRecord.getId()).add(dependencyRecord);
+            } else {
+                dependencies.put(dependencyRecord.getId(), Arrays.asList(dependencyRecord));
+            }
+
+            cursor.moveToNext();
+        }
+
+        return dependencies;
     }
 }

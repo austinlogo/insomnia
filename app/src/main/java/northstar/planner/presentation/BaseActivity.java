@@ -27,11 +27,17 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.OnLongClick;
+import com.amazonaws.mobileconnectors.amazonmobileanalytics.AnalyticsEvent;
+import com.amazonaws.mobileconnectors.amazonmobileanalytics.MobileAnalyticsManager;
+import northstar.planner.PlannerApplication;
 import northstar.planner.R;
+import northstar.planner.analytics.AnalyticsEventType;
 import northstar.planner.models.Goal;
 import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
@@ -41,14 +47,17 @@ import northstar.planner.models.tables.TaskTable;
 import northstar.planner.models.tables.ThemeTable;
 import northstar.planner.notification.NotificationPublisher;
 import northstar.planner.persistence.PlannerSqliteGateway;
+import northstar.planner.persistence.PrefManager;
 import northstar.planner.presentation.Theme.ListThemesActivity;
 import northstar.planner.presentation.Theme.ThemeActivity;
 import northstar.planner.presentation.adapter.DrawerAdapter;
 import northstar.planner.presentation.adapter.DrawerListeners;
 import northstar.planner.presentation.goal.GoalActivity;
-import northstar.planner.presentation.intro.IntroActivity;
+import northstar.planner.presentation.settings.SettingsActivity;
 import northstar.planner.presentation.task.TaskActivity;
 import northstar.planner.presentation.today.FocusActivity;
+import northstar.planner.utils.NotificationType;
+import northstar.planner.utils.NotificationUtils;
 
 public abstract class BaseActivity
         extends AppCompatActivity
@@ -56,6 +65,7 @@ public abstract class BaseActivity
 
     public static final int EDIT_MENUITEM_INDEX = 1;
 
+    @Nullable
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
 
@@ -68,6 +78,13 @@ public abstract class BaseActivity
     @BindView(R.id.activity_drawer_list_themes)
     protected ListView themeList;
 
+    @Inject
+    protected MobileAnalyticsManager analytics;
+
+    @Inject
+    protected PrefManager prefManager;
+
+
     protected DrawerAdapter drawerAdapter;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     protected List<Theme> themes;
@@ -79,7 +96,7 @@ public abstract class BaseActivity
 
     protected abstract void deleteAction();
     public abstract void editAction();
-    protected abstract void updateActivity();
+    public abstract void updateActivity();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,7 +106,16 @@ public abstract class BaseActivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             adjustStatusThemeColor();
         }
+
+        ((PlannerApplication) getApplication()).getComponent().inject(this);
     }
+
+    private void recordStart() {
+        AnalyticsEvent event =  analytics.getEventClient().createEvent(AnalyticsEventType.STARTED.toString());
+        analytics.getEventClient().recordEvent(event);
+        analytics.getEventClient().submitEvents();
+    }
+
 
     protected void finishDrawerInit(Activity act, DrawerLayout mDrawerLayout, String actionBarTitle) {
 
@@ -100,12 +126,14 @@ public abstract class BaseActivity
                 android.R.string.ok,
                 android.R.string.cancel);
 
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle(actionBarTitle);
-        mActionBarDrawerToggle.syncState();
-        ((DrawerLayout) getRootView()).setDrawerListener(this);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setTitle(actionBarTitle);
+            mActionBarDrawerToggle.syncState();
+            ((DrawerLayout) getRootView()).setDrawerListener(this);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -117,6 +145,9 @@ public abstract class BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        recordStart();
+
         themes = dao.getAllThemes();
         drawerAdapter = new DrawerAdapter(
                 this,
@@ -186,7 +217,7 @@ public abstract class BaseActivity
 
     @OnClick(R.id.activity_drawer_list_getting_started_container)
     public void onClickGettingStarted() {
-        Intent i = new Intent(this, IntroActivity.class);
+        Intent i = new Intent(this, SettingsActivity.class);
         startActivity(i);
     }
 
@@ -202,6 +233,7 @@ public abstract class BaseActivity
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+
         mActionBarDrawerToggle.syncState();
     }
 
@@ -294,22 +326,37 @@ public abstract class BaseActivity
     }
 
     public void removeFromDb(Task task) {
-        getDao().removeTask(task.getId());
+        getDao().deleteTask(task);
+        getDao().removeBlockers(task.getId());
     }
 
     public void removeFromDb(Metric sc) {
         getDao().removeTheme(sc.getId());
     }
 
-    public void scheduleNotification(Task task) {
-        PendingIntent pendingIntent = constructNotificationPendingIntent(task);
+    public void scheduleNotification(Task task, NotificationType notificationType) {
+        PendingIntent pendingIntent = constructNotificationPendingIntent(task, notificationType);
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 
+        long notificationTime = getNotificationTime(task, notificationType);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, task.getReminder().getTime(), pendingIntent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
         } else {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, task.getReminder().getTime(), pendingIntent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
         }
+    }
+
+    private long getNotificationTime(Task task, NotificationType notificationType) {
+        switch (notificationType) {
+            case DUE_NOTIFICATION:
+                return task.getDue().getTime();
+            case REMINDER_NOTIFICATION:
+                return task.getReminder().getTime();
+            case SNOOZE_NOTIFICATION:
+                return task.getSnooze().getTime();
+        }
+        return 0;
     }
 
     private Notification getNotification(Task task) {
@@ -325,7 +372,6 @@ public abstract class BaseActivity
             builder.setColor(getResources().getColor(R.color.colorPrimary));
         }
 
-
         Intent result = new Intent(this, TaskActivity.class);
         result.putExtra(TaskTable.TABLE_NAME, task);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, (int) task.getId() , result, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -335,18 +381,29 @@ public abstract class BaseActivity
         return builder.build();
     }
 
-    private PendingIntent constructNotificationPendingIntent(Task task) {
+    private PendingIntent constructNotificationPendingIntent(Task task, NotificationType notificationType) {
         Notification notification = getNotification(task);
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
 
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, task.getId());
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        notificationIntent.putExtra(
+                NotificationPublisher.NOTIFICATION_ID, task.getId());
+        notificationIntent.putExtra(
+                NotificationPublisher.NOTIFICATION, notification);
 
-        return PendingIntent.getBroadcast(this, (int) task.getId(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(
+                this,
+                (int) NotificationUtils.constructNotificationId(task.getId(), notificationType),
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     public void cancelNotification(Task item) {
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(constructNotificationPendingIntent(item));
+
+//        alarmManager.c
+
+        alarmManager.cancel(constructNotificationPendingIntent(item, NotificationType.DUE_NOTIFICATION));
+        alarmManager.cancel(constructNotificationPendingIntent(item, NotificationType.REMINDER_NOTIFICATION));
+        alarmManager.cancel(constructNotificationPendingIntent(item, NotificationType.SNOOZE_NOTIFICATION));
     }
 }
