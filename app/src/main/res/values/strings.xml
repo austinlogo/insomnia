@@ -66,4 +66,5 @@
     <string name="notify_when_snooze_ends">Notify when snooze has finished</string>
     <string name="getting_started">getting started</string>
     <string name="choose_dependent_task">Choose dependent task</string>
+
 </resources>

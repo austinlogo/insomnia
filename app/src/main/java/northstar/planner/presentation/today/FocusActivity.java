@@ -18,6 +18,7 @@ import northstar.planner.presentation.goal.GoalFragment;
 import northstar.planner.presentation.intro.IntroActivity;
 import northstar.planner.presentation.rate.RateDialogFragment;
 import northstar.planner.presentation.task.TaskBasedActivity;
+import northstar.planner.utils.NotificationType;
 
 public class FocusActivity
         extends TaskBasedActivity
@@ -44,19 +45,19 @@ public class FocusActivity
     protected void onResume() {
         super.onResume();
 
-        boolean isFirstTimeLaunch = prefManager.isFirstTimeLaunch();
+        boolean isFirstTimeLaunch = prefs.isFirstTimeLaunch();
 
         if (isFirstTimeLaunch) {
-            prefManager.setLastRatedAsked();
-            prefManager.setFirstTimeLaunch(false);
+            prefs.setLastRatedAsked();
+            prefs.setFirstTimeLaunch(false);
             Intent i = new Intent(this, IntroActivity.class);
             startActivity(i);
         }
 
 
-        if (!prefManager.hasRated() && prefManager.isTimeToRate()) {
+        if (!prefs.hasRated() && prefs.isTimeToRate()) {
             RateDialogFragment.nweInstance().show(getFragmentManager(), "Dialog");
-            prefManager.setLastRatedAsked();
+            prefs.setLastRatedAsked();
         }
     }
 
@@ -80,6 +81,10 @@ public class FocusActivity
         newTask.setGoal(BaseModel.SCRATCH_ID);
         getDao().addTask(newTask);
         ((TaskRecyclerViewAdapter) mFragment.taskList.getAdapter()).addItem(newTask);
+
+        if (prefs.remindWhenDue() && newTask.getDue() != null) {
+            scheduleNotification(newTask, NotificationType.DUE_NOTIFICATION);
+        }
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,9 +94,9 @@ public class FocusActivity
     @Override public void editAction() {}
 
     @Override
-    public void openAddTaskWorkflow(String newTaskTitle) {
+    public void openAddTaskWorkflow() {
         setFragmentVisible(addTaskLayout);
-        addTaskFragment.updateFragmentValuesForTodayTask(newTaskTitle);
+        addTaskFragment.updateFragmentValuesForTodayTask();
     }
 
     protected boolean isEmptyApp(List<Task> focusTasks) {

@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import northstar.planner.presentation.BaseActivity;
 import northstar.planner.presentation.BaseFragment;
+import northstar.planner.presentation.settings.SettingsActivity;
 import northstar.planner.presentation.settings.SettingsFragment;
 
 @Singleton
@@ -14,6 +15,8 @@ import northstar.planner.presentation.settings.SettingsFragment;
 })
 public interface PlannerComponent {
     void inject(BaseActivity activity);
+    void inject(SettingsActivity activity);
     void inject(SettingsFragment activity);
     void inject(BaseFragment fragment);
+    void inject(Object obj);
 }

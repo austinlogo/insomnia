@@ -35,8 +35,8 @@ public class TaskTable extends BaseTable{
             SNOOZE_COLUMN + " NUMERIC, " +
             REMINDER_COLUMN + " NUMERIC, " +
             ORDER_COLUMN + " INTEGER, " +
-            SNOOZE_REMINDER_COLUMN + " INTEGER" +
-            DUE_REMINDER_COLUMN + " INTEGER" +
+            SNOOZE_REMINDER_COLUMN + " INTEGER, " +
+            DUE_REMINDER_COLUMN + " INTEGER, " +
             STATUS_COLUMN +" STATUS_COLUMN)";
 
     public static String getDropTableQuery() {

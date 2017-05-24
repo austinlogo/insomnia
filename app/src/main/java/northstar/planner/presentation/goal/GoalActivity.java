@@ -17,8 +17,9 @@ import northstar.planner.models.tables.GoalTable;
 import northstar.planner.presentation.success.AddMetricFragment;
 import northstar.planner.presentation.task.TaskBasedActivity;
 import northstar.planner.presentation.today.AddOverlayFragment;
+import northstar.planner.utils.NotificationType;
 
-public class GoalActivity
+ public class GoalActivity
         extends     TaskBasedActivity
         implements  GoalFragment.GoalFragmentListener,
                     AddTaskFragment.AddTaskFragmentListener,
@@ -113,6 +114,10 @@ public class GoalActivity
         newTask = getDao().addTask(newTask);
         currentGoal.getTasks().add(newTask);
         goalFragment.updateViews(this, currentGoal);
+
+        if (prefs.remindWhenDue() && newTask.getDue() != null) {
+            scheduleNotification(newTask, NotificationType.DUE_NOTIFICATION);
+        }
     }
 
     private void setAddFragment(Fragment fragmentToBeVisible) {
@@ -130,7 +135,7 @@ public class GoalActivity
 
     @Override
     public Metric addandStoreMetric(Metric sc) {
-        setFragmentVisible(mainFragmentLayout);
+//        setFragmentVisible(mainFragmentLayout);
 
         sc.setGoal(currentGoal.getId());
         sc = getDao().addMetric(sc);

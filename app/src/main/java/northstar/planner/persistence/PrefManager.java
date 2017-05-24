@@ -74,7 +74,7 @@ public class PrefManager {
     }
 
     public void remindWhenDue(boolean remindWhenDue) {
-        editor.putBoolean(DUE_REMINDER, remindWhenDue);
+        editor.putBoolean(DUE_REMINDER, remindWhenDue).commit();
     }
 
     public boolean remindWhenDue() {

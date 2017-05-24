@@ -32,19 +32,13 @@ import northstar.planner.models.tables.TaskTable;
 import northstar.planner.models.tables.ThemeTable;
 import northstar.planner.utils.DateUtils;
 
-public class PlannerSqliteGateway {//implements PlannerGateway {
-
-    private static final String EQUALSQ = " = ?";
+public class PlannerSqliteGateway extends BaseGateway {
 
     SQLiteDatabase db;
 
     public PlannerSqliteGateway(Context ctx) {
         new PlannerDBHelper(ctx);
         db = PlannerDBHelper.getDbInstance();
-    }
-
-    public PlannerSqliteGateway(SQLiteDatabase db) {
-        this.db = db;
     }
 
     public PlannerSqliteGateway() {
@@ -60,6 +54,12 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
 
         long newId = db.insert(ThemeTable.TABLE_NAME, null, newValues);
         newTheme.setId(newId);
+
+        // set Active hours to always.
+        insertContextualActiveHours(newTheme.getId(), CheckboxGroup.CheckboxGroupIndex.WEEKDAYS.getValue(), DateUtils.getTimeOfDay(0, 0), DateUtils.getTimeOfDay(23, 0));
+        insertContextualActiveHours(newTheme.getId(), CheckboxGroup.CheckboxGroupIndex.WEEKENDS.getValue(), DateUtils.getTimeOfDay(0, 0), DateUtils.getTimeOfDay(23, 0));
+
+
         return newTheme;
     }
 
@@ -534,12 +534,13 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         CheckboxGroup weekdays = checkBoxGroups.get(CheckboxGroup.CheckboxGroupIndex.WEEKDAYS);
 
         if (weekdays.isChecked()) {
-            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.WEEKDAYS, weekdays);
-            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.MONDAY, weekdays);
-            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.TUESDAY, weekdays);
-            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.WEDNESDAY, weekdays);
-            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.THURSDAY, weekdays);
-            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.FRIDAY, weekdays);
+            insertContextualActiveHours(themeId, CheckboxGroup.CheckboxGroupIndex.WEEKDAYS.getValue(), weekdays.getStartTime(), weekdays.getEndTime());
+//            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.WEEKDAYS, weekdays);
+//            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.MONDAY, weekdays);
+//            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.TUESDAY, weekdays);
+//            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.WEDNESDAY, weekdays);
+//            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.THURSDAY, weekdays);
+//            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.FRIDAY, weekdays);
         } else {
             updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.WEEKDAYS, weekdays);
             updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.MONDAY, checkBoxGroups.get(CheckboxGroup.CheckboxGroupIndex.MONDAY));
@@ -550,9 +551,10 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         }
 
         if (weekends.isChecked()) {
-            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.WEEKENDS, weekends);
-            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.SATURDAY, weekends);
-            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.SUNDAY, weekends);
+            insertContextualActiveHours(themeId, CheckboxGroup.CheckboxGroupIndex.WEEKENDS.getValue(), weekends.getStartTime(), weekends.getEndTime());
+//            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.WEEKENDS, weekends);
+//            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.SATURDAY, weekends);
+//            updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.SUNDAY, weekends);
         } else {
             updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.WEEKENDS, weekends);
             updateActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.SATURDAY, checkBoxGroups.get(CheckboxGroup.CheckboxGroupIndex.SATURDAY));
@@ -560,15 +562,30 @@ public class PlannerSqliteGateway {//implements PlannerGateway {
         }
     }
 
+    public void insertContextualActiveHours(long themeId, long day, long start, long end) {
+        insertSingleRowActiveHour(themeId, day, start, end);
+
+        if (day == CheckboxGroup.CheckboxGroupIndex.WEEKDAYS.getValue()) {
+            insertSingleRowActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.MONDAY.getValue(), start, end);
+            insertSingleRowActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.TUESDAY.getValue(), start, end);
+            insertSingleRowActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.WEDNESDAY.getValue(), start, end);
+            insertSingleRowActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.THURSDAY.getValue(), start, end);
+            insertSingleRowActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.FRIDAY.getValue(), start, end);
+        } else if (day == CheckboxGroup.CheckboxGroupIndex.WEEKENDS.getValue()) {
+            insertSingleRowActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.SATURDAY.getValue(), start, end);
+            insertSingleRowActiveHour(themeId, CheckboxGroup.CheckboxGroupIndex.SUNDAY.getValue(), start, end);
+        }
+    }
+
     public void updateActiveHour(long themeId, long day, long start, long end) {
-        insertActiveHour(themeId, day, start, end);
+        insertSingleRowActiveHour(themeId, day, start, end);
     }
 
     private void updateActiveHour(long themeId, CheckboxGroup.CheckboxGroupIndex index, CheckboxGroup currentGroup) {
-        insertActiveHour(themeId, index.getValue(), currentGroup.getStartTime(), currentGroup.getEndTime());
+        insertSingleRowActiveHour(themeId, index.getValue(), currentGroup.getStartTime(), currentGroup.getEndTime());
     }
 
-    private void insertActiveHour(long themeId, long day, long start, long end) {
+    private void insertSingleRowActiveHour(long themeId, long day, long start, long end) {
         ContentValues cv = new ContentValues();
         cv.put(ActiveHoursTable.THEME_COLUMN, themeId);
         cv.put(ActiveHoursTable.DAY_COLUMN, day);

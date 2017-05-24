@@ -62,7 +62,7 @@ public class FocusFragment
 
     @OnClick(R.id.fragment_today_add_fab)
     public void onClick() {
-        todayActivityListener.openAddTaskWorkflow("");
+        todayActivityListener.openAddTaskWorkflow();
     }
 
     @Override
@@ -84,6 +84,6 @@ public class FocusFragment
     }
 
     public interface FocusActivityListener {
-        void openAddTaskWorkflow(String newTaskTitle);
+        void openAddTaskWorkflow();
     }
 }

@@ -95,7 +95,7 @@ public abstract class TaskBasedActivity
     @Override
     public void addNewTask(Task newTask) {
         hideKeyboard();
-        setFragmentVisible(mainFragmentLayout);
+//        setFragmentVisible(mainFragmentLayout);
         storeNewTask(newTask);
     }
 

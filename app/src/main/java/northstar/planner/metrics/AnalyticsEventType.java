@@ -1,8 +1,4 @@
-package northstar.planner.analytics;
-
-/**
- * Created by Austin on 3/28/2017.
- */
+package northstar.planner.metrics;
 
 public enum AnalyticsEventType {
     STARTED("STARTED"),

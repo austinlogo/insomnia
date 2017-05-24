@@ -42,8 +42,27 @@ public class IntroActivity
         setContentView(R.layout.activity_intro);
         ButterKnife.bind(this);
 
+        viewPager.setOffscreenPageLimit(1);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                addBottomDots(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         layouts = new int[]{
                 R.layout.activity_intro_slide0,
+                R.layout.activity_intro_slide0_1,
                 R.layout.activity_intro_slide1,
                 R.layout.activity_intro_slide2,
                 R.layout.activity_intro_slide3,
@@ -107,9 +126,13 @@ public class IntroActivity
 
     @OnClick(R.id.activity_intro_btn_next)
     public void onClick(View v) {
+        updatePositionDots(1);
+    }
+
+    private void updatePositionDots(int pageOffset) {
         // checking for last page
         // if last page home screen will be launched
-        int current = getItem(+1);
+        int current = getItem(pageOffset);
         if (current < layouts.length) {
             // move to next screen
             viewPager.setCurrentItem(current);

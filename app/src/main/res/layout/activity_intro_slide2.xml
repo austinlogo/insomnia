@@ -4,10 +4,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+    <include layout="@layout/include_background_blue" />
+
+
     <LinearLayout
         android:id="@+id/android_intro_slide1_img_container"
         android:gravity="bottom"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:paddingBottom="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,10 +46,8 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:src="@drawable/tree_black"
-                android:scaleType="fitXY"
-                android:layout_width="32dp"
-                android:layout_height="@dimen/small_icon_width"/>
+                style="@style/AppTheme.Icon"
+                android:src="@drawable/tree_black"/>
 
             <TextView
                 android:layout_width="match_parent"

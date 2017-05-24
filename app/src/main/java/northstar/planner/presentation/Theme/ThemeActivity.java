@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
+import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -59,7 +60,17 @@ public class ThemeActivity
     @Override
     public void onResume() {
         super.onResume();
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        if (optionsMenu != null && currentTheme.isNew()) {
+            editAction();
+        }
+
+        return true;
     }
 
     @Override
@@ -84,9 +95,7 @@ public class ThemeActivity
     public View onCreateView(String name, Context context, AttributeSet attrs) {
         View v = super.onCreateView(name, context, attrs);
 
-        if (optionsMenu != null && currentTheme.isNew()) {
-            editAction();
-        }
+
 
         return v;
     }

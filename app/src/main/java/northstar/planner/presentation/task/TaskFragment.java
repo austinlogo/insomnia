@@ -212,7 +212,7 @@ public class TaskFragment
                 currentTask.setSnooze(selectedDate);
                 saveAndUpdateTask(currentTask);
 
-                if (prefs.remindWhenDue()) {
+                if (prefs.remindAfterSnooze()) {
                     getBaseActivity().scheduleNotification(currentTask, NotificationType.SNOOZE_NOTIFICATION);
                 }
             }

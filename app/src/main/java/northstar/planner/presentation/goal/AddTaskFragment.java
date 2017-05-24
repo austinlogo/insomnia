@@ -150,7 +150,7 @@ public class AddTaskFragment
         }
 
         activityListener.addNewTask(newTask);
-        getBaseActivity().hideKeyboard();
+        addTaskTitle.setText("");
     }
 
     @OnClick(R.id.fragment_add_task_committed_icon)
@@ -197,11 +197,11 @@ public class AddTaskFragment
         addTaskTitle.requestFocus();
     }
 
-    public void updateFragmentValuesForTodayTask(String newTaskTitle) {
+    public void updateFragmentValuesForTodayTask() {
         updateFragmentValues(null);
         metricIcon.setVisibility(View.GONE);
         isScratch = true;
-        selectedDate = DateUtils.today();
+        selectedDate = null;
         committedValue.setText("");
     }
 

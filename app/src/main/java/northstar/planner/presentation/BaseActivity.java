@@ -33,11 +33,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.OnLongClick;
-import com.amazonaws.mobileconnectors.amazonmobileanalytics.AnalyticsEvent;
-import com.amazonaws.mobileconnectors.amazonmobileanalytics.MobileAnalyticsManager;
 import northstar.planner.PlannerApplication;
 import northstar.planner.R;
-import northstar.planner.analytics.AnalyticsEventType;
+import northstar.planner.metrics.MetricsLogger;
 import northstar.planner.models.Goal;
 import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
@@ -79,11 +77,10 @@ public abstract class BaseActivity
     protected ListView themeList;
 
     @Inject
-    protected MobileAnalyticsManager analytics;
+    protected PrefManager prefs;
 
     @Inject
-    protected PrefManager prefManager;
-
+    MetricsLogger metricsLogger;
 
     protected DrawerAdapter drawerAdapter;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -109,13 +106,6 @@ public abstract class BaseActivity
 
         ((PlannerApplication) getApplication()).getComponent().inject(this);
     }
-
-    private void recordStart() {
-        AnalyticsEvent event =  analytics.getEventClient().createEvent(AnalyticsEventType.STARTED.toString());
-        analytics.getEventClient().recordEvent(event);
-        analytics.getEventClient().submitEvents();
-    }
-
 
     protected void finishDrawerInit(Activity act, DrawerLayout mDrawerLayout, String actionBarTitle) {
 
@@ -146,7 +136,7 @@ public abstract class BaseActivity
     protected void onResume() {
         super.onResume();
 
-        recordStart();
+        metricsLogger.recordStart();
 
         themes = dao.getAllThemes();
         drawerAdapter = new DrawerAdapter(

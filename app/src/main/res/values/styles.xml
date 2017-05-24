@@ -118,5 +118,12 @@
         <item name="android:padding">@dimen/standardSpace</item>
     </style>
 
+    <style name="AppTheme.Icon">
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:layout_width">@dimen/icon_width</item>
+        <item name="android:layout_height">@dimen/icon_width</item>
+    </style>
+
 
 </resources>

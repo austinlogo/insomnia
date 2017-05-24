@@ -15,4 +15,5 @@
     <color name="lightGrey">#DDD</color>
     <color name="grey">#555</color>
     <color name="translucent">#ddffffff</color>
+    <color name="transparent">#00ffffff</color>
 </resources>

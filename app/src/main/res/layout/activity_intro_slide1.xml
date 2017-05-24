@@ -4,9 +4,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+    <include layout="@layout/include_background_blue" />
+
     <LinearLayout
         android:id="@+id/android_intro_slide1_img_container"
         android:gravity="bottom"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:paddingBottom="2dp"
         android:layout_width="wrap_content"
@@ -42,10 +45,9 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                style="@style/AppTheme.Icon"
                 android:src="@drawable/ic_today_black_24dp"
-                android:scaleType="fitXY"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"/>
+                />
 
             <TextView
                 android:layout_width="match_parent"

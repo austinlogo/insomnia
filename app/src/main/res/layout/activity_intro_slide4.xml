@@ -4,10 +4,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+    <include layout="@layout/include_background_blue" />
+
     <LinearLayout
         android:id="@+id/android_intro_slide1_img_container"
         android:gravity="bottom"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:paddingBottom="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:scaleType="fitXY"
+            android:scaleType="fitCenter"
             android:src="@drawable/activity_intro_slide_task_03" />
     </LinearLayout>
 
@@ -42,10 +45,8 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:src="@drawable/seed_black"
-                android:scaleType="fitXY"
-                android:layout_width="@dimen/icon_width"
-                android:layout_height="@dimen/icon_width"/>
+                style="@style/AppTheme.Icon"
+                android:src="@drawable/seed_black"/>
 
             <TextView
                 android:layout_width="match_parent"

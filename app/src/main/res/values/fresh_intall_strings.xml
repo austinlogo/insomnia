@@ -30,7 +30,11 @@
     <string name="active_title">Active Hours</string>
     <string name="active_hours_description">Themes are not always relevant all day. Be sure to set when you care about each theme.</string>
     <string name="drawer_title">Drawer</string>
-    <string name="drawer_description">Handy drawer navigation gives you quick access to all your goals</string>
+    <string name="drawer_description">Handy drawer navigation gives you quick access to all your Themes, goals, and settings</string>
+
+    <string name="why_we_do_this">We want to make getting things done easier</string>
+    <string name="how_we_do_this">We filter your tasks to help keep you focused.</string>
+    <string name="dependency_title">dependencies</string>
 
     <string name="next">next</string>
     <string name="skip">skip</string>

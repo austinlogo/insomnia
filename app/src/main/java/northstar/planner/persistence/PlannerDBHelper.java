@@ -9,6 +9,7 @@ import northstar.planner.models.tables.ActiveHoursTable;
 import northstar.planner.models.tables.DependencyTable;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.MetricTable;
+import northstar.planner.models.tables.RecurrenceTable;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.models.tables.ThemeTable;
 
@@ -35,11 +36,10 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         newInstall += doesTableExists(ThemeTable.TABLE_NAME, db) ? 0 : 1;
 
-        db.execSQL(DependencyTable.getDropTableQuery());
-
         db.execSQL(ThemeTable.SQL_CREATE_QUERY);
         db.execSQL(GoalTable.SQL_CREATE_QUERY);
         db.execSQL(TaskTable.SQL_CREATE_QUERY);
+        db.execSQL(RecurrenceTable.SQL_CREATE_QUERY);
         db.execSQL(MetricTable.SQL_CREATE_QUERY);
         db.execSQL(ActiveHoursTable.SQL_CREATE_QUERY);
         db.execSQL(DependencyTable.SQL_CREATE_QUERY);
@@ -50,6 +50,7 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
         db.execSQL(ThemeTable.getDropTableQuery());
         db.execSQL(GoalTable.getDropTableQuery());
         db.execSQL(TaskTable.getDropTableQuery());
+        db.execSQL(RecurrenceTable.getDropTableQuery());
         db.execSQL(MetricTable.getDropTableQuery());
         db.execSQL(MetricTable.getDropTableQuery());
     }
