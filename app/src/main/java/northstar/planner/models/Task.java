@@ -26,6 +26,7 @@ public class Task extends BaseModel {
     private Date reminderTime;
     private TaskStatus taskStatus;
     private ShallowModel dependentTask;
+    private Recurrence recurrenceSchedule;
 
     public Task() {
         _id = NEW_ID;
@@ -200,5 +201,21 @@ public class Task extends BaseModel {
 
     public ShallowModel getDependentTask() {
         return dependentTask;
+    }
+
+    public Recurrence getRecurrenceSchedule() {
+        return recurrenceSchedule;
+    }
+
+    public void setRecurrenceSchedule(Recurrence recurrenceSchedule) {
+        this.recurrenceSchedule = recurrenceSchedule;
+
+        if (due == null && recurrenceSchedule != null) {
+            due = new Date();
+        }
+    }
+
+    public static long getNextIteration(Task task) {
+        return task.getDue().getTime() + task.getRecurrenceSchedule().getPeriod();
     }
 }

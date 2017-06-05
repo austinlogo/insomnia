@@ -44,15 +44,15 @@ public class FreshInstallData {
         Task chrisTask = constructGetBossApprovalTask(goal.getId(), approvalsNeeded);
         dao.addTask(chrisTask);
 
-        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.WEEKDAYS.getValue(),DateUtils.getTimeOfDay(0, 0), DateUtils.getTimeOfDay(23, 59));
-        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.WEEKENDS.getValue(),DateUtils.getTimeOfDay(0, 0), DateUtils.getTimeOfDay(23, 59));
-        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.MONDAY.getValue(),DateUtils.getTimeOfDay(0, 0), DateUtils.getTimeOfDay(23, 59));
-        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.TUESDAY.getValue(),DateUtils.getTimeOfDay(0, 0), DateUtils.getTimeOfDay(23, 59));
-        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.WEDNESDAY.getValue(),DateUtils.getTimeOfDay(0, 0), DateUtils.getTimeOfDay(23, 59));
-        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.THURSDAY.getValue(),DateUtils.getTimeOfDay(0, 0), DateUtils.getTimeOfDay(23, 59));
-        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.FRIDAY.getValue(),DateUtils.getTimeOfDay(0, 0), DateUtils.getTimeOfDay(23, 59));
-        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.SATURDAY.getValue(),DateUtils.getTimeOfDay(0, 0), DateUtils.getTimeOfDay(23, 59));
-        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.SUNDAY.getValue(),DateUtils.getTimeOfDay(0, 0), DateUtils.getTimeOfDay(23, 59));
+        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.WEEKDAYS.getValue(),DateUtils.getLongTimeOfDay(0, 0), DateUtils.getLongTimeOfDay(23, 59));
+        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.WEEKENDS.getValue(),DateUtils.getLongTimeOfDay(0, 0), DateUtils.getLongTimeOfDay(23, 59));
+        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.MONDAY.getValue(),DateUtils.getLongTimeOfDay(0, 0), DateUtils.getLongTimeOfDay(23, 59));
+        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.TUESDAY.getValue(),DateUtils.getLongTimeOfDay(0, 0), DateUtils.getLongTimeOfDay(23, 59));
+        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.WEDNESDAY.getValue(),DateUtils.getLongTimeOfDay(0, 0), DateUtils.getLongTimeOfDay(23, 59));
+        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.THURSDAY.getValue(),DateUtils.getLongTimeOfDay(0, 0), DateUtils.getLongTimeOfDay(23, 59));
+        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.FRIDAY.getValue(),DateUtils.getLongTimeOfDay(0, 0), DateUtils.getLongTimeOfDay(23, 59));
+        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.SATURDAY.getValue(),DateUtils.getLongTimeOfDay(0, 0), DateUtils.getLongTimeOfDay(23, 59));
+        dao.updateActiveHour(theme.getId(), CheckboxGroup.CheckboxGroupIndex.SUNDAY.getValue(),DateUtils.getLongTimeOfDay(0, 0), DateUtils.getLongTimeOfDay(23, 59));
     }
 
     private Theme constructProfessionalTheme() {

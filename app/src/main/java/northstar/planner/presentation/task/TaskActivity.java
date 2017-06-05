@@ -18,7 +18,6 @@ import northstar.planner.models.Task;
 import northstar.planner.models.drawer.ShallowModel;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.TaskTable;
-import northstar.planner.persistence.PlannerSqliteGateway;
 import northstar.planner.presentation.BaseActivity;
 import northstar.planner.presentation.dependency.DependencyChooserCallback;
 import northstar.planner.presentation.dependency.DependencyDialogFragment;
@@ -31,7 +30,7 @@ public class TaskActivity
     @BindView(R.id.activity_task_drawer_layout)
     DrawerLayout mDrawerLayout;
 
-    PlannerSqliteGateway dao;
+//    PlannerSqliteGateway dao;
     Task currentTask;
     TaskFragment mFragment;
 
@@ -40,7 +39,7 @@ public class TaskActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
         ButterKnife.bind(this);
-        dao = new PlannerSqliteGateway();
+//        dao = new PlannerSqliteGateway();
         currentTask = (Task) getIntent().getExtras().getSerializable(TaskTable.TABLE_NAME);
         currentTask = getDao().getTask(currentTask.getId());
         mFragment = TaskFragment.newInstance(getIntent().getExtras());
@@ -56,6 +55,11 @@ public class TaskActivity
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         mFragment.initUI(currentTask);
     }
 
@@ -68,7 +72,7 @@ public class TaskActivity
     protected void onPause() {
         super.onPause();
         currentTask = mFragment.updateValues();
-        dao.updateTask(currentTask);
+        getDao().updateTask(currentTask);
     }
 
     @Override
@@ -85,7 +89,7 @@ public class TaskActivity
 
     @Override
     protected void deleteAction() {
-        dao.deleteTask(currentTask);
+        getDao().deleteTask(currentTask);
         finish();
     }
 
@@ -111,7 +115,7 @@ public class TaskActivity
 
     @Override
     public void addTaskDependency() {
-        Goal taskGoal = dao.getGoal(currentTask.getGoal());
+        Goal taskGoal = getDao().getGoal(currentTask.getGoal());
         List<Task> tasks = taskGoal.getTasks();
 
         Iterator<Task> iterator = tasks.iterator();
@@ -125,7 +129,7 @@ public class TaskActivity
         DependencyDialogFragment.newInstance(tasks, new DependencyChooserCallback() {
             @Override
             public void onChoose(Task chosenTask) {
-                dao.updateDependencyTable(currentTask, chosenTask);
+                getDao().updateDependencyTable(currentTask, chosenTask);
                 currentTask.setDependentTask(new ShallowModel(chosenTask));
                 mFragment.initUI(currentTask);
             }
@@ -134,7 +138,7 @@ public class TaskActivity
 
     @Override
     public void removeDependency() {
-        dao.removeDependency(currentTask.getId());
+        getDao().removeDependency(currentTask.getId());
         currentTask.setDependentTask(null);
         mFragment.initUI(currentTask);
     }

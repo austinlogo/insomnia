@@ -1,5 +1,7 @@
 package northstar.planner.dagger;
 
+import android.app.DialogFragment;
+
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -18,5 +20,6 @@ public interface PlannerComponent {
     void inject(SettingsActivity activity);
     void inject(SettingsFragment activity);
     void inject(BaseFragment fragment);
+    void inject(DialogFragment fragment);
     void inject(Object obj);
 }

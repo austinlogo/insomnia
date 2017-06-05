@@ -135,7 +135,6 @@ import northstar.planner.utils.NotificationType;
 
     @Override
     public Metric addandStoreMetric(Metric sc) {
-//        setFragmentVisible(mainFragmentLayout);
 
         sc.setGoal(currentGoal.getId());
         sc = getDao().addMetric(sc);

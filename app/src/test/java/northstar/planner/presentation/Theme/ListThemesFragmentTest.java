@@ -65,7 +65,7 @@ public class ListThemesFragmentTest {
     @Test
     public void testOnItemClick() {
         when(themeListAdapter.getItem(0)).thenReturn(new Theme(0, "title", "desc"));
-        fragment.onItemClick(null, null, 0, 0X01);
+//        fragment.onItemClick(null, null, 0, 0X01);
 
         verify(activityListener).startThemeEdit(any(Theme.class));
     }

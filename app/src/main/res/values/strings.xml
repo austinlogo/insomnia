@@ -66,5 +66,13 @@
     <string name="notify_when_snooze_ends">Notify when snooze has finished</string>
     <string name="getting_started">getting started</string>
     <string name="choose_dependent_task">Choose dependent task</string>
+    <string name="period_text">every</string>
+    <string name="from">from</string>
+    <string name="to">to</string>
+    <string name="week">Week</string>
+    <string name="minute">Minute</string>
+    <string name="recurrence_multi_display_string">Every %1$d %2$ss</string>
+    <string name="recurrence_single_display_string">Every %1$s</string>
+    <string name="Recurrence_hint">Recurrence</string>
 
 </resources>

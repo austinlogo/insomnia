@@ -79,11 +79,11 @@ public class DateUtils {
         return c;
     }
 
-    public static long getTimeOfDay(int hourOfDay, int minute) {
+    public static long getLongTimeOfDay(int hourOfDay, int minute) {
         return (hourOfDay * MINUTES_IN_HOUR) + minute;
     }
 
-    public static String getStringTime(long time) {
+    public static String getStringTimeOfDay(long time) {
         long hours = time / MINUTES_IN_HOUR;
         long minutes = time % MINUTES_IN_HOUR;
 

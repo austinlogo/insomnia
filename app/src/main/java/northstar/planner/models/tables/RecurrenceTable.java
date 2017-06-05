@@ -6,28 +6,30 @@ public class RecurrenceTable extends BaseTable{
     public static final String START_TIME = "START_TIME";
     public static final String END_TIME = "END_TIME";
     public static final String PERIOD = "PERIOD";
-    public static final String UNIT = "UNIT";
+    public static final String PERIOD_UNIT = "UNIT";
 
 
     public static final String[] projection = {
-            _ID,
+//            _ID,
             TASK_ID,
             START_TIME,
             END_TIME,
             PERIOD,
-            UNIT
+            PERIOD_UNIT
     };
 
     public static final String SQL_CREATE_QUERY =
             CREATE_STATEMENT +
             TABLE_NAME + " (" +
-            PRIMARY_KEY + ", " +
+//            PRIMARY_KEY + ", " +
+            TASK_ID + " INTEGER" + ", " +
             TITLE_COLUMN + " TEXT, " +
-            TASK_ID + " INTEGER, " +
             START_TIME + " NUMERIC, " +
             END_TIME + " NUMERIC, " +
             PERIOD + " INTEGER, " +
-            UNIT +" STATUS_COLUMN)";
+            PERIOD_UNIT +" STATUS_COLUMN, " +
+            "PRIMARY KEY (" + TASK_ID + ")" +
+            ")";
 
     public static String getDropTableQuery() {
         return DROP_TABLE + TABLE_NAME;

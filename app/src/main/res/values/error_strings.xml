@@ -1,0 +1,4 @@
+<resources>
+
+    <string name="no_period_error">Cannot read Period format</string>
+</resources>

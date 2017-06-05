@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              style="@style/AppTheme.DialogTheme"
+              android:background="#EEE"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/dialog_recurrence_content_container"
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/standardSpace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/dialog_recurrence_period_container"
+
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/AppTheme.EditText"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingEnd="@dimen/smallSpace"
+                android:text="@string/period_text"/>
+
+            <EditText
+                android:id="@+id/dialog_recurrence_period_value"
+                android:hint="0"
+                android:minWidth="100dp"
+                android:inputType="number"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+            <Spinner
+                android:id="@+id/dialog_recurrence_period_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/dialog_recurrence_end_time"
+            android:layout_below="@id/dialog_recurrence_period_container"
+            android:hint="@string/to"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_below="@id/dialog_recurrence_content_container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_alignParentBottom="false"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/dialog_recurrence_done"
+            android:src="@drawable/ic_done_white_36dp"
+            android:background="?selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</RelativeLayout>

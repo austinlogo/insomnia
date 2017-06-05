@@ -7,7 +7,8 @@ package northstar.planner.utils;
 public enum NotificationType {
     DUE_NOTIFICATION(0),
     SNOOZE_NOTIFICATION(1),
-    REMINDER_NOTIFICATION(2);
+    REMINDER_NOTIFICATION(2),
+    RECURRING_NOTIFICATION(3);
 
 
     private final int value;

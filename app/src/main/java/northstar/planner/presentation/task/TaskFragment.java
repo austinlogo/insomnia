@@ -2,6 +2,7 @@ package northstar.planner.presentation.task;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
@@ -26,8 +27,8 @@ import butterknife.OnLongClick;
 import northstar.planner.R;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.TaskTable;
-import northstar.planner.persistence.PlannerSqliteGateway;
 import northstar.planner.presentation.BaseFragment;
+import northstar.planner.presentation.recurrence.RecurrenceDialogFragment;
 import northstar.planner.utils.DateTimeSetter;
 import northstar.planner.utils.DateTimeSetterCallback;
 import northstar.planner.utils.DateUtils;
@@ -68,6 +69,9 @@ public class TaskFragment
     @BindView(R.id.fragment_task_goal)
     TextView goalTitle;
 
+    @BindView(R.id.fragment_task_recurrence_display)
+    TextView recurrenceView;
+
     @BindView(R.id.fragment_task_metric_container)
     RelativeLayout metricContainer;
 
@@ -75,7 +79,6 @@ public class TaskFragment
     TextView blockingTask;
 
     Task currentTask;
-    PlannerSqliteGateway dao;
     TaskFragmentListener attachedActivity;
 
     public static TaskFragment newInstance(Bundle b) {
@@ -88,7 +91,7 @@ public class TaskFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dao = new PlannerSqliteGateway();
+//        dao = new PlannerSqliteGateway();
         currentTask = (Task) getArguments().getSerializable(TaskTable.TABLE_NAME);
     }
 
@@ -122,6 +125,7 @@ public class TaskFragment
         setMetricProgressRow();
         setReminderRow();
         setDependentTask();
+        setRecurrence();
     }
 
     private void setDependentTask() {
@@ -129,6 +133,14 @@ public class TaskFragment
             blockingTask.setText(currentTask.getDependentTask().getTitle());
         } else {
             blockingTask.setText("");
+        }
+    }
+
+    private void setRecurrence() {
+        if (currentTask.getRecurrenceSchedule() == null) {
+            recurrenceView.setText("");
+        } else {
+            recurrenceView.setText(currentTask.getRecurrenceSchedule().toString());
         }
     }
 
@@ -153,7 +165,7 @@ public class TaskFragment
             metricTitle.setText(currentTask.getMetric().getTitle());
             metricProgress.setText(currentTask.getMetric().getProgressString());
         } else {
-            metricContainer.setVisibility(View.INVISIBLE);
+            metricContainer.setVisibility(View.GONE);
         }
     }
 
@@ -251,7 +263,7 @@ public class TaskFragment
 
     private void saveAndUpdateTask(Task task) {
         initUI(task);
-        dao.updateTask(task);
+        getBaseActivity().getDao().updateTask(task);
     }
 
     @OnEditorAction(R.id.fragment_task_title)
@@ -283,6 +295,20 @@ public class TaskFragment
         if (isEditable) {
             editTitle.requestFocus();
         }
+    }
+
+    @OnClick(R.id.fragment_task_recurrence_container)
+    public void onRecurrenceClick() {
+        RecurrenceDialogFragment dialogFragment = RecurrenceDialogFragment.newInstance(currentTask);
+        FragmentManager fm = getFragmentManager();
+        dialogFragment.show(fm, "TAG");
+    }
+
+    @OnLongClick(R.id.fragment_task_recurrence_container)
+    public boolean onLongClickRecurrence() {
+        currentTask = getBaseActivity().cancelAllNotificationsForTask(currentTask);
+        initUI(currentTask);
+        return true;
     }
 
     @Override

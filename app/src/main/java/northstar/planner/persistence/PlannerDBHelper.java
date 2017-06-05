@@ -36,6 +36,8 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         newInstall += doesTableExists(ThemeTable.TABLE_NAME, db) ? 0 : 1;
 
+//        db.execSQL(RecurrenceTable.getDropTableQuery());
+
         db.execSQL(ThemeTable.SQL_CREATE_QUERY);
         db.execSQL(GoalTable.SQL_CREATE_QUERY);
         db.execSQL(TaskTable.SQL_CREATE_QUERY);

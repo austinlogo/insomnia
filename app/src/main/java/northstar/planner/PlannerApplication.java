@@ -24,6 +24,7 @@ public class PlannerApplication extends Application{
     public void onCreate() {
         super.onCreate();
         context = this;
+        new PlannerDBHelper(context);
         PlannerSqliteGateway dao = new PlannerSqliteGateway(getApplicationContext());
         new RecurrenceGateway(getApplicationContext());
 

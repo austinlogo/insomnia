@@ -35,7 +35,7 @@ public abstract class TaskBasedFragment extends BaseFragment {
                             taskListAdapter.undoDeletion(item, position);
                         } else {
                             getBaseActivity().removeFromDb(item);
-                            getBaseActivity().cancelNotification(item);
+                            getBaseActivity().cancelAllNotificationsForTask(item);
                             // TODO: UPDATE METRICS
                             getBaseActivity().updateActivity();
                             updateMetricOnUI(item.getMetric());

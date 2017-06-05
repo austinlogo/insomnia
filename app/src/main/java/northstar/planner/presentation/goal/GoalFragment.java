@@ -218,6 +218,7 @@ public class GoalFragment
     }
 
     public interface TaskActionListener {
+        void updateTask(Task updatedTask);
         void openTask(Task t);
         void removeTask(int position, Task t);
         void completeTask(Task t);

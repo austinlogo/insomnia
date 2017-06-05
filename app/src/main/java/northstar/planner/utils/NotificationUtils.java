@@ -7,8 +7,13 @@ package northstar.planner.utils;
 public class NotificationUtils {
 
     public static int constructNotificationId(long id, NotificationType notificationType) {
+        int type = notificationType.getValue();
+        return constructNotificationId(id, type);
+    }
+
+    public static int constructNotificationId(long id, int notificationType) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(notificationType.getValue());
+        stringBuilder.append(notificationType);
         stringBuilder.append(id);
         return Integer.parseInt(stringBuilder.toString());
     }

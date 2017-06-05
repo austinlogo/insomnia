@@ -34,10 +34,11 @@ import northstar.planner.utils.DateUtils;
 
 public class PlannerSqliteGateway extends BaseGateway {
 
-    SQLiteDatabase db;
+    private RecurrenceGateway recurrenceGateway;
+    private SQLiteDatabase db;
 
     public PlannerSqliteGateway(Context ctx) {
-        new PlannerDBHelper(ctx);
+        recurrenceGateway = new RecurrenceGateway(ctx);
         db = PlannerDBHelper.getDbInstance();
     }
 
@@ -56,8 +57,8 @@ public class PlannerSqliteGateway extends BaseGateway {
         newTheme.setId(newId);
 
         // set Active hours to always.
-        insertContextualActiveHours(newTheme.getId(), CheckboxGroup.CheckboxGroupIndex.WEEKDAYS.getValue(), DateUtils.getTimeOfDay(0, 0), DateUtils.getTimeOfDay(23, 0));
-        insertContextualActiveHours(newTheme.getId(), CheckboxGroup.CheckboxGroupIndex.WEEKENDS.getValue(), DateUtils.getTimeOfDay(0, 0), DateUtils.getTimeOfDay(23, 0));
+        insertContextualActiveHours(newTheme.getId(), CheckboxGroup.CheckboxGroupIndex.WEEKDAYS.getValue(), DateUtils.getLongTimeOfDay(0, 0), DateUtils.getLongTimeOfDay(23, 0));
+        insertContextualActiveHours(newTheme.getId(), CheckboxGroup.CheckboxGroupIndex.WEEKENDS.getValue(), DateUtils.getLongTimeOfDay(0, 0), DateUtils.getLongTimeOfDay(23, 0));
 
 
         return newTheme;
@@ -184,6 +185,7 @@ public class PlannerSqliteGateway extends BaseGateway {
         Task result = new Task(c);
         result.setMetric(getMetric(result.getCompletes()));
         result.setDependentTask(getDependentTask(result.getId()));
+        result.setRecurrenceSchedule(recurrenceGateway.getRecurrence(result));
         return result;
     }
 
@@ -452,7 +454,7 @@ public class PlannerSqliteGateway extends BaseGateway {
 
     public List<Task> getTasksByPriority() {
         Date now = new Date();
-        long timeOfDay = DateUtils.getTimeOfDay(now.getHours(), now.getMinutes());
+        long timeOfDay = DateUtils.getLongTimeOfDay(now.getHours(), now.getMinutes());
 
         String query = "Select ta.*, g." + GoalTable.TITLE_COLUMN + " as " + GoalTable.uniqueTitle()
                 + " from " + TaskTable.TABLE_NAME + " ta"

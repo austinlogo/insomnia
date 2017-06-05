@@ -113,7 +113,7 @@ public class AddTaskFragment
     }
 
     @OnItemSelected(R.id.fragment_add_task_successcriteria_value)
-    public void onSuccessCriteriaSelected(Spinner spinner, int position) {
+    public void onMetricSelected(Spinner spinner, int position) {
         selectedMetric = successCriteriaSpinnerAdapter.getItem(position);
         spinner.setSelection(position);
 

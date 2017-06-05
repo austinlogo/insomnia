@@ -125,5 +125,12 @@
         <item name="android:layout_height">@dimen/icon_width</item>
     </style>
 
+    <style name="AppTheme.DialogTheme" parent="android:Theme.Dialog">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
 
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>

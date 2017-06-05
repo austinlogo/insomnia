@@ -69,8 +69,8 @@ public class CheckboxGroup
     }
 
     public void updateDisplay() {
-        start.setText(DateUtils.getStringTime(startTime));
-        end.setText(DateUtils.getStringTime(endTime));
+        start.setText(DateUtils.getStringTimeOfDay(startTime));
+        end.setText(DateUtils.getStringTimeOfDay(endTime));
     }
 
     public void setCheckBoxStates() {
@@ -91,11 +91,11 @@ public class CheckboxGroup
         }
 
         if (activePicker.getId() == start.getId()) {
-            startTime = DateUtils.getTimeOfDay(hourOfDay, minute);
-            activePicker.setText(DateUtils.getStringTime(startTime));
+            startTime = DateUtils.getLongTimeOfDay(hourOfDay, minute);
+            activePicker.setText(DateUtils.getStringTimeOfDay(startTime));
         } else {
-            endTime = DateUtils.getTimeOfDay(hourOfDay, minute);
-            activePicker.setText(DateUtils.getStringTime(endTime));
+            endTime = DateUtils.getLongTimeOfDay(hourOfDay, minute);
+            activePicker.setText(DateUtils.getStringTimeOfDay(endTime));
         }
 
         activePicker = null;
