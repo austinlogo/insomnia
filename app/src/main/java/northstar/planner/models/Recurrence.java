@@ -20,16 +20,17 @@ public class Recurrence extends BaseModel implements Serializable {
     private Date endTime;
     private PeriodUnit periodUnit;
 
-//    public Recurrence(long taskId, int periodUnitMultiplier, PeriodUnit periodUnit, Date startTime, Date endTime) {
-//        this(taskId, periodUnitMultiplier, periodUnit, startTime, endTime);
+//    public Recurrence(long taskId, int periodUnitMultiplier, PeriodUnit periodUnit, Date calculateStartTime, Date endTime) {
+//        this(taskId, periodUnitMultiplier, periodUnit, calculateStartTime, endTime);
 //    }
 
     public Recurrence(long taskId, int periodUnitMultiplier, PeriodUnit periodUnit, Date startTime, Date endTime) {
         this.taskId = taskId;
         this.periodUnitMultiplier = periodUnitMultiplier;
         this.periodUnit = periodUnit;
-        this.startTime = calculateStartTime(startTime);
         this.endTime = endTime;
+
+        this.startTime = calculateStartTime(startTime);
     }
 
     @Override
@@ -66,7 +67,7 @@ public class Recurrence extends BaseModel implements Serializable {
         return periodUnitMultiplier * PeriodUnit.unitToMillis(periodUnit);
     }
 
-    public Date calculateStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
@@ -83,9 +84,12 @@ public class Recurrence extends BaseModel implements Serializable {
     }
 
     private Date calculateStartTime(Date startTime) {
-        return startTime == null ?
-                new Date() :
-                startTime;
+        long startTimeLong = startTime == null ?
+                new Date().getTime() :
+                startTime.getTime();
+
+        startTimeLong += getPeriod();
+        return new Date(startTimeLong);
     }
 
     public PeriodUnit getPeriodUnit() {

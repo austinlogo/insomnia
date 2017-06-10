@@ -4,7 +4,7 @@ import northstar.planner.PlannerApplication;
 import northstar.planner.R;
 
 public enum PeriodUnit {
-//    Minute(R.string.minute),
+    Minute(R.string.minute),
     Day(R.string.day),
     Week(R.string.week);
 
@@ -23,8 +23,8 @@ public enum PeriodUnit {
 
     public static long unitToMillis(PeriodUnit unit) {
         switch (unit) {
-//            case Minute:
-//                return 1000 * 60;
+            case Minute:
+                return 1000 * 60;
             case Day:
                 return 1000* 60 * 60 * 24;
             case Week:

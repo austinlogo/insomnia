@@ -347,7 +347,7 @@ public abstract class BaseActivity
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 
         alarmManager.cancel(pendingIntent);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, rec.calculateStartTime().getTime(), rec.getPeriod(),  pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, rec.getStartTime().getTime(), rec.getPeriod(),  pendingIntent);
     }
 
     private static long getNotificationTime(Task task, NotificationType notificationType) {
@@ -375,6 +375,10 @@ public abstract class BaseActivity
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_TYPE, notificationType.toString());
 
         return constructBasePendingIntent(ctx, task.getId(), notificationType, notificationIntent);
+    }
+
+    public static PendingIntent constructBasePendingIntent(Context ctx, long taskId, String notificationType, Intent intent) {
+        return constructBasePendingIntent(ctx, taskId, NotificationType.valueOf(notificationType), intent);
     }
 
     public static PendingIntent constructBasePendingIntent(Context ctx, long taskId, NotificationType notificationType, Intent intent) {
@@ -431,6 +435,10 @@ public abstract class BaseActivity
     public Task cancelAllNotificationsForTask(Task item) {
         if (item.getDue() != null) {
             cancelAllNotificationsForTask(item, NotificationType.DUE_NOTIFICATION);
+
+            cancelAllNotificationsForTask(item, NotificationType.RECURRING_NOTIFICATION);
+            getRecurrenceDao().removeRecurrenceRecord(item);
+            item.setRecurrenceSchedule(null);
         }
 
         if (item.getReminder() != null) {
@@ -441,9 +449,6 @@ public abstract class BaseActivity
             cancelAllNotificationsForTask(item, NotificationType.SNOOZE_NOTIFICATION);
         }
 
-        cancelAllNotificationsForTask(item, NotificationType.RECURRING_NOTIFICATION);
-        getRecurrenceDao().removeRecurrenceRecord(item);
-        item.setRecurrenceSchedule(null);
         return item;
     }
 

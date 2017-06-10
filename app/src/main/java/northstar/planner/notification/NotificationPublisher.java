@@ -11,7 +11,6 @@ import android.content.Intent;
 import java.util.Date;
 
 import northstar.planner.presentation.BaseActivity;
-import northstar.planner.utils.NotificationType;
 
 public class NotificationPublisher extends BroadcastReceiver {
 
@@ -37,14 +36,11 @@ public class NotificationPublisher extends BroadcastReceiver {
 
         long now = new Date().getTime();
 
-//        if (true) {
         if (stopTime > 0 && now > stopTime) {
             notificationManager.cancel(id);
-//            PendingIntent pIntent = BaseActivity.constructNotificationPendingIntent(context, )
-            PendingIntent pIntent = BaseActivity.constructBasePendingIntent(context, taskId, NotificationType.valueOf(notificationType), intent);
+            PendingIntent pIntent = BaseActivity.constructBasePendingIntent(context, taskId, notificationType, intent);
             alarmManager.cancel(pIntent);
         } else {
-            notificationManager.cancel(id);
             notificationManager.notify(id, notification);
         }
 

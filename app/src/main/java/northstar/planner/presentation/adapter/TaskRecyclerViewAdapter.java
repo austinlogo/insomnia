@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -99,8 +98,7 @@ public class TaskRecyclerViewAdapter
         Task removedTask = tasks.remove(position);
 
         if (taskContainsAnotherRecurrence(removedTask)) {
-            Date newDueDate = new Date(Task.getNextIteration(removedTask));
-            removedTask.setDueDate(newDueDate);
+            removedTask.udpateToNextIteration();
             tasks.add(position, removedTask);
             activityListener.updateTask(removedTask);
         } else {
@@ -110,11 +108,11 @@ public class TaskRecyclerViewAdapter
     }
 
     private boolean taskContainsAnotherRecurrence(Task task) {
-        if (task.getRecurrenceSchedule() == null) {
+        if (task.getRecurrenceSchedule() == null ) {
             return false;
         }
 
-        return Task.getNextIteration(task) < new Date().getTime();
+        return task.getRecurrenceSchedule().getEndTime() == null || Task.getNextIteration(task) < task.getRecurrenceSchedule().getEndTime().getTime();
     }
 
     @Override

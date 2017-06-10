@@ -215,6 +215,19 @@ public class Task extends BaseModel {
         }
     }
 
+    public void udpateToNextIteration() {
+        Date nextDueIteration = new Date(due.getTime() + recurrenceSchedule.getPeriod());
+        Date nextSnoozeIteration = null;
+
+        if (snooze != null) {
+            long snoozeDelta = due.getTime() - snooze.getTime();
+             nextSnoozeIteration = new Date(nextDueIteration.getTime() - snoozeDelta);
+        }
+
+        setDueDate(nextDueIteration);
+        setSnooze(nextSnoozeIteration);
+    }
+
     public static long getNextIteration(Task task) {
         return task.getDue().getTime() + task.getRecurrenceSchedule().getPeriod();
     }

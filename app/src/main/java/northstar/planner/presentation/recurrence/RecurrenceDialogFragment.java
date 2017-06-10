@@ -113,21 +113,6 @@ public class RecurrenceDialogFragment extends BaseDialogFragment {
         periodValue.setText(String.valueOf(recurrence.getPeriodUnitMultiplier()));
         periodUnit.setSelection(spinnerAdapter.getPosition(recurrence.getPeriodUnit()));
     }
-//
-//    @OnClick(R.id.dialog_recurrence_start_time)
-//    public void onClickStartTime() {
-//        datePickerDialog = new DatePickerDialog(getBaseActivity(), new DatePickerDialog.OnDateSetListener() {
-//            @Override
-//            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-//                from = Calendar.getInstance();
-//                from.set(year, monthOfYear, dayOfMonth);
-//
-//                startTime.setText(DateUtils.getDateString(getString(R.string.today), from));
-//            }
-//        }, DateUtils.today().get(Calendar.YEAR), DateUtils.today().get(Calendar.MONTH), DateUtils.today().get(Calendar.DAY_OF_MONTH));
-//
-//        datePickerDialog.show();
-//    }
 
     @OnClick(R.id.dialog_recurrence_end_time)
     public void onClickEndTime() {

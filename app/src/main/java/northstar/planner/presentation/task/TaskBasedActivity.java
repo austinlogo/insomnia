@@ -128,6 +128,7 @@ public abstract class TaskBasedActivity
     @Override
     public void updateTask(Task updatedTask) {
         getDao().updateTask(updatedTask);
+        sche
         updateActivity();
     }
 
