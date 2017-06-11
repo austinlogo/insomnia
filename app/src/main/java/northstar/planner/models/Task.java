@@ -3,16 +3,14 @@ package northstar.planner.models;
 import android.database.Cursor;
 import android.widget.EditText;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.DateTime;
 
-import northstar.planner.PlannerApplication;
-import northstar.planner.R;
 import northstar.planner.models.drawer.ShallowModel;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.utils.DateUtils;
+
+
 
 public class Task extends BaseModel {
     private long goal;
@@ -21,9 +19,9 @@ public class Task extends BaseModel {
     private double taskCommitment;
     private long completes;
     private Metric metric;
-    private Date due;
-    private Date snooze;
-    private Date reminderTime;
+    private DateTime due;
+    private DateTime snooze;
+    private DateTime reminderTime;
     private TaskStatus taskStatus;
     private ShallowModel dependentTask;
     private Recurrence recurrenceSchedule;
@@ -31,7 +29,7 @@ public class Task extends BaseModel {
     public Task() {
         _id = NEW_ID;
         goal = NEW_ID;
-        due = new Date();
+        due = new DateTime();
         taskStatus = TaskStatus.NOT_STARTED;
     }
 
@@ -53,7 +51,7 @@ public class Task extends BaseModel {
         goal = goalId;
     }
 
-    public Task(long goalId, String title, Date due) {
+    public Task(long goalId, String title, DateTime due) {
         goal = goalId;
         _id = NEW_ID;
         this.title = title;
@@ -63,13 +61,13 @@ public class Task extends BaseModel {
         taskStatus = TaskStatus.IN_PROGRESS;
     }
 
-    public Task(EditText newTaskTitle, Calendar chosenDate, Metric item, int commitment) {
+    public Task(EditText newTaskTitle, DateTime chosenDate, Metric item, int commitment) {
         boolean hasSuccessCriteria = item != null && item.getId() != NEW_ID;
 
         goal = NEW_ID;
         _id = NEW_ID;
         title = newTaskTitle.getText().toString();
-        due = chosenDate == null ? null : chosenDate.getTime();
+        due = chosenDate == null ? null : chosenDate;
         taskStatus = TaskStatus.NOT_STARTED;
 
         if (hasSuccessCriteria) {
@@ -104,7 +102,7 @@ public class Task extends BaseModel {
         return metric;
     }
 
-    public Date getDue() {
+    public DateTime getDue() {
         return due;
     }
 
@@ -120,7 +118,7 @@ public class Task extends BaseModel {
         this.title = title;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(DateTime dueDate) {
         this.due = dueDate;
     }
 
@@ -144,19 +142,15 @@ public class Task extends BaseModel {
         return getDateString(due);
     }
 
-    public static String getDateString(Date date) {
-        if (date == null) {
+    public static String getDateString(DateTime dateTime) {
+        if (dateTime == null) {
             return "";
         }
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        String todayString = PlannerApplication.getInstance().getString(R.string.today);
+//        return dateTime.toString("%s, %s", D)
 
-        SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm");
-        String time = localDateFormat.format(date);
-
-        return DateUtils.getDateString(todayString, cal) + ", " + time;
+        return String.format("%s, %s", DateUtils.getDateString(dateTime), dateTime.toString("HH:mm"));
+//        return DateUtils.getDateString(cal) + ", " + time;
     }
 
     public void setTaskStatus(TaskStatus taskStatus) {
@@ -171,7 +165,7 @@ public class Task extends BaseModel {
         return getDateString(snooze);
     }
 
-    public void setSnooze(Date snooze) {
+    public void setSnooze(DateTime snooze) {
         this.snooze = snooze;
     }
 
@@ -179,11 +173,11 @@ public class Task extends BaseModel {
         return snooze != null;
     }
 
-    public Date getSnooze() {
+    public DateTime getSnooze() {
         return snooze;
     }
 
-    public Date getReminder() {
+    public DateTime getReminder() {
         return reminderTime;
     }
 
@@ -191,7 +185,7 @@ public class Task extends BaseModel {
         return getDateString(reminderTime);
     }
 
-    public void setReminder(Date reminder) {
+    public void setReminder(DateTime reminder) {
         this.reminderTime = reminder;
     }
 
@@ -211,17 +205,17 @@ public class Task extends BaseModel {
         this.recurrenceSchedule = recurrenceSchedule;
 
         if (due == null && recurrenceSchedule != null) {
-            due = new Date();
+            due = new DateTime();
         }
     }
 
     public void udpateToNextIteration() {
-        Date nextDueIteration = new Date(due.getTime() + recurrenceSchedule.getPeriod());
-        Date nextSnoozeIteration = null;
+        DateTime nextDueIteration = new DateTime(due.getMillis() + recurrenceSchedule.getPeriod());
+        DateTime nextSnoozeIteration = null;
 
         if (snooze != null) {
-            long snoozeDelta = due.getTime() - snooze.getTime();
-             nextSnoozeIteration = new Date(nextDueIteration.getTime() - snoozeDelta);
+            long snoozeDelta = due.getMillis() - snooze.getMillis();
+             nextSnoozeIteration = new DateTime(nextDueIteration.getMillis() - snoozeDelta);
         }
 
         setDueDate(nextDueIteration);
@@ -229,6 +223,6 @@ public class Task extends BaseModel {
     }
 
     public static long getNextIteration(Task task) {
-        return task.getDue().getTime() + task.getRecurrenceSchedule().getPeriod();
+        return task.getDue().getMillis() + task.getRecurrenceSchedule().getPeriod();
     }
 }

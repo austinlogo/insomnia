@@ -5,10 +5,13 @@ import android.app.DialogFragment;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import northstar.planner.models.checkboxgroup.CheckboxGroup;
+import northstar.planner.notification.PlannerNotificationManager;
 import northstar.planner.presentation.BaseActivity;
 import northstar.planner.presentation.BaseFragment;
 import northstar.planner.presentation.settings.SettingsActivity;
 import northstar.planner.presentation.settings.SettingsFragment;
+import northstar.planner.utils.DateTimeSetter;
 
 @Singleton
 @Component(modules = {
@@ -21,5 +24,8 @@ public interface PlannerComponent {
     void inject(SettingsFragment activity);
     void inject(BaseFragment fragment);
     void inject(DialogFragment fragment);
-    void inject(Object obj);
+    void inject(PlannerNotificationManager manager);
+    void inject(DateTimeSetter setter);
+    void inject(CheckboxGroup cbg);
+//    void inject(Object obj);
 }

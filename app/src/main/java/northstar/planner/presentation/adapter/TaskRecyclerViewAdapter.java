@@ -50,7 +50,7 @@ public class TaskRecyclerViewAdapter
         }
 
         if (currentTask.getDue() != null
-                && currentTask.getDue().getTime() < DateUtils.today().getTimeInMillis()) {
+                && currentTask.getDue().getMillis() < DateUtils.today().getMillis()) {
             holder.due.setTextColor(Color.RED);
         } else {
             holder.due.setTextColor(Color.BLACK);
@@ -112,7 +112,7 @@ public class TaskRecyclerViewAdapter
             return false;
         }
 
-        return task.getRecurrenceSchedule().getEndTime() == null || Task.getNextIteration(task) < task.getRecurrenceSchedule().getEndTime().getTime();
+        return task.getRecurrenceSchedule().getEndTime() == null || Task.getNextIteration(task) < task.getRecurrenceSchedule().getEndTime().getMillis();
     }
 
     @Override

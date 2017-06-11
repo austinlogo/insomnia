@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import java.util.Date;
+
+
+import org.joda.time.DateTime;
 
 import northstar.planner.models.Recurrence;
 
@@ -20,6 +22,6 @@ public class RecurrencePublisher extends BroadcastReceiver {
         Recurrence rec = (Recurrence) intent.getSerializableExtra(RECURRENCE);
 //        int id = (int) intent.getLongExtra(RECURRENCE_ID, 0L);
 
-        Log.d("TEST", "Testing: " + new Date().getTime() / 1000);
+        Log.d("TEST", "Testing: " + new DateTime().getMillis() / 1000);
     }
 }

@@ -58,6 +58,30 @@
 
     <RelativeLayout
         style="@style/AppTheme.Setting"
+        android:id="@+id/fragment_settings_24_hour_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Switch
+            android:id="@+id/fragment_settings_24_hour_switch"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            style="@style/AppTheme.TextView"
+            android:layout_centerVertical="true"
+            android:text="@string/use_24_hour_clock"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/fragment_settings_24_hour_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        style="@style/AppTheme.Setting"
         android:id="@+id/fragment_settings_getting_started_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

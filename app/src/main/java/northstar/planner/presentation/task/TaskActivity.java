@@ -142,21 +142,4 @@ public class TaskActivity
         currentTask.setDependentTask(null);
         mFragment.initUI(currentTask);
     }
-
-//    @Override
-//    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-//        selectedDate = Calendar.getDbInstance();
-//        selectedDate.set(year, monthOfYear, dayOfMonth);
-//        timePickerDialog.show();
-//    }
-//
-//    @Override
-//    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-//        selectedDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
-//        selectedDate.set(Calendar.MINUTE, minute);
-//
-//        dao.snooze(currentTask.getId(), selectedDate.getTime());
-//        currentTask.setSnooze(selectedDate.getTime());
-//        mFragment.initUI(currentTask);
-//    }
 }

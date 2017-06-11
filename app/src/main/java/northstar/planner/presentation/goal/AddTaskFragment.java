@@ -15,8 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.DateTime;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,7 +59,7 @@ public class AddTaskFragment
     private AddTaskFragmentListener activityListener;
     private Metric selectedMetric;
     private SuccessCriteriaSpinnerAdapter successCriteriaSpinnerAdapter;
-    private Calendar selectedDate;
+    private DateTime selectedDate;
     private boolean isScratch;
 
     public static AddTaskFragment newInstance(String title) {
@@ -98,10 +97,8 @@ public class AddTaskFragment
         setVisible(datePickerValue);
         new DateTimeSetter(getActivity(), new DateTimeSetterCallback() {
             @Override
-            public void onValuesSet(Date time) {
-
-                selectedDate = Calendar.getInstance();
-                selectedDate.setTime(time);
+            public void onValuesSet(DateTime time) {
+                selectedDate = time;
                 datePickerValue.setText( Task.getDateString(time));
             }
         }).selectTime();
@@ -178,8 +175,12 @@ public class AddTaskFragment
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-        selectedDate.set(year, monthOfYear, dayOfMonth);
-        datePickerValue.setText(DateUtils.getDateString(getString(R.string.today), selectedDate));
+        selectedDate = selectedDate
+                .withYear(year)
+                .withMonthOfYear(monthOfYear)
+                .withDayOfMonth(dayOfMonth);
+//        selectedDate.set(year, monthOfYear, dayOfMonth);
+        datePickerValue.setText(DateUtils.getDateString(selectedDate));
     }
 
     public void updateFragmentValues(SuccessCriteriaSpinnerAdapter successCriteriasAdapter) {

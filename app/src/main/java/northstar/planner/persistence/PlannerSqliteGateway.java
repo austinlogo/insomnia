@@ -5,10 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +31,8 @@ import northstar.planner.models.tables.MetricTable;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.models.tables.ThemeTable;
 import northstar.planner.utils.DateUtils;
+
+
 
 public class PlannerSqliteGateway extends BaseGateway {
 
@@ -95,13 +97,13 @@ public class PlannerSqliteGateway extends BaseGateway {
         updateMetricInDb(task.getMetric());
 
         if (task.getDue() != null) {
-            newValues.put(TaskTable.DUE_COLUMN, task.getDue().getTime());
+            newValues.put(TaskTable.DUE_COLUMN, task.getDue().getMillis());
         } else {
             newValues.put(TaskTable.DUE_COLUMN, 0);
         }
 
         if (task.getSnooze() != null) {
-            newValues.put(TaskTable.SNOOZE_COLUMN, task.getSnooze().getTime());
+            newValues.put(TaskTable.SNOOZE_COLUMN, task.getSnooze().getMillis());
         } else {
             newValues.put(TaskTable.SNOOZE_COLUMN, 0);
         }
@@ -240,28 +242,13 @@ public class PlannerSqliteGateway extends BaseGateway {
         List<Task> filteredTasks = new ArrayList<>();
 
         for (Task currentTask : tasks) {
-            if (currentTask.hasSnoozed() && currentTask.getSnooze().getTime() >= currentTime) { // still snoozing
+            if (currentTask.hasSnoozed() && currentTask.getSnooze().getMillis() >= currentTime) { // still snoozing
                 continue;
             }
 
             filteredTasks.add(currentTask);
         }
         return filteredTasks;
-    }
-
-    public List<Task> getTasksBeforeDueDate(Calendar cal) {
-        Calendar endOfDay = DateUtils.getEndOfDay(cal);
-        String query = constructOpenTaskQuery(TaskTable.DUE_COLUMN + " < " + endOfDay.getTime().getTime());
-
-        Cursor c = db.rawQuery(query, null);
-        c.moveToFirst();
-
-        List<Task> result = new ArrayList<>();
-        while(!c.isAfterLast()) {
-            result.add(constructTaskFromCursor(c));
-            c.moveToNext();
-        }
-        return result;
     }
 
     private String constructOpenTaskQuery(String criteria) {
@@ -403,16 +390,16 @@ public class PlannerSqliteGateway extends BaseGateway {
         String[] whereArgs = {Long.toString(task.getId())};
 
         if (task.getDue() != null) {
-            newValues.put(TaskTable.DUE_COLUMN, task.getDue().getTime());
+            newValues.put(TaskTable.DUE_COLUMN, task.getDue().getMillis());
         }
 
         if (task.getSnooze() != null) {
-            newValues.put(TaskTable.SNOOZE_COLUMN, task.getSnooze().getTime());
+            newValues.put(TaskTable.SNOOZE_COLUMN, task.getSnooze().getMillis());
         }
 
 
         if (task.getReminder() != null) {
-            newValues.put(TaskTable.REMINDER_COLUMN, task.getReminder().getTime());
+            newValues.put(TaskTable.REMINDER_COLUMN, task.getReminder().getMillis());
         }
 
         newValues.put(TaskTable.TITLE_COLUMN, task.getTitle());
@@ -438,7 +425,7 @@ public class PlannerSqliteGateway extends BaseGateway {
 
     public List<Task> getTodaysTasks() {
         List<Task> tasks = getTasksByGoalId(Task.SCRATCH_ID);
-        tasks = filterTaskBySnoozeTime(tasks, (new Date()).getTime());
+        tasks = filterTaskBySnoozeTime(tasks, (new DateTime()).getMillis());
 
         List<Task> todaysTasks = getTasksByPriority(); //getTasksBeforeDueDate(DateUtils.today());
         for (int i = todaysTasks.size() - 1; i >= 0; i--) {
@@ -453,8 +440,8 @@ public class PlannerSqliteGateway extends BaseGateway {
     }
 
     public List<Task> getTasksByPriority() {
-        Date now = new Date();
-        long timeOfDay = DateUtils.getLongTimeOfDay(now.getHours(), now.getMinutes());
+        DateTime now = new DateTime();
+        long timeOfDay = DateUtils.getLongTimeOfDay(now.getHourOfDay(), now.getMinuteOfHour());
 
         String query = "Select ta.*, g." + GoalTable.TITLE_COLUMN + " as " + GoalTable.uniqueTitle()
                 + " from " + TaskTable.TABLE_NAME + " ta"
@@ -464,12 +451,12 @@ public class PlannerSqliteGateway extends BaseGateway {
                     + " g." + GoalTable.THEME_COLUMN + " = th." + ThemeTable._ID
                 + " LEFT JOIN " + ActiveHoursTable.TABLE_NAME + " ah on"
                     + " th." + ThemeTable._ID + " = ah." + ActiveHoursTable.THEME_COLUMN
-                    + " AND ah." + ActiveHoursTable.DAY_COLUMN + " = " + DateUtils.today().get(Calendar.DAY_OF_WEEK)
+                    + " AND ah." + ActiveHoursTable.DAY_COLUMN + " = " + DateUtils.today().getDayOfWeek()
                 + " LEFT JOIN " + DependencyTable.TABLE_NAME + " dep on"
                     + " ta." + TaskTable._ID + " = dep." + DependencyTable._ID
                 + " WHERE ta." + TaskTable.GOAL_COLUMN + " >= 0"
                     + " AND ta." + TaskTable.STATUS_COLUMN + " != '" + TaskStatus.DONE + "'"
-                    + " AND ta." + TaskTable.SNOOZE_COLUMN + " < " + now.getTime()
+                    + " AND ta." + TaskTable.SNOOZE_COLUMN + " < " + now.getMillis()
                     + " AND ah." + ActiveHoursTable.START_COLUMN + " < " + timeOfDay
                     + " AND ah." + ActiveHoursTable.END_COLUMN + " > " + timeOfDay
                     + " AND ("

@@ -75,6 +75,13 @@ public class ActiveHoursDialogFragment extends BaseDialogFragment {
         themeId = (long) getArguments().get(ActiveHoursTable.THEME_COLUMN);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        getDialog().getWindow()
+                .setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

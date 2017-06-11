@@ -1,11 +1,9 @@
 package northstar.planner.utils;
 
-import java.util.Date;
 
-/**
- * Created by Austin on 3/7/2017.
- */
+import org.joda.time.DateTime;
+
 public interface DateTimeSetterCallback {
 
-    void onValuesSet(Date time);
+    void onValuesSet(DateTime time);
 }

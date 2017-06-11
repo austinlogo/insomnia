@@ -1,74 +1,75 @@
 package northstar.planner.utils;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
+import android.text.format.DateFormat;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.chrono.GregorianChronology;
+
+
 
 
 public class DateTimeSetter implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    DateTimeSetterCallback callback;
+    private DateTimeSetterCallback callback;
+    private DateTime selectedDate;
+    private DatePickerDialog datePickerDialog;
+    private TimePickerDialog timePickerDialog;
+    private boolean use24Hour;
 
-    Calendar selectedDate;
-    DatePickerDialog datePickerDialog;
-    TimePickerDialog timePickerDialog;
-
-    public DateTimeSetter(Context ctx, DateTimeSetterCallback cb) {
+    public DateTimeSetter(Activity context, DateTimeSetterCallback cb) {
         callback = cb;
 
-        Calendar today = Calendar.getInstance();
-        selectedDate = Calendar.getInstance();
+//        ((PlannerApplication) context.getApplication()).getComponent().inject(this);
+
+        use24Hour = DateFormat.is24HourFormat(context);
+
+        DateTime today = new DateTime(GregorianChronology.getInstance());
+        selectedDate = new DateTime(GregorianChronology.getInstance());
 
         datePickerDialog = new DatePickerDialog(
-                ctx,
+                context,
                 this,
-                today.get(Calendar.YEAR),
-                today.get(Calendar.MONTH),
-                today.get(Calendar.DAY_OF_MONTH));
+                today.getYear(),
+                today.getMonthOfYear(),
+                today.getDayOfMonth());
 
-        datePickerDialog.getDatePicker().setMinDate(today.getTimeInMillis());
-        timePickerDialog = new TimePickerDialog(ctx, this, today.get(Calendar.HOUR_OF_DAY), today.get(Calendar.MINUTE), true);
+        datePickerDialog.getDatePicker().setMinDate(today.getMillis());
+        timePickerDialog = new TimePickerDialog(context, this, today.getHourOfDay(), today.getMinuteOfHour(), use24Hour);
     }
 
     public void selectTime() {
         datePickerDialog.show();
     }
 
-    public Date getSelectedTime() {
-        return selectedDate.getTime();
+    public DateTime getSelectedTime() {
+        return selectedDate;
     }
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        selectedDate = Calendar.getInstance();
-        selectedDate.set(year, monthOfYear, dayOfMonth);
+        selectedDate = new DateTime(
+                year,
+                monthOfYear,
+                dayOfMonth,
+                new DateTime().getHourOfDay(),
+                new DateTime().getMinuteOfHour());
         timePickerDialog.show();
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        selectedDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        selectedDate.set(Calendar.MINUTE, minute);
-        selectedDate.set(Calendar.SECOND, 0);
-        callback.onValuesSet(selectedDate.getTime());
-//
-//        switch (modifierValue) {
-//            case REMINDER:
-//                selectedTask.setReminder(selectedDate.getTime());
-//                callback.getBaseActivity().scheduleNotification(selectedTask);
-//                break;
-//            case SNOOZE:
-//                selectedTask.setSnooze(selectedDate.getTime());
-//                break;
-//            case DUE:
-//                selectedTask.setDueDate(selectedDate.getTime());
-//        }
-
-//        callback.onValuesSet(selectedDate.getTime());
+        selectedDate = new DateTime(
+                selectedDate.getYear(),
+                selectedDate.getMonthOfYear(),
+                selectedDate.getDayOfMonth(),
+                hourOfDay,
+                minute,
+                0);
+        callback.onValuesSet(selectedDate);
     }
 }

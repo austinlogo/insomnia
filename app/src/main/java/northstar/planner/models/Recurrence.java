@@ -3,8 +3,10 @@ package northstar.planner.models;
 
 import android.database.Cursor;
 
+import org.joda.time.DateTime;
+
 import java.io.Serializable;
-import java.util.Date;
+
 
 import northstar.planner.PlannerApplication;
 import northstar.planner.R;
@@ -16,20 +18,20 @@ public class Recurrence extends BaseModel implements Serializable {
     private long _id;
     private long taskId;
     private int periodUnitMultiplier;
-    private Date startTime;
-    private Date endTime;
+    private DateTime startTime;
+    private DateTime endTime;
     private PeriodUnit periodUnit;
 
 //    public Recurrence(long taskId, int periodUnitMultiplier, PeriodUnit periodUnit, Date calculateStartTime, Date endTime) {
 //        this(taskId, periodUnitMultiplier, periodUnit, calculateStartTime, endTime);
 //    }
 
-    public Recurrence(long taskId, int periodUnitMultiplier, PeriodUnit periodUnit, Date startTime, Date endTime) {
+    public Recurrence(long taskId, int periodUnitMultiplier, PeriodUnit periodUnit, DateTime startTime, DateTime endTime) {
         this.taskId = taskId;
         this.periodUnitMultiplier = periodUnitMultiplier;
         this.periodUnit = periodUnit;
-        this.endTime = endTime;
 
+        this.endTime = endTime;
         this.startTime = calculateStartTime(startTime);
     }
 
@@ -39,7 +41,6 @@ public class Recurrence extends BaseModel implements Serializable {
     }
 
     public Recurrence(Cursor c) {
-//        _id = getColumnLong(c, RecurrenceTable._ID);
         taskId = getColumnLong(c, RecurrenceTable.TASK_ID);
         periodUnitMultiplier = getColumnInt(c, RecurrenceTable.PERIOD);
         startTime = getColumnDate(c, RecurrenceTable.START_TIME);
@@ -67,29 +68,29 @@ public class Recurrence extends BaseModel implements Serializable {
         return periodUnitMultiplier * PeriodUnit.unitToMillis(periodUnit);
     }
 
-    public Date getStartTime() {
+    public DateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(DateTime startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public DateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(DateTime endTime) {
         this.endTime = endTime;
     }
 
-    private Date calculateStartTime(Date startTime) {
+    private DateTime calculateStartTime(DateTime startTime) {
         long startTimeLong = startTime == null ?
-                new Date().getTime() :
-                startTime.getTime();
+                new DateTime().getMillis() :
+                startTime.getMillis();
 
         startTimeLong += getPeriod();
-        return new Date(startTimeLong);
+        return new DateTime(startTimeLong);
     }
 
     public PeriodUnit getPeriodUnit() {
@@ -104,7 +105,7 @@ public class Recurrence extends BaseModel implements Serializable {
         String formattedSingleString = PlannerApplication.getInstance().getString(R.string.recurrence_single_display_string);
         String formattedPluralString = PlannerApplication.getInstance().getString(R.string.recurrence_multi_display_string);
 
-        return formattedPluralString = periodUnitMultiplier > 1
+        return periodUnitMultiplier > 1
                 ? String.format(formattedPluralString, periodUnitMultiplier, periodUnit.toString())
                 : String.format(formattedSingleString, periodUnit.toString());
     }

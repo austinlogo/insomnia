@@ -3,16 +3,14 @@ package northstar.planner.persistence;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
-/**
- * Created by Lincoln on 05/05/16.
- */
 public class PrefManager {
     private static final String LAST_TIME_RATED = "last_time_rated";
     private static final String HAS_RATED = "HAS_RATED";
     private static final String SNOOZE_REMINDER  = "SNOOZE_REMINDER";
     private static final String DUE_REMINDER = "DUE_REMINDER";
+    private static final String USE_24_HOUR_CLOCK = "USE_24_HOUR_CLOCK";
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     Context _context;
@@ -26,6 +24,7 @@ public class PrefManager {
     private static final String PREF_NAME = "androidhive-welcome";
 
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
+
 
     public PrefManager(Context context) {
         this._context = context;
@@ -43,12 +42,12 @@ public class PrefManager {
     }
 
     public void setLastRatedAsked() {
-        editor.putLong(LAST_TIME_RATED, new Date().getTime()).commit();
+        editor.putLong(LAST_TIME_RATED, new DateTime().getMillis()).commit();
     }
 
     public boolean isTimeToRate() {
         long lastRateTime = getLastRatedAsked();
-        long now = new Date().getTime();
+        long now = new DateTime().getMillis();
         long timeElapsed = now - lastRateTime;
         return timeElapsed > timeBetweenRating;
     }
@@ -79,5 +78,13 @@ public class PrefManager {
 
     public boolean remindWhenDue() {
         return pref.getBoolean(DUE_REMINDER, false);
+    }
+
+    public void use24Hour(boolean use24Hour) {
+        editor.putBoolean(USE_24_HOUR_CLOCK, use24Hour).commit();
+    }
+
+    public boolean use24Hour() {
+        return pref.getBoolean(USE_24_HOUR_CLOCK, false);
     }
 }

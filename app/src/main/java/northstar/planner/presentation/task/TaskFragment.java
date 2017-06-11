@@ -1,7 +1,6 @@
 package northstar.planner.presentation.task;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,14 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.DateTime;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,13 +28,11 @@ import northstar.planner.presentation.BaseFragment;
 import northstar.planner.presentation.recurrence.RecurrenceDialogFragment;
 import northstar.planner.utils.DateTimeSetter;
 import northstar.planner.utils.DateTimeSetterCallback;
-import northstar.planner.utils.DateUtils;
 import northstar.planner.utils.NotificationType;
 import northstar.planner.utils.StringUtils;
 
 public class TaskFragment
-        extends BaseFragment
-        implements DatePickerDialog.OnDateSetListener {
+        extends BaseFragment {
 
     @BindView(R.id.fragment_task_title_container)
     LinearLayout titleContainer;
@@ -91,7 +86,6 @@ public class TaskFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        dao = new PlannerSqliteGateway();
         currentTask = (Task) getArguments().getSerializable(TaskTable.TABLE_NAME);
     }
 
@@ -180,11 +174,11 @@ public class TaskFragment
         DateTimeSetter setter = new DateTimeSetter(getActivity(), new DateTimeSetterCallback() {
 
             @Override
-            public void onValuesSet(Date selectedDate) {
+            public void onValuesSet(DateTime selectedDate) {
                 currentTask.setDueDate(selectedDate);
                 saveAndUpdateTask(currentTask);
                 if (prefs.remindWhenDue()) {
-                    getBaseActivity().scheduleNotification(currentTask, NotificationType.DUE_NOTIFICATION);
+                    getBaseActivity().getPlannerNotificationManager().scheduleNotification(currentTask, NotificationType.DUE_NOTIFICATION);
                 }
             }
         });
@@ -201,9 +195,9 @@ public class TaskFragment
         DateTimeSetter setter = new DateTimeSetter(getActivity(), new DateTimeSetterCallback() {
 
             @Override
-            public void onValuesSet(Date selectedDate) {
+            public void onValuesSet(DateTime selectedDate) {
                 currentTask.setReminder(selectedDate);
-                getBaseActivity().scheduleNotification(currentTask, NotificationType.REMINDER_NOTIFICATION);
+                getBaseActivity().getPlannerNotificationManager().scheduleNotification(currentTask, NotificationType.REMINDER_NOTIFICATION);
                 saveAndUpdateTask(currentTask);
             }
         });
@@ -220,12 +214,12 @@ public class TaskFragment
         DateTimeSetter setter = new DateTimeSetter(getActivity(), new DateTimeSetterCallback() {
 
             @Override
-            public void onValuesSet(Date selectedDate) {
+            public void onValuesSet(DateTime selectedDate) {
                 currentTask.setSnooze(selectedDate);
                 saveAndUpdateTask(currentTask);
 
                 if (prefs.remindAfterSnooze()) {
-                    getBaseActivity().scheduleNotification(currentTask, NotificationType.SNOOZE_NOTIFICATION);
+                    getBaseActivity().getPlannerNotificationManager().scheduleNotification(currentTask, NotificationType.SNOOZE_NOTIFICATION);
                 }
             }
         });
@@ -242,24 +236,6 @@ public class TaskFragment
         attachedActivity.removeDependency();
         return true;
     }
-
-//    @OnClick(R.id.fragment_task_add_alert_due)
-//    public void onClickAddAlertOnDue() {
-//        Date due = currentTask.getDue();
-//
-//        if (due != null) {
-//            getBaseActivity().scheduleNotification(currentTask, NotificationType.DUE_NOTIFICATION);
-//        }
-//    }
-
-//    @OnClick(R.id.fragment_task_add_alert_snooze)
-//    public void onClickAddSnoozeTask() {
-//        Date snoozeDate = currentTask.getSnooze();
-//
-//        if (snoozeDate != null) {
-//            getBaseActivity().scheduleNotification(currentTask, NotificationType.SNOOZE_NOTIFICATION);
-//        }
-//    }
 
     private void saveAndUpdateTask(Task task) {
         initUI(task);
@@ -306,17 +282,9 @@ public class TaskFragment
 
     @OnLongClick(R.id.fragment_task_recurrence_container)
     public boolean onLongClickRecurrence() {
-        currentTask = getBaseActivity().cancelAllNotificationsForTask(currentTask);
+        currentTask = getBaseActivity().getPlannerNotificationManager().cancelAllNotificationsForTask(currentTask);
         initUI(currentTask);
         return true;
-    }
-
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        Calendar c = Calendar.getInstance();
-        c.set(year, monthOfYear, dayOfMonth);
-        currentTask.setDueDate(c.getTime());
-        due.setText(DateUtils.getDateString(getString(R.string.today), c));
     }
 
     public interface TaskFragmentListener {

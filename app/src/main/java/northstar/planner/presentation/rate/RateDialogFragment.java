@@ -18,10 +18,6 @@ import butterknife.OnClick;
 import northstar.planner.R;
 import northstar.planner.persistence.PrefManager;
 
-/**
- * Created by Austin on 3/26/2017.
- */
-
 public class RateDialogFragment extends DialogFragment {
 
     PrefManager prefManager;

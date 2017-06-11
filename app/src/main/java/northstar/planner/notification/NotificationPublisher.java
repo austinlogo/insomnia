@@ -8,9 +8,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
-import northstar.planner.presentation.BaseActivity;
+
 
 public class NotificationPublisher extends BroadcastReceiver {
 
@@ -34,11 +34,11 @@ public class NotificationPublisher extends BroadcastReceiver {
         String notificationType = intent.getStringExtra(NOTIFICATION_TYPE);
         long stopTime = intent.getLongExtra(NOTIFICATION_STOP, -1);
 
-        long now = new Date().getTime();
+        long now = new DateTime().getMillis();
 
         if (stopTime > 0 && now > stopTime) {
             notificationManager.cancel(id);
-            PendingIntent pIntent = BaseActivity.constructBasePendingIntent(context, taskId, notificationType, intent);
+            PendingIntent pIntent = PlannerNotificationManager.constructBasePendingIntent(context, taskId, notificationType, intent);
             alarmManager.cancel(pIntent);
         } else {
             notificationManager.notify(id, notification);

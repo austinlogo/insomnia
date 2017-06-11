@@ -16,7 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,7 +50,7 @@ public class NewTaskDialog
     private NewTaskDialogListener activityListener;
     private MetricsListAdapter metricsListAdapter;
     private Metric selectedSc;
-    private Calendar selectedDate;
+    private DateTime selectedDate;
     private boolean firstSelect = true;
 
     public static NewTaskDialog newinstance(EditText editTitle, MetricsListAdapter successCriteriasAdapter) {
@@ -107,17 +107,17 @@ public class NewTaskDialog
         DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(),
                 this,
-                selectedDate.get(Calendar.YEAR),
-                selectedDate.get(Calendar.MONTH),
-                selectedDate.get(Calendar.DAY_OF_MONTH));
-        dialog.getDatePicker().setMinDate(selectedDate.getTime().getTime());
+                selectedDate.getYear(),
+                selectedDate.getMonthOfYear(),
+                selectedDate.getDayOfMonth());
+        dialog.getDatePicker().setMinDate(selectedDate.getMillis());
         return dialog;
     }
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-        selectedDate.set(year, monthOfYear, dayOfMonth);
-        picker.setText(DateUtils.getDateString(getResources().getString(R.string.drawer_item_today).toLowerCase(), selectedDate));
+        selectedDate = new DateTime(year, monthOfYear, dayOfMonth, selectedDate.getHourOfDay(), selectedDate.getMinuteOfHour());
+        picker.setText(DateUtils.getDateString(selectedDate));
     }
 
     @OnClick(R.id.dialog_new_task_done)

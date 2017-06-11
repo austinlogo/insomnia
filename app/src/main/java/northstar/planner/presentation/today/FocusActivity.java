@@ -83,7 +83,7 @@ public class FocusActivity
         ((TaskRecyclerViewAdapter) mFragment.taskList.getAdapter()).addItem(newTask);
 
         if (prefs.remindWhenDue() && newTask.getDue() != null) {
-            scheduleNotification(newTask, NotificationType.DUE_NOTIFICATION);
+            plannerNotificationManager.scheduleNotification(newTask, NotificationType.DUE_NOTIFICATION);
         }
     }
 

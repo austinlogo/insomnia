@@ -3,6 +3,7 @@ package northstar.planner.models.checkboxgroup;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.database.Cursor;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -10,16 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.util.Calendar;
+import org.joda.time.DateTimeConstants;
 
 import northstar.planner.R;
 import northstar.planner.models.BaseModel;
 import northstar.planner.models.tables.ActiveHoursTable;
 import northstar.planner.utils.DateUtils;
-
-/**
- * Created by Austin on 12/23/2016.
- */
 
 public class CheckboxGroup
         extends BaseModel
@@ -30,13 +27,16 @@ public class CheckboxGroup
 
     private long startTime, endTime;
     private TextView start, end, activePicker;
+    private boolean using24Hour;
 
     public CheckboxGroup(LinearLayout container, String title, Activity act) {
+
         ctx = act;
         checkBox = (CheckBox) container.findViewById(R.id.day_checkbox);
         start = (TextView) container.findViewById(R.id.day_start);
         end = (TextView) container.findViewById(R.id.day_end);
         checkBox.setText(title);
+        using24Hour = DateFormat.is24HourFormat(act);
 
         checkBox.setOnCheckedChangeListener(this);
         toggleViews();
@@ -69,8 +69,8 @@ public class CheckboxGroup
     }
 
     public void updateDisplay() {
-        start.setText(DateUtils.getStringTimeOfDay(startTime));
-        end.setText(DateUtils.getStringTimeOfDay(endTime));
+        start.setText(DateUtils.getStringTimeOfDay(startTime, using24Hour));
+        end.setText(DateUtils.getStringTimeOfDay(endTime, using24Hour));
     }
 
     public void setCheckBoxStates() {
@@ -92,10 +92,10 @@ public class CheckboxGroup
 
         if (activePicker.getId() == start.getId()) {
             startTime = DateUtils.getLongTimeOfDay(hourOfDay, minute);
-            activePicker.setText(DateUtils.getStringTimeOfDay(startTime));
+            activePicker.setText(DateUtils.getStringTimeOfDay(startTime, using24Hour));
         } else {
             endTime = DateUtils.getLongTimeOfDay(hourOfDay, minute);
-            activePicker.setText(DateUtils.getStringTimeOfDay(endTime));
+            activePicker.setText(DateUtils.getStringTimeOfDay(endTime, using24Hour));
         }
 
         activePicker = null;
@@ -127,13 +127,13 @@ public class CheckboxGroup
     }
 
     public enum CheckboxGroupIndex{
-        MONDAY(Calendar.MONDAY),
-        TUESDAY(Calendar.TUESDAY),
-        WEDNESDAY(Calendar.WEDNESDAY),
-        THURSDAY(Calendar.THURSDAY),
-        FRIDAY(Calendar.FRIDAY),
-        SATURDAY(Calendar.SATURDAY),
-        SUNDAY(Calendar.SUNDAY),
+        MONDAY(DateTimeConstants.MONDAY),
+        TUESDAY(DateTimeConstants.TUESDAY),
+        WEDNESDAY(DateTimeConstants.WEDNESDAY),
+        THURSDAY(DateTimeConstants.THURSDAY),
+        FRIDAY(DateTimeConstants.FRIDAY),
+        SATURDAY(DateTimeConstants.SATURDAY),
+        SUNDAY(DateTimeConstants.SUNDAY),
         WEEKDAYS(24601),
         WEEKENDS(24602);
 
@@ -149,19 +149,19 @@ public class CheckboxGroup
 
         public static CheckboxGroupIndex valueOf(long aLong) {
             switch ( (int) aLong) {
-                case Calendar.MONDAY:
+                case DateTimeConstants.MONDAY:
                     return MONDAY;
-                case Calendar.TUESDAY:
+                case DateTimeConstants.TUESDAY:
                     return TUESDAY;
-                case Calendar.WEDNESDAY:
+                case DateTimeConstants.WEDNESDAY:
                     return WEDNESDAY;
-                case Calendar.THURSDAY:
+                case DateTimeConstants.THURSDAY:
                     return THURSDAY;
-                case Calendar.FRIDAY:
+                case DateTimeConstants.FRIDAY:
                     return FRIDAY;
-                case Calendar.SATURDAY:
+                case DateTimeConstants.SATURDAY:
                     return SATURDAY;
-                case Calendar.SUNDAY:
+                case DateTimeConstants.SUNDAY:
                     return SUNDAY;
                 case 24601:
                     return WEEKDAYS;

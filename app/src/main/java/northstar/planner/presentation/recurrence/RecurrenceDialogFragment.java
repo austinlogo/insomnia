@@ -16,8 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
@@ -32,6 +31,8 @@ import northstar.planner.persistence.PeriodUnit;
 import northstar.planner.persistence.RecurrenceGateway;
 import northstar.planner.presentation.hours.BaseDialogFragment;
 import northstar.planner.utils.DateUtils;
+import northstar.planner.utils.NumberUtils;
+
 
 
 public class RecurrenceDialogFragment extends BaseDialogFragment {
@@ -50,7 +51,7 @@ public class RecurrenceDialogFragment extends BaseDialogFragment {
 
     private Task currentTask;
     private int period;
-    private Calendar to;
+    private DateTime to;
     private DatePickerDialog datePickerDialog;
     private ArrayAdapter<PeriodUnit> spinnerAdapter;
 
@@ -64,21 +65,17 @@ public class RecurrenceDialogFragment extends BaseDialogFragment {
         return dialog;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         currentTask = (Task) getArguments().getSerializable(TaskTable.TABLE_NAME);
-
-
         datePickerDialog = new DatePickerDialog(getBaseActivity(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
             }
-        }, DateUtils.today().get(Calendar.YEAR), DateUtils.today().get(Calendar.MONTH), DateUtils.today().get(Calendar.DAY_OF_MONTH));
-
+        }, DateUtils.today().getYear(), DateUtils.today().getMonthOfYear(), DateUtils.today().getDayOfMonth());
     }
 
     @Nullable
@@ -97,17 +94,13 @@ public class RecurrenceDialogFragment extends BaseDialogFragment {
         return v;
     }
 
-
     private void initUIComponents(Recurrence recurrence) {
         if (recurrence == null) {
             return;
         }
 
-        Calendar endTimeCalendar = Calendar.getInstance();
-
         if (recurrence.getEndTime() != null) {
-            endTimeCalendar.setTime(recurrence.getEndTime());
-            endTime.setText(DateUtils.getDateString(getString(R.string.today), endTimeCalendar));
+            endTime.setText(DateUtils.getDateString(recurrence.getEndTime()));
         }
 
         periodValue.setText(String.valueOf(recurrence.getPeriodUnitMultiplier()));
@@ -119,39 +112,37 @@ public class RecurrenceDialogFragment extends BaseDialogFragment {
         datePickerDialog = new DatePickerDialog(getBaseActivity(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                to = Calendar.getInstance();
-                to.set(year, monthOfYear, dayOfMonth);
+                to = new DateTime(year, monthOfYear, dayOfMonth, 23 , 59, 59); // End of Picked Date
 
-                endTime.setText(DateUtils.getDateString(getString(R.string.today), to));
+                endTime.setText(DateUtils.getDateString(to));
             }
-        }, DateUtils.today().get(Calendar.YEAR), DateUtils.today().get(Calendar.MONTH), DateUtils.today().get(Calendar.DAY_OF_MONTH));
+        }, DateUtils.today().getYear(), DateUtils.today().getMonthOfYear(), DateUtils.today().getDayOfMonth());
 
         datePickerDialog.show();
     }
 
     @OnClick(R.id.dialog_recurrence_done)
     public void onClickDone() {
-
-        try {
-            period = Integer.parseInt(periodValue.getText().toString());
-        } catch (NumberFormatException e) {
-            period = 0;
-        }
+        period = NumberUtils.parseInt(periodValue.getText().toString());
 
         if (period == 0) {
             Toast.makeText(getBaseActivity(), getString(R.string.no_period_error), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Date toDate = to == null ? null : to.getTime();
-
-        Recurrence rec = new Recurrence(currentTask.getId(), period, (PeriodUnit) periodUnit.getSelectedItem(), currentTask.getDue(), toDate);
-        currentTask.setRecurrenceSchedule(rec);
-
-        getBaseActivity().getRecurrenceDao().addRecurrenceRecord(rec);
-        getBaseActivity().scheduleRecurringNotification(rec, currentTask);
-
+        saveRecurrenceToDb();
         dismiss();
+    }
+
+    private void saveRecurrenceToDb() {
+        DateTime toDate = ( to == null )
+                ? null
+                : to;
+        Recurrence updatedRecurrence = new Recurrence(currentTask.getId(), period, (PeriodUnit) periodUnit.getSelectedItem(), currentTask.getDue(), toDate);
+        currentTask.setRecurrenceSchedule(updatedRecurrence);
+
+        getBaseActivity().getRecurrenceDao().addRecurrenceRecord(updatedRecurrence);
+        getBaseActivity().getPlannerNotificationManager().scheduleRecurringNotification(updatedRecurrence, currentTask);
     }
 
     @Override
@@ -159,4 +150,3 @@ public class RecurrenceDialogFragment extends BaseDialogFragment {
         getBaseActivity().updateActivity();
     }
 }
-

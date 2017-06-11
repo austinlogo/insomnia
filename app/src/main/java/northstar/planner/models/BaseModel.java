@@ -2,8 +2,10 @@ package northstar.planner.models;
 
 import android.database.Cursor;
 
+import org.joda.time.DateTime;
+
 import java.io.Serializable;
-import java.util.Date;
+
 
 import northstar.planner.models.tables.BaseTable;
 
@@ -45,11 +47,11 @@ public abstract class BaseModel implements Serializable {
         return cursor.getDouble(cursor.getColumnIndexOrThrow(columnName));
     }
 
-    protected Date getColumnDate(Cursor cursor, String columnName) {
+    protected DateTime getColumnDate(Cursor cursor, String columnName) {
         long date = cursor.getLong(cursor.getColumnIndexOrThrow(columnName));
         return date == 0
                 ? null
-                : new Date(date);
+                : new DateTime(date);
     }
 
 

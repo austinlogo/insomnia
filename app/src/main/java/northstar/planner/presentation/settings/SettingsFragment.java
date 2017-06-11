@@ -30,6 +30,9 @@ public class SettingsFragment extends Fragment {
     @BindView(R.id.fragment_settings_notify_snooze_switch)
     Switch notifyAfterSnooze;
 
+    @BindView(R.id.fragment_settings_24_hour_switch)
+    Switch use24Hour;
+
     @Inject
     PrefManager prefs;
 
@@ -52,7 +55,7 @@ public class SettingsFragment extends Fragment {
 
 
 
-    @OnCheckedChanged({R.id.fragment_settings_notify_due_switch, R.id.fragment_settings_notify_snooze_switch})
+    @OnCheckedChanged({R.id.fragment_settings_notify_due_switch, R.id.fragment_settings_notify_snooze_switch, R.id.fragment_settings_24_hour_switch})
     public void onCheckedChanged(CompoundButton v, boolean checked) {
         switch (v.getId()) {
             case R.id.fragment_settings_notify_due_switch:
@@ -60,6 +63,9 @@ public class SettingsFragment extends Fragment {
                 break;
             case R.id.fragment_settings_notify_snooze_switch:
                 prefs.remindAfterSnooze(checked);
+                break;
+            case R.id.fragment_settings_24_hour_switch:
+                prefs.use24Hour(checked);
         }
     }
 

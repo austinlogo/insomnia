@@ -1,9 +1,6 @@
 package northstar.planner.presentation;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -38,13 +35,11 @@ import northstar.planner.R;
 import northstar.planner.metrics.MetricsLogger;
 import northstar.planner.models.Goal;
 import northstar.planner.models.Metric;
-import northstar.planner.models.Recurrence;
 import northstar.planner.models.Task;
 import northstar.planner.models.Theme;
 import northstar.planner.models.tables.GoalTable;
-import northstar.planner.models.tables.TaskTable;
 import northstar.planner.models.tables.ThemeTable;
-import northstar.planner.notification.NotificationPublisher;
+import northstar.planner.notification.PlannerNotificationManager;
 import northstar.planner.persistence.PlannerSqliteGateway;
 import northstar.planner.persistence.PrefManager;
 import northstar.planner.persistence.RecurrenceGateway;
@@ -54,10 +49,7 @@ import northstar.planner.presentation.adapter.DrawerAdapter;
 import northstar.planner.presentation.adapter.DrawerListeners;
 import northstar.planner.presentation.goal.GoalActivity;
 import northstar.planner.presentation.settings.SettingsActivity;
-import northstar.planner.presentation.task.TaskActivity;
 import northstar.planner.presentation.today.FocusActivity;
-import northstar.planner.utils.NotificationType;
-import northstar.planner.utils.NotificationUtils;
 
 public abstract class BaseActivity
         extends AppCompatActivity
@@ -82,7 +74,10 @@ public abstract class BaseActivity
     protected PrefManager prefs;
 
     @Inject
-    public RecurrenceGateway recurrenceGateway;
+    protected RecurrenceGateway recurrenceGateway;
+
+    @Inject
+    protected PlannerNotificationManager plannerNotificationManager;
 
     @Inject
     MetricsLogger metricsLogger;
@@ -320,6 +315,10 @@ public abstract class BaseActivity
         getDao().removeGoal(goal.getId());
     }
 
+    public PlannerNotificationManager getPlannerNotificationManager() {
+        return plannerNotificationManager;
+    }
+
     public void removeFromDb(Task task) {
         getDao().deleteTask(task);
         getDao().removeBlockers(task.getId());
@@ -329,135 +328,136 @@ public abstract class BaseActivity
         getDao().removeTheme(sc.getId());
     }
 
-    public void scheduleNotification(Task task, NotificationType notificationType) {
-        PendingIntent pendingIntent = constructNotificationPendingIntent(this, task, notificationType);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-
-        long notificationTime = getNotificationTime(task, notificationType);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
-        } else {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
-        }
-    }
-
-    public void scheduleRecurringNotification(Recurrence rec, Task task) {
-        PendingIntent pendingIntent = constructNotificationPendingIntent(this, rec, task, NotificationType.RECURRING_NOTIFICATION);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-
-        alarmManager.cancel(pendingIntent);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, rec.getStartTime().getTime(), rec.getPeriod(),  pendingIntent);
-    }
-
-    private static long getNotificationTime(Task task, NotificationType notificationType) {
-        switch (notificationType) {
-            case DUE_NOTIFICATION:
-                return task.getDue().getTime();
-            case REMINDER_NOTIFICATION:
-                return task.getReminder().getTime();
-            case SNOOZE_NOTIFICATION:
-                return task.getSnooze().getTime();
-            case RECURRING_NOTIFICATION:
-                return task.getDue().getTime();
-        }
-        return 0;
-    }
-
-    private static PendingIntent constructNotificationPendingIntent(Context ctx, Recurrence rec, Task task, NotificationType notificationType) {
-        Intent notificationIntent = constructNotificationIntent(ctx, task, getNotificationTime(task, notificationType));
-
-        if (rec.getEndTime() != null) {
-            notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_STOP, rec.getEndTime().getTime());
-        }
-
-        notificationIntent.putExtra(NotificationPublisher.TASK_ID, task.getId());
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_TYPE, notificationType.toString());
-
-        return constructBasePendingIntent(ctx, task.getId(), notificationType, notificationIntent);
-    }
-
-    public static PendingIntent constructBasePendingIntent(Context ctx, long taskId, String notificationType, Intent intent) {
-        return constructBasePendingIntent(ctx, taskId, NotificationType.valueOf(notificationType), intent);
-    }
-
-    public static PendingIntent constructBasePendingIntent(Context ctx, long taskId, NotificationType notificationType, Intent intent) {
-        return PendingIntent.getBroadcast(
-                ctx,
-                NotificationUtils.constructNotificationId(taskId, notificationType),
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    public static PendingIntent constructNotificationPendingIntent(Context ctx, Task task, NotificationType notificationType) {
-        Intent notificationIntent = constructNotificationIntent(ctx, task, getNotificationTime(task, notificationType));
-
-
-        return constructBasePendingIntent(ctx, task.getId(), notificationType, notificationIntent);
-    }
-
-    private static Intent constructNotificationIntent(Context ctx, Task task, long showTimestamp) {
-        Notification notification = getNotification(ctx, task, showTimestamp);
-        Intent notificationIntent = new Intent(ctx, NotificationPublisher.class);
-
-        notificationIntent.putExtra(
-                NotificationPublisher.NOTIFICATION_ID, task.getId());
-        notificationIntent.putExtra(
-                NotificationPublisher.NOTIFICATION, notification);
-
-        return notificationIntent;
-    }
-
-    private static Notification getNotification(Context ctx, Task task, long showtimestamp) {
-        Intent result = new Intent(ctx, TaskActivity.class);
-        result.putExtra(TaskTable.TABLE_NAME, task);
-        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, (int) task.getId() , result, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Notification.Builder builder = new Notification.Builder(ctx);
-        builder.setContentTitle("Task Reminder");
-        builder.setContentText(task.getTitle());
-        builder.setWhen(showtimestamp);
-        builder.setAutoCancel(true);
-        builder.setPriority(Notification.PRIORITY_HIGH);
-        builder.setVibrate(new long[]{0,100,100,100});
-        builder.setSmallIcon(R.drawable.logo_nobackground);
-
-        if (Build.VERSION.SDK_INT >= 21) {
-            builder.setColor(ctx.getResources().getColor(R.color.colorPrimary));
-        }
-
-        result.putExtra(TaskTable.TABLE_NAME, task);
-        builder.setContentIntent(pendingIntent);
-
-        return builder.build();
-    }
-
-    public Task cancelAllNotificationsForTask(Task item) {
-        if (item.getDue() != null) {
-            cancelAllNotificationsForTask(item, NotificationType.DUE_NOTIFICATION);
-
-            cancelAllNotificationsForTask(item, NotificationType.RECURRING_NOTIFICATION);
-            getRecurrenceDao().removeRecurrenceRecord(item);
-            item.setRecurrenceSchedule(null);
-        }
-
-        if (item.getReminder() != null) {
-            cancelAllNotificationsForTask(item, NotificationType.REMINDER_NOTIFICATION);
-        }
-
-        if (item.getSnooze() != null) {
-            cancelAllNotificationsForTask(item, NotificationType.SNOOZE_NOTIFICATION);
-        }
-
-        return item;
-    }
-
-    private void cancelAllNotificationsForTask(Task item, NotificationType notificationType) {
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(constructNotificationPendingIntent(this, item, notificationType));
-    }
-
     public RecurrenceGateway getRecurrenceDao() {
         return recurrenceGateway;
     }
+
+//    public void scheduleNotification(Task task, NotificationType notificationType) {
+//        PendingIntent pendingIntent = constructNotificationPendingIntent(this, task, notificationType);
+//        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+//
+//        long notificationTime = getNotificationTime(task, notificationType);
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
+//        } else {
+//            alarmManager.setExact(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
+//        }
+//    }
+//
+//    public void scheduleRecurringNotification(Recurrence rec, Task task) {
+//        PendingIntent pendingIntent = constructNotificationPendingIntent(this, rec, task, NotificationType.RECURRING_NOTIFICATION);
+//        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+//
+//        alarmManager.cancel(pendingIntent);
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, rec.getStartTime().getTime(), rec.getPeriod(),  pendingIntent);
+//    }
+//
+//    private static long getNotificationTime(Task task, NotificationType notificationType) {
+//        switch (notificationType) {
+//            case DUE_NOTIFICATION:
+//                return task.getDue().getTime();
+//            case REMINDER_NOTIFICATION:
+//                return task.getReminder().getTime();
+//            case SNOOZE_NOTIFICATION:
+//                return task.getSnooze().getTime();
+//            case RECURRING_NOTIFICATION:
+//                return task.getDue().getTime();
+//        }
+//        return 0;
+//    }
+//
+//    private static PendingIntent constructNotificationPendingIntent(Context ctx, Recurrence rec, Task task, NotificationType notificationType) {
+//        Intent notificationIntent = constructNotificationIntent(ctx, task, getNotificationTime(task, notificationType));
+//
+//        if (rec.getEndTime() != null) {
+//            notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_STOP, rec.getEndTime().getTime());
+//        }
+//
+//        notificationIntent.putExtra(NotificationPublisher.TASK_ID, task.getId());
+//        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_TYPE, notificationType.toString());
+//
+//        return constructBasePendingIntent(ctx, task.getId(), notificationType, notificationIntent);
+//    }
+//
+//    public static PendingIntent constructBasePendingIntent(Context ctx, long taskId, String notificationType, Intent intent) {
+//        return constructBasePendingIntent(ctx, taskId, NotificationType.valueOf(notificationType), intent);
+//    }
+//
+//    public static PendingIntent constructBasePendingIntent(Context ctx, long taskId, NotificationType notificationType, Intent intent) {
+//        return PendingIntent.getBroadcast(
+//                ctx,
+//                NotificationUtils.constructNotificationId(taskId, notificationType),
+//                intent,
+//                PendingIntent.FLAG_UPDATE_CURRENT);
+//    }
+//
+//    public static PendingIntent constructNotificationPendingIntent(Context ctx, Task task, NotificationType notificationType) {
+//        Intent notificationIntent = constructNotificationIntent(ctx, task, getNotificationTime(task, notificationType));
+//
+//
+//        return constructBasePendingIntent(ctx, task.getId(), notificationType, notificationIntent);
+//    }
+//
+//    private static Intent constructNotificationIntent(Context ctx, Task task, long showTimestamp) {
+//        Notification notification = getNotification(ctx, task, showTimestamp);
+//        Intent notificationIntent = new Intent(ctx, NotificationPublisher.class);
+//
+//        notificationIntent.putExtra(
+//                NotificationPublisher.NOTIFICATION_ID, task.getId());
+//        notificationIntent.putExtra(
+//                NotificationPublisher.NOTIFICATION, notification);
+//
+//        return notificationIntent;
+//    }
+//
+//    private static Notification getNotification(Context ctx, Task task, long showtimestamp) {
+//        Intent result = new Intent(ctx, TaskActivity.class);
+//        result.putExtra(TaskTable.TABLE_NAME, task);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, (int) task.getId() , result, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        Notification.Builder builder = new Notification.Builder(ctx);
+//        builder.setContentTitle("Task Reminder");
+//        builder.setContentText(task.getTitle());
+//        builder.setWhen(showtimestamp);
+//        builder.setAutoCancel(true);
+//        builder.setPriority(Notification.PRIORITY_HIGH);
+//        builder.setVibrate(new long[]{0,100,100,100});
+//        builder.setSmallIcon(R.drawable.logo_nobackground);
+//
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            builder.setColor(ctx.getResources().getColor(R.color.colorPrimary));
+//        }
+//
+//        result.putExtra(TaskTable.TABLE_NAME, task);
+//        builder.setContentIntent(pendingIntent);
+//
+//        return builder.build();
+//    }
+//
+//    public Task cancelAllNotificationsForTask(Task item) {
+//        if (item.getDue() != null) {
+//            cancelAllNotificationsForTask(item, NotificationType.DUE_NOTIFICATION);
+//
+//            cancelAllNotificationsForTask(item, NotificationType.RECURRING_NOTIFICATION);
+//            getRecurrenceDao().removeRecurrenceRecord(item);
+//            item.setRecurrenceSchedule(null);
+//        }
+//
+//        if (item.getReminder() != null) {
+//            cancelAllNotificationsForTask(item, NotificationType.REMINDER_NOTIFICATION);
+//        }
+//
+//        if (item.getSnooze() != null) {
+//            cancelAllNotificationsForTask(item, NotificationType.SNOOZE_NOTIFICATION);
+//        }
+//
+//        return item;
+//    }
+//
+//    private void cancelAllNotificationsForTask(Task item, NotificationType notificationType) {
+//        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+//        alarmManager.cancel(constructNotificationPendingIntent(this, item, notificationType));
+//    }
+//
 }

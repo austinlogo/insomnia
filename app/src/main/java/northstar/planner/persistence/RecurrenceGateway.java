@@ -22,7 +22,7 @@ public class RecurrenceGateway extends BaseGateway {
         ContentValues newValues = new ContentValues();
 
         newValues.put(RecurrenceTable.TASK_ID, rec.getTaskId() );
-        newValues.put(RecurrenceTable.END_TIME, rec.getEndTime().getTime());
+        newValues.put(RecurrenceTable.END_TIME, rec.getEndTime().getMillis());
         newValues.put(RecurrenceTable.PERIOD_UNIT, rec.getPeriodUnit().toString());
         newValues.put(RecurrenceTable.PERIOD, rec.getPeriodUnitMultiplier());
 

@@ -116,7 +116,7 @@ import northstar.planner.utils.NotificationType;
         goalFragment.updateViews(this, currentGoal);
 
         if (prefs.remindWhenDue() && newTask.getDue() != null) {
-            scheduleNotification(newTask, NotificationType.DUE_NOTIFICATION);
+            plannerNotificationManager.scheduleNotification(newTask, NotificationType.DUE_NOTIFICATION);
         }
     }
 

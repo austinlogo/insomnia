@@ -121,14 +121,13 @@ public abstract class TaskBasedActivity
         Metric updatedMetric = getDao().completeTask(t);
         mainFragment.updateMetricOnUI(updatedMetric);
         getDao().updateDependencyOnComplete(t.getId());
-        cancelAllNotificationsForTask(t);
+        getPlannerNotificationManager().cancelAllNotificationsForTask(t);
         updateActivity();
     }
 
     @Override
     public void updateTask(Task updatedTask) {
         getDao().updateTask(updatedTask);
-        sche
         updateActivity();
     }
 

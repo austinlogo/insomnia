@@ -12,9 +12,7 @@ import northstar.planner.persistence.PlannerSqliteGateway;
 import northstar.planner.persistence.RecurrenceGateway;
 import northstar.planner.persistence.fresh.FreshInstallData;
 
-//import northstar.planner.dagger.DaggerPlannerComponent;
-
-public class PlannerApplication extends Application{
+public class PlannerApplication extends Application {
 
     private PlannerComponent plannerComponent;
     private static PlannerApplication context;

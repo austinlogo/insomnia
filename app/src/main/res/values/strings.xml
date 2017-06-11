@@ -74,5 +74,6 @@
     <string name="recurrence_multi_display_string">Every %1$d %2$ss</string>
     <string name="recurrence_single_display_string">Every %1$s</string>
     <string name="Recurrence_hint">Recurrence</string>
+    <string name="use_24_hour_clock">use 24 hour clock?</string>
 
 </resources>
