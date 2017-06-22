@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -16,10 +14,10 @@ import northstar.planner.R;
 import northstar.planner.models.IncrementalMetric;
 import northstar.planner.models.Metric;
 
-public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<Metric> implements SpinnerAdapter {
+public class MetricSpinnerAdapter extends PlannerSpinnerAdapter<Metric> {
     private List<Metric> metrics;
 
-    public SuccessCriteriaSpinnerAdapter(Context context, List<Metric> metrics) {
+    public MetricSpinnerAdapter(Context context, List<Metric> metrics) {
         super(context, R.layout.item_default);
         List<Metric> spinnerSCList = new ArrayList<>(metrics);
 
@@ -32,8 +30,6 @@ public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<Metric> implemen
         return metrics.size();
     }
 
-
-
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -42,17 +38,6 @@ public class SuccessCriteriaSpinnerAdapter extends ArrayAdapter<Metric> implemen
                 : convertView;
 
         TextView text = (TextView) convertView.findViewById(android.R.id.text1);
-        text.setText(metrics.get(position).getTitle());
-        return convertView;
-    }
-
-    @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        convertView = (convertView == null)
-                ? LayoutInflater.from(getContext()).inflate(R.layout.item_default, parent, false)
-                : convertView;
-
-        TextView text = (TextView) convertView.findViewById(R.id.item_default_text);
         text.setText(metrics.get(position).getTitle());
         return convertView;
     }

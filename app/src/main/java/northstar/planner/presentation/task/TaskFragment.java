@@ -204,8 +204,14 @@ public class TaskFragment
         setter.selectTime();
     }
 
+    @OnClick(R.id.fragment_task_back)
+    public void onBackClicked() {
+        getActivity().finish();
+    }
+
     @OnClick(R.id.fragment_task_done)
     public void onDoneClicked() {
+        ((TaskActivity) getActivity()).completeTask(currentTask);
         getActivity().finish();
     }
 

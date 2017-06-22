@@ -28,7 +28,7 @@ import northstar.planner.models.Task;
 import northstar.planner.models.tables.MetricTable;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.presentation.adapter.MetricsListAdapter;
-import northstar.planner.presentation.adapter.SuccessCriteriaSpinnerAdapter;
+import northstar.planner.presentation.adapter.MetricSpinnerAdapter;
 import northstar.planner.utils.DateUtils;
 
 public class NewTaskDialog
@@ -83,7 +83,7 @@ public class NewTaskDialog
         ButterKnife.bind(this, v);
 
         title.setText(getArguments().getString(TaskTable.TITLE_COLUMN));
-        scSpinner.setAdapter(new SuccessCriteriaSpinnerAdapter(getActivity(), metricsListAdapter.getList()));
+        scSpinner.setAdapter(new MetricSpinnerAdapter(getActivity(), metricsListAdapter.getList()));
         title.requestFocus();
         return v;
     }

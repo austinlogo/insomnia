@@ -9,7 +9,7 @@ import android.util.Log;
 
 import org.joda.time.DateTime;
 
-import northstar.planner.models.Recurrence;
+import northstar.planner.models.SimpleRecurrence;
 
 public class RecurrencePublisher extends BroadcastReceiver {
 
@@ -19,7 +19,7 @@ public class RecurrencePublisher extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Recurrence rec = (Recurrence) intent.getSerializableExtra(RECURRENCE);
+        SimpleRecurrence rec = (SimpleRecurrence) intent.getSerializableExtra(RECURRENCE);
 //        int id = (int) intent.getLongExtra(RECURRENCE_ID, 0L);
 
         Log.d("TEST", "Testing: " + new DateTime().getMillis() / 1000);

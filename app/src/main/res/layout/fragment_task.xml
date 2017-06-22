@@ -14,8 +14,8 @@
         <ImageView
             android:src="@drawable/ic_title_black_24dp"
             android:padding="@dimen/smallSpace"
-            android:layout_width="@dimen/icon_width"
-            android:layout_height="@dimen/icon_width"/>
+            android:layout_width="@dimen/icon_length"
+            android:layout_height="@dimen/icon_length"/>
         <EditText
             android:id="@+id/fragment_task_title"
             style="@style/AppTheme.EditText.NoMargin"
@@ -39,8 +39,8 @@
         <ImageView
             android:id="@+id/fragment_task_due_icon"
             android:padding="@dimen/smallSpace"
-            android:layout_width="@dimen/icon_width"
-            android:layout_height="@dimen/icon_width"
+            android:layout_width="@dimen/icon_length"
+            android:layout_height="@dimen/icon_length"
             android:src="@drawable/ic_date_range_black_24dp"/>
 
         <TextView
@@ -66,8 +66,8 @@
             android:id="@+id/fragment_task_snooze_icon"
             android:layout_alignParentStart="true"
             android:padding="@dimen/smallSpace"
-            android:layout_width="@dimen/icon_width"
-            android:layout_height="@dimen/icon_width"
+            android:layout_width="@dimen/icon_length"
+            android:layout_height="@dimen/icon_length"
             android:src="@drawable/ic_snooze_black_36dp"/>
 
         <TextView
@@ -94,8 +94,8 @@
 
         <ImageView
             android:padding="@dimen/smallSpace"
-            android:layout_width="@dimen/icon_width"
-            android:layout_height="@dimen/icon_width"
+            android:layout_width="@dimen/icon_length"
+            android:layout_height="@dimen/icon_length"
             android:src="@drawable/ic_alarm_black_36dp"/>
 
         <TextView
@@ -118,11 +118,11 @@
 
         <ImageView
             android:padding="@dimen/smallSpace"
-            android:layout_width="@dimen/icon_width"
+            android:layout_width="@dimen/icon_length"
             android:layout_gravity="center_vertical"
             android:src="@drawable/goal_icon"
             android:scaleType="fitCenter"
-            android:layout_height="@dimen/icon_width"/>
+            android:layout_height="@dimen/icon_length"/>
 
         <TextView
             style="@style/AppTheme.TextView"
@@ -144,11 +144,11 @@
 
         <ImageView
             android:padding="@dimen/smallSpace"
-            android:layout_width="@dimen/icon_width"
+            android:layout_width="@dimen/icon_length"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_block_black_48dp"
             android:scaleType="fitCenter"
-            android:layout_height="@dimen/icon_width"/>
+            android:layout_height="@dimen/icon_length"/>
 
         <TextView
             style="@style/AppTheme.TextView"
@@ -173,8 +173,8 @@
             android:src="@drawable/ic_equalizer_black_36dp"
             android:layout_alignParentStart="true"
             android:padding="@dimen/smallSpace"
-            android:layout_width="@dimen/icon_width"
-            android:layout_height="@dimen/icon_width"/>
+            android:layout_width="@dimen/icon_length"
+            android:layout_height="@dimen/icon_length"/>
 
         <TextView
             style="@style/AppTheme.TextView"
@@ -207,11 +207,11 @@
 
         <ImageView
             android:padding="@dimen/smallSpace"
-            android:layout_width="@dimen/icon_width"
+            android:layout_width="@dimen/icon_length"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_repeat_black_36dp"
             android:scaleType="fitCenter"
-            android:layout_height="@dimen/icon_width"/>
+            android:layout_height="@dimen/icon_length"/>
 
         <TextView
             style="@style/AppTheme.TextView"
@@ -223,16 +223,43 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/fragment_task_navigation_container"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageButton
-            android:id="@+id/fragment_task_done"
-            android:src="@drawable/ic_done_white_36dp"
-            android:background="?selectableItemBackground"
+        <LinearLayout
+            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/fragment_task_back"
+                android:src="@drawable/ic_keyboard_backspace_white_36dp"
+                android:tint="@color/colorPrimary"
+                android:background="?selectableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:background="@color/colorPrimary"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/fragment_task_done"
+                android:src="@drawable/ic_done_white_36dp"
+                android:background="?selectableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_above="@id/fragment_task_navigation_container"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
 </RelativeLayout>

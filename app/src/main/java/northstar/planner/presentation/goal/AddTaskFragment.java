@@ -28,7 +28,7 @@ import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.TaskTable;
 import northstar.planner.presentation.BaseFragment;
-import northstar.planner.presentation.adapter.SuccessCriteriaSpinnerAdapter;
+import northstar.planner.presentation.adapter.MetricSpinnerAdapter;
 import northstar.planner.utils.DateTimeSetter;
 import northstar.planner.utils.DateTimeSetterCallback;
 import northstar.planner.utils.DateUtils;
@@ -58,7 +58,7 @@ public class AddTaskFragment
 
     private AddTaskFragmentListener activityListener;
     private Metric selectedMetric;
-    private SuccessCriteriaSpinnerAdapter successCriteriaSpinnerAdapter;
+    private MetricSpinnerAdapter metricSpinnerAdapter;
     private DateTime selectedDate;
     private boolean isScratch;
 
@@ -77,7 +77,7 @@ public class AddTaskFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_add_task, container, false);
         ButterKnife.bind(this, v);
-        updateFragmentValues(successCriteriaSpinnerAdapter);
+        updateFragmentValues(metricSpinnerAdapter);
         return v;
     }
 
@@ -111,7 +111,7 @@ public class AddTaskFragment
 
     @OnItemSelected(R.id.fragment_add_task_successcriteria_value)
     public void onMetricSelected(Spinner spinner, int position) {
-        selectedMetric = successCriteriaSpinnerAdapter.getItem(position);
+        selectedMetric = metricSpinnerAdapter.getItem(position);
         spinner.setSelection(position);
 
         if (position == 0 || (selectedMetric != null && !selectedMetric.needsCommitmentInput())) {
@@ -183,7 +183,7 @@ public class AddTaskFragment
         datePickerValue.setText(DateUtils.getDateString(selectedDate));
     }
 
-    public void updateFragmentValues(SuccessCriteriaSpinnerAdapter successCriteriasAdapter) {
+    public void updateFragmentValues(MetricSpinnerAdapter successCriteriasAdapter) {
         isScratch = false;
         setVisible(addTaskTitle);
         datePickerValue.setText("");
@@ -191,7 +191,7 @@ public class AddTaskFragment
         addTaskTitle.setText("");
         selectedMetric = null;
         scValues.setAdapter(successCriteriasAdapter);
-        this.successCriteriaSpinnerAdapter = successCriteriasAdapter;
+        this.metricSpinnerAdapter = successCriteriasAdapter;
         metricIcon.setVisibility(View.VISIBLE);
         committedIcon.setVisibility(View.GONE);
 

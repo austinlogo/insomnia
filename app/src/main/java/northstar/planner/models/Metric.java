@@ -70,4 +70,9 @@ public abstract class Metric extends BaseModel{
     public void setGoal(long goalId) {
         this.goal = goalId;
     }
+
+    @Override
+    public String toString() {
+        return getTitle();
+    }
 }

@@ -46,6 +46,7 @@
         <activity
             android:name=".presentation.task.TaskActivity"
             android:label="Task"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan"/>
 

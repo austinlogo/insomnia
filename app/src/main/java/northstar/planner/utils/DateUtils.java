@@ -19,6 +19,10 @@ public class DateUtils {
         return nextWeek;
     }
 
+    public static String getTimeAndDateString(DateTime dateTime, boolean isUsing24HourClock) {
+        return String.format("%s, %s", getDateString(dateTime), getStringTimeOfDay(dateTime, isUsing24HourClock));
+    }
+
     public static String getDateString(DateTime dateTime) {
         final int today = today().getDayOfYear();
         final int yesterday = today - 1;
@@ -33,7 +37,7 @@ public class DateUtils {
             return PlannerApplication.getInstance().getString(R.string.tomorrow);
         } else if (dateTime.getDayOfYear() > today().getDayOfYear()
                 && dateTime.getMillis() <= nextWeek().getMillis()) {
-            return dateTime.toString("dddd");
+            return dateTime.dayOfWeek().getAsText();
         } else {
 
             String dayOfWeek = dateTime.dayOfWeek().getAsShortText();
@@ -49,13 +53,21 @@ public class DateUtils {
         return (hourOfDay * MINUTES_IN_HOUR) + minute;
     }
 
+    public static String getStringTimeOfDay(DateTime datetime, boolean use24HourFormat) {
+        if (use24HourFormat) {
+            return datetime.toString("HH:mm");
+        } else {
+            return datetime.toString("hh:mm.a");
+        }
+    }
+
     public static String getStringTimeOfDay(long time, boolean use24HourFormat) {
         int hours = (int) time / MINUTES_IN_HOUR;
         int minutes = (int) time % MINUTES_IN_HOUR;
 
 
         if (use24HourFormat) {
-            return new DateTime().withHourOfDay(hours).withMinuteOfHour(minutes).toString("hh:mm");
+            return new DateTime().withHourOfDay(hours).withMinuteOfHour(minutes).toString("HH:mm");
         } else {
             return new DateTime().withHourOfDay(hours).withMinuteOfHour(minutes).toString("hh:mm.a");
         }

@@ -10,8 +10,8 @@
         android:id="@+id/item_default_text"
         android:layout_width="match_parent"
         android:textColor="#000"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
+        android:paddingTop="@dimen/smallSpace"
+        android:paddingBottom="@dimen/smallSpace"
         android:layout_height="wrap_content" />
 
 

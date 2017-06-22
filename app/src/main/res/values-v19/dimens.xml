@@ -1,6 +1,6 @@
 <resources>
 
-    <dimen name="icon_width">36dp</dimen>
+    <dimen name="icon_length">36dp</dimen>
     <dimen name="slide_title">20dp</dimen>
     <dimen name="slide_subtitle">16dp</dimen>
     <dimen name="slide_desc">12dp</dimen>

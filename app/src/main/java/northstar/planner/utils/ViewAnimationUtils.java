@@ -92,7 +92,6 @@ public class ViewAnimationUtils {
 
         LayoutTransition trans = new LayoutTransition();
         trans.setAnimator(LayoutTransition.DISAPPEARING, hide);
-//        trans.setAnimator(LayoutTransition.APPEARING, show);
         trans.setStartDelay(LayoutTransition.APPEARING, 2000);
         trans.setStartDelay(LayoutTransition.DISAPPEARING, 2000);
         trans.setStartDelay(LayoutTransition.CHANGE_APPEARING, 2000);
@@ -104,13 +103,13 @@ public class ViewAnimationUtils {
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
+        if (listAdapter == null || listView.getVisibility() != View.VISIBLE) {
             // pre-condition
             return;
         }
 
         int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
+        for (int i = 0; i < listView.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(0, 0);
             totalHeight += listItem.getMeasuredHeight();

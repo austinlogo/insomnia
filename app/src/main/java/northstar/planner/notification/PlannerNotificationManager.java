@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import org.joda.time.DateTime;
+
 import javax.inject.Inject;
 
 import northstar.planner.PlannerApplication;
@@ -16,6 +18,7 @@ import northstar.planner.R;
 import northstar.planner.models.Recurrence;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.TaskTable;
+import northstar.planner.persistence.PlannerSqliteGateway;
 import northstar.planner.persistence.RecurrenceGateway;
 import northstar.planner.presentation.task.TaskActivity;
 import northstar.planner.utils.NotificationType;
@@ -25,6 +28,9 @@ public class PlannerNotificationManager {
 
     @Inject
     RecurrenceGateway recurrenceGateway;
+
+    @Inject
+    PlannerSqliteGateway plannerGateway;
 
     private Context ctx;
     private AlarmManager alarmManager;
@@ -38,24 +44,32 @@ public class PlannerNotificationManager {
 
 
     public void scheduleNotification(Task task, NotificationType notificationType) {
-        PendingIntent pendingIntent = constructNotificationPendingIntent(ctx, task, notificationType);
-//        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-
+        PendingIntent pendingIntent = constructNotificationPendingIntent(null, task, notificationType);
         long notificationTime = getNotificationTime(task, notificationType);
+        scheduleNotification(notificationTime, pendingIntent);
+    }
 
+    public void  scheduleNextRecurrenceIteration(Task task) {
+        task.updateToNextIteration();
+        plannerGateway.updateTask(task);
+
+        if (task.getDue().isAfterNow()) {
+            scheduleNexRecurrenceNotification(task, task.getDue());
+        }
+    }
+
+    private void scheduleNexRecurrenceNotification(Task task, DateTime nextOccurrence) {
+        Recurrence taskRecurrenceSchedule = task.getRecurrenceSchedule();
+        PendingIntent pendingIntent = constructNotificationPendingIntent(taskRecurrenceSchedule, task, NotificationType.RECURRING_NOTIFICATION);
+        scheduleNotification(nextOccurrence.getMillis(), pendingIntent);
+    }
+
+    private void scheduleNotification(long notificationTime, PendingIntent pendingIntent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
         } else {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
         }
-    }
-
-    public void scheduleRecurringNotification(Recurrence rec, Task task) {
-        PendingIntent pendingIntent = constructNotificationPendingIntent(rec, task, NotificationType.RECURRING_NOTIFICATION);
-//        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-
-        alarmManager.cancel(pendingIntent);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, rec.getStartTime().getMillis(), rec.getPeriod(),  pendingIntent);
     }
 
     private static long getNotificationTime(Task task, NotificationType notificationType) {
@@ -75,7 +89,7 @@ public class PlannerNotificationManager {
     private PendingIntent constructNotificationPendingIntent(Recurrence rec, Task task, NotificationType notificationType) {
         Intent notificationIntent = constructNotificationIntent(task, getNotificationTime(task, notificationType));
 
-        if (rec.getEndTime() != null) {
+        if (rec != null && rec.getEndTime() != null) {
             notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_STOP, rec.getEndTime().getMillis());
         }
 
@@ -85,9 +99,16 @@ public class PlannerNotificationManager {
         return constructBasePendingIntent(ctx, task.getId(), notificationType, notificationIntent);
     }
 
-    public static PendingIntent constructBasePendingIntent(Context ctx, long taskId, String notificationType, Intent intent) {
-        return constructBasePendingIntent(ctx, taskId, NotificationType.valueOf(notificationType), intent);
-    }
+//    private PendingIntent constructNotificationPendingIntent(Context ctx, Task task, NotificationType notificationType) {
+//        Intent notificationIntent = constructNotificationIntent(task, getNotificationTime(task, notificationType));
+//
+//
+//        return constructBasePendingIntent(ctx, task.getId(), notificationType, notificationIntent);
+//    }
+
+//    public static PendingIntent constructBasePendingIntent(Context ctx, long taskId, String notificationType, Intent intent) {
+//        return constructBasePendingIntent(ctx, taskId, NotificationType.valueOf(notificationType), intent);
+//    }
 
     public static PendingIntent constructBasePendingIntent(Context ctx, long taskId, NotificationType notificationType, Intent intent) {
         return PendingIntent.getBroadcast(
@@ -97,12 +118,7 @@ public class PlannerNotificationManager {
                 PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    public PendingIntent constructNotificationPendingIntent(Context ctx, Task task, NotificationType notificationType) {
-        Intent notificationIntent = constructNotificationIntent(task, getNotificationTime(task, notificationType));
 
-
-        return constructBasePendingIntent(ctx, task.getId(), notificationType, notificationIntent);
-    }
 
     private Intent constructNotificationIntent(Task task, long showTimestamp) {
         Notification notification = getNotification(task, showTimestamp);
@@ -161,6 +177,6 @@ public class PlannerNotificationManager {
     }
 
     private void cancelAllNotificationsForTask(Task item, NotificationType notificationType) {
-        alarmManager.cancel(constructNotificationPendingIntent(ctx, item, notificationType));
+        alarmManager.cancel(constructNotificationPendingIntent(null, item, notificationType));
     }
 }

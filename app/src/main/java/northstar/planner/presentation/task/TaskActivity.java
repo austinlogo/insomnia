@@ -18,19 +18,17 @@ import northstar.planner.models.Task;
 import northstar.planner.models.drawer.ShallowModel;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.TaskTable;
-import northstar.planner.presentation.BaseActivity;
 import northstar.planner.presentation.dependency.DependencyChooserCallback;
 import northstar.planner.presentation.dependency.DependencyDialogFragment;
 import northstar.planner.presentation.goal.GoalActivity;
 
 public class TaskActivity
-        extends BaseActivity
+        extends TaskManagementActivity
         implements TaskFragment.TaskFragmentListener {
 
     @BindView(R.id.activity_task_drawer_layout)
     DrawerLayout mDrawerLayout;
 
-//    PlannerSqliteGateway dao;
     Task currentTask;
     TaskFragment mFragment;
 
@@ -39,7 +37,6 @@ public class TaskActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
         ButterKnife.bind(this);
-//        dao = new PlannerSqliteGateway();
         currentTask = (Task) getIntent().getExtras().getSerializable(TaskTable.TABLE_NAME);
         currentTask = getDao().getTask(currentTask.getId());
         mFragment = TaskFragment.newInstance(getIntent().getExtras());

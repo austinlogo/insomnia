@@ -8,7 +8,6 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import org.joda.time.DateTime;
-import org.joda.time.chrono.GregorianChronology;
 
 
 
@@ -28,14 +27,14 @@ public class DateTimeSetter implements DatePickerDialog.OnDateSetListener, TimeP
 
         use24Hour = DateFormat.is24HourFormat(context);
 
-        DateTime today = new DateTime(GregorianChronology.getInstance());
-        selectedDate = new DateTime(GregorianChronology.getInstance());
+        DateTime today = new DateTime();
+        selectedDate = new DateTime();
 
         datePickerDialog = new DatePickerDialog(
                 context,
                 this,
                 today.getYear(),
-                today.getMonthOfYear(),
+                today.getMonthOfYear() - 1,
                 today.getDayOfMonth());
 
         datePickerDialog.getDatePicker().setMinDate(today.getMillis());
@@ -54,7 +53,7 @@ public class DateTimeSetter implements DatePickerDialog.OnDateSetListener, TimeP
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         selectedDate = new DateTime(
                 year,
-                monthOfYear,
+                monthOfYear + 1, // offset for joda
                 dayOfMonth,
                 new DateTime().getHourOfDay(),
                 new DateTime().getMinuteOfHour());

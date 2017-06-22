@@ -69,8 +69,13 @@ public class CheckboxGroup
     }
 
     public void updateDisplay() {
-        start.setText(DateUtils.getStringTimeOfDay(startTime, using24Hour));
-        end.setText(DateUtils.getStringTimeOfDay(endTime, using24Hour));
+        if (checkBox.isChecked()) {
+            start.setText(DateUtils.getStringTimeOfDay(startTime, using24Hour));
+            end.setText(DateUtils.getStringTimeOfDay(endTime, using24Hour));
+        } else {
+            start.setText(R.string.startTime);
+            end.setText(R.string.endTime);
+        }
     }
 
     public void setCheckBoxStates() {

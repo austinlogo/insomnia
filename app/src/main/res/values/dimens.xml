@@ -16,9 +16,10 @@
     <dimen name="xlSpace">35dp</dimen>
     <dimen name="slide_list_icon_length">24dp</dimen>
 
-    <dimen name="icon_width">48dp</dimen>
+    <dimen name="icon_length">48dp</dimen>
+    <dimen name="icon_length_small">36dp</dimen>
+    <dimen name="icon_length_large">60dp</dimen>
 
-    <!-- intro dimens -->
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="dots_height">30dp</dimen>
     <dimen name="dots_margin_bottom">20dp</dimen>

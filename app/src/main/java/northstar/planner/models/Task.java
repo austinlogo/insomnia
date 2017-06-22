@@ -1,10 +1,12 @@
 package northstar.planner.models;
 
 import android.database.Cursor;
+import android.text.format.DateFormat;
 import android.widget.EditText;
 
 import org.joda.time.DateTime;
 
+import northstar.planner.PlannerApplication;
 import northstar.planner.models.drawer.ShallowModel;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.TaskTable;
@@ -147,10 +149,8 @@ public class Task extends BaseModel {
             return "";
         }
 
-//        return dateTime.toString("%s, %s", D)
-
-        return String.format("%s, %s", DateUtils.getDateString(dateTime), dateTime.toString("HH:mm"));
-//        return DateUtils.getDateString(cal) + ", " + time;
+        boolean isUsing24Hours = DateFormat.is24HourFormat(PlannerApplication.getInstance());
+        return DateUtils.getTimeAndDateString(dateTime, isUsing24Hours);
     }
 
     public void setTaskStatus(TaskStatus taskStatus) {
@@ -209,8 +209,8 @@ public class Task extends BaseModel {
         }
     }
 
-    public void udpateToNextIteration() {
-        DateTime nextDueIteration = new DateTime(due.getMillis() + recurrenceSchedule.getPeriod());
+    public void updateToNextIteration() {
+        DateTime nextDueIteration = getRecurrenceSchedule().calculateNextIterationFromGivenDate(due);
         DateTime nextSnoozeIteration = null;
 
         if (snooze != null) {
@@ -222,7 +222,8 @@ public class Task extends BaseModel {
         setSnooze(nextSnoozeIteration);
     }
 
-    public static long getNextIteration(Task task) {
-        return task.getDue().getMillis() + task.getRecurrenceSchedule().getPeriod();
+    public boolean containsAnotherIteration() {
+        return recurrenceSchedule != null &&
+                getRecurrenceSchedule().containsAnotherIteration(due);
     }
 }

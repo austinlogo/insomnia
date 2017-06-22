@@ -162,9 +162,13 @@ import northstar.planner.utils.NotificationType;
     }
 
     @Override
-    public void completeTask(Task t) {
-        super.completeTask(t);
-        currentGoal.getTasks().remove(t);
+    public boolean completeTask(Task completedTask) {
+        boolean taskWasCompletedSuccessfully = super.completeTask(completedTask);
+        if (taskWasCompletedSuccessfully) {
+            currentGoal.getTasks().remove(completedTask);
+        }
+
+        return taskWasCompletedSuccessfully;
     }
 
     @Override

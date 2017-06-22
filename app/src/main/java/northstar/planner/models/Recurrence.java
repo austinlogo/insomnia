@@ -1,36 +1,44 @@
 package northstar.planner.models;
 
-
 import android.database.Cursor;
 
 import org.joda.time.DateTime;
+import org.joda.time.Period;
 
-import java.io.Serializable;
-
+import java.util.List;
 
 import northstar.planner.PlannerApplication;
 import northstar.planner.R;
-import northstar.planner.models.tables.RecurrenceTable;
+import northstar.planner.persistence.PeriodTarget;
 import northstar.planner.persistence.PeriodUnit;
+import northstar.planner.persistence.TargetUnit;
 
-public class Recurrence extends BaseModel implements Serializable {
+public abstract class Recurrence extends BaseModel {
 
-    private long _id;
-    private long taskId;
-    private int periodUnitMultiplier;
-    private DateTime startTime;
-    private DateTime endTime;
-    private PeriodUnit periodUnit;
+    protected long taskId;
+    protected int periodUnitMultiplier;
+    protected DateTime startTime;
+    protected DateTime endTime;
+    protected PeriodUnit periodUnit;
 
-//    public Recurrence(long taskId, int periodUnitMultiplier, PeriodUnit periodUnit, Date calculateStartTime, Date endTime) {
-//        this(taskId, periodUnitMultiplier, periodUnit, calculateStartTime, endTime);
-//    }
+    public abstract List<PeriodTarget> getTargets();
+    public abstract TargetUnit getTargetUnit();
+    public abstract DateTime calculateNextIterationFromGivenDate(DateTime dateTime);
+
+    public static Recurrence newInstance(Cursor recurrenceTableCursor, Cursor periodTargetsCursor) {
+        if (periodTargetsCursor == null) {
+            return new SimpleRecurrence(recurrenceTableCursor);
+        }
+
+        return new ComplexRecurrence(recurrenceTableCursor, periodTargetsCursor);
+    }
+
+    public Recurrence() {}
 
     public Recurrence(long taskId, int periodUnitMultiplier, PeriodUnit periodUnit, DateTime startTime, DateTime endTime) {
         this.taskId = taskId;
         this.periodUnitMultiplier = periodUnitMultiplier;
         this.periodUnit = periodUnit;
-
         this.endTime = endTime;
         this.startTime = calculateStartTime(startTime);
     }
@@ -40,57 +48,35 @@ public class Recurrence extends BaseModel implements Serializable {
         return "";
     }
 
-    public Recurrence(Cursor c) {
-        taskId = getColumnLong(c, RecurrenceTable.TASK_ID);
-        periodUnitMultiplier = getColumnInt(c, RecurrenceTable.PERIOD);
-        startTime = getColumnDate(c, RecurrenceTable.START_TIME);
-        endTime = getColumnDate(c, RecurrenceTable.END_TIME);
-        periodUnit = PeriodUnit.valueOf(getColumnString(c, RecurrenceTable.PERIOD_UNIT));
-    }
-
-    public long get_id() {
-        return _id;
-    }
-
-    public void set_id(long _id) {
-        this._id = _id;
-    }
-
     public long getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(long taskId) {
-        this.taskId = taskId;
-    }
-
-    public long getPeriod() {
-        return periodUnitMultiplier * PeriodUnit.unitToMillis(periodUnit);
-    }
-
-    public DateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(DateTime startTime) {
-        this.startTime = startTime;
+    public Period getPeriod() {
+        switch(periodUnit) {
+//            case Minute:
+//                return new Period().withMinutes(periodUnitMultiplier);
+            case Week:
+                return new Period().withWeeks(periodUnitMultiplier);
+            case Day:
+                return new Period().withDays(periodUnitMultiplier);
+            case Month:
+                return new Period().withMonths(periodUnitMultiplier);
+        }
+        return Period.ZERO;
     }
 
     public DateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(DateTime endTime) {
-        this.endTime = endTime;
-    }
+    protected DateTime calculateStartTime(DateTime givenStartTime) {
+        DateTime calculatedStartTime = givenStartTime == null ?
+                new DateTime() :
+                givenStartTime;
 
-    private DateTime calculateStartTime(DateTime startTime) {
-        long startTimeLong = startTime == null ?
-                new DateTime().getMillis() :
-                startTime.getMillis();
-
-        startTimeLong += getPeriod();
-        return new DateTime(startTimeLong);
+        calculatedStartTime = calculatedStartTime.plus(getPeriod());
+        return new DateTime(calculatedStartTime);
     }
 
     public PeriodUnit getPeriodUnit() {
@@ -108,5 +94,10 @@ public class Recurrence extends BaseModel implements Serializable {
         return periodUnitMultiplier > 1
                 ? String.format(formattedPluralString, periodUnitMultiplier, periodUnit.toString())
                 : String.format(formattedSingleString, periodUnit.toString());
+    }
+
+    public boolean containsAnotherIteration(DateTime due) {
+        return endTime == null ||
+                calculateNextIterationFromGivenDate(due).isBefore(endTime);
     }
 }

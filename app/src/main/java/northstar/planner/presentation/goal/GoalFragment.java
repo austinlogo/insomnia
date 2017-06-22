@@ -30,7 +30,7 @@ import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.presentation.adapter.MetricsListAdapter;
-import northstar.planner.presentation.adapter.SuccessCriteriaSpinnerAdapter;
+import northstar.planner.presentation.adapter.MetricSpinnerAdapter;
 import northstar.planner.presentation.adapter.TaskRecyclerViewAdapter;
 import northstar.planner.presentation.task.TaskBasedFragment;
 
@@ -62,7 +62,7 @@ public class GoalFragment
     RelativeLayout taskHeaderContainer;
 
     private MetricsListAdapter metricsListAdapter;
-    private SuccessCriteriaSpinnerAdapter metricsSpinnerAdapter;
+    private MetricSpinnerAdapter metricsSpinnerAdapter;
     GoalFragmentListener attachedActivity;
     private TaskActionListener taskActionListener;
 
@@ -109,7 +109,7 @@ public class GoalFragment
         metricsListAdapter.registerDataSetObserver(new ListObserver());
         metrics.setAdapter(metricsListAdapter);
 
-        metricsSpinnerAdapter = new SuccessCriteriaSpinnerAdapter(activity, currentGoal.getMetrics());
+        metricsSpinnerAdapter = new MetricSpinnerAdapter(activity, currentGoal.getMetrics());
         taskListAdapter.updateList(currentGoal.getTasks());
 
         initViews();
@@ -159,7 +159,7 @@ public class GoalFragment
         return false;
     }
 
-    public SuccessCriteriaSpinnerAdapter getMetricsSpinnerAdapter() {
+    public MetricSpinnerAdapter getMetricsSpinnerAdapter() {
         return metricsSpinnerAdapter;
     }
 
@@ -221,7 +221,7 @@ public class GoalFragment
         void updateTask(Task updatedTask);
         void openTask(Task t);
         void removeTask(int position, Task t);
-        void completeTask(Task t);
+        boolean completeTask(Task t);
     }
 
     private class ListObserver extends DataSetObserver {

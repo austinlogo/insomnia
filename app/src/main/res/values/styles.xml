@@ -28,8 +28,8 @@
     <style name="AppTheme.LeftIcon">
         <item name="android:padding">@dimen/smallSpace</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_height">@dimen/icon_width</item>
-        <item name="android:layout_width">@dimen/icon_width</item>
+        <item name="android:layout_height">@dimen/icon_length</item>
+        <item name="android:layout_width">@dimen/icon_length</item>
         <item name="android:scaleType">fitCenter</item>
     </style>
 
@@ -46,6 +46,7 @@
     </style>
 
     <style name="AppTheme.EditText">
+        <item name="android:inputType">text|textAutoCorrect</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
@@ -121,8 +122,8 @@
     <style name="AppTheme.Icon">
         <item name="android:scaleType">fitCenter</item>
         <item name="android:background">@color/transparent</item>
-        <item name="android:layout_width">@dimen/icon_width</item>
-        <item name="android:layout_height">@dimen/icon_width</item>
+        <item name="android:layout_width">@dimen/icon_length</item>
+        <item name="android:layout_height">@dimen/icon_length</item>
     </style>
 
     <style name="AppTheme.DialogTheme" parent="android:Theme.Dialog">

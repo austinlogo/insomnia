@@ -95,24 +95,19 @@ public class TaskRecyclerViewAdapter
 
     @Override
     public void onItemComplete(int position) {
-        Task removedTask = tasks.remove(position);
-
-        if (taskContainsAnotherRecurrence(removedTask)) {
-            removedTask.udpateToNextIteration();
-            tasks.add(position, removedTask);
-            activityListener.updateTask(removedTask);
-        } else {
-            notifyItemRemoved(position);
-            activityListener.completeTask(removedTask);
-        }
-    }
-
-    private boolean taskContainsAnotherRecurrence(Task task) {
-        if (task.getRecurrenceSchedule() == null ) {
-            return false;
+        Task taskSwipedForCompletion = tasks.get(position);
+        if (activityListener.completeTask(taskSwipedForCompletion)) {
+//            tasks.remove(position);
+//            notifyItemRemoved(position);
         }
 
-        return task.getRecurrenceSchedule().getEndTime() == null || Task.getNextIteration(task) < task.getRecurrenceSchedule().getEndTime().getMillis();
+//        if (removedTask.containsAnotherIteration()) {
+//            tasks.add(position, removedTask);
+//            activityListener.updateTask(removedTask);
+//        } else {
+//            notifyItemRemoved(position);
+//            activityListener.completeTask(removedTask);
+//        }
     }
 
     @Override

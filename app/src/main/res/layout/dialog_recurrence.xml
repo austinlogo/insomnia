@@ -45,6 +45,66 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <LinearLayout
+            android:id="@+id/dialog_recurrence_weekly_target_container"
+            android:layout_below="@id/dialog_recurrence_end_time"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ToggleButton
+                android:id="@+id/dialog_recurrence_weekly_target_sunday"
+                android:layout_weight="1"
+                android:textOn="@string/sunday_short"
+                android:textOff="@string/sunday_short"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ToggleButton
+                android:id="@+id/dialog_recurrence_weekly_target_monday"
+                android:layout_weight="1"
+                android:textOn="@string/monday_short"
+                android:textOff="@string/monday_short"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ToggleButton
+                android:id="@+id/dialog_recurrence_weekly_target_tuesday"
+                android:layout_weight="1"
+                android:textOn="@string/tuesday_short"
+                android:textOff="@string/tuesday_short"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ToggleButton
+                android:id="@+id/dialog_recurrence_weekly_target_wednesday"
+                android:layout_weight="1"
+                android:textOn="@string/wednesday_short"
+                android:textOff="@string/wednesday_short"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ToggleButton
+                android:id="@+id/dialog_recurrence_weekly_target_thursday"
+                android:layout_weight="1"
+                android:textOn="@string/thursday_short"
+                android:textOff="@string/thursday_short"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ToggleButton
+                android:id="@+id/dialog_recurrence_weekly_target_friday"
+                android:layout_weight="1"
+                android:textOn="@string/friday_short"
+                android:textOff="@string/friday_short"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ToggleButton
+                android:id="@+id/dialog_recurrence_weekly_target_saturday"
+                android:layout_weight="1"
+                android:textOn="@string/saturday_short"
+                android:textOff="@string/saturday_short"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
     </RelativeLayout>
 
     <LinearLayout

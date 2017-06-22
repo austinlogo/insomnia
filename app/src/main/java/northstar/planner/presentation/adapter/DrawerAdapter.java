@@ -78,31 +78,54 @@ public class DrawerAdapter extends ArrayAdapter<String> {
             }
         });
 
-        final ListView goals = (ListView) convertView.findViewById(R.id.item_drawer_goals);
-        goals.canScrollList(1);
+        ListView goals = (ListView) convertView.findViewById(R.id.item_drawer_goals);
         ImageButton button = (ImageButton) convertView.findViewById(R.id.item_drawer_theme_collapse_icon);
 
         int buttonVisibility = drawerItems.get(position).getGoals().isEmpty() ? View.INVISIBLE : View.VISIBLE;
         button.setVisibility(buttonVisibility);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (goals.getVisibility() == View.VISIBLE) {
-                    goals.setVisibility(View.GONE);
-                    v.setRotation(180);
-                } else {
-                    goals.setVisibility(View.VISIBLE);
-                    v.setRotation(0);
-                }
-            }
-        });
+        button.setOnClickListener(new DrawerCollapseListener(goals));
+
+//        button.setOnClickListener( new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (goals.getVisibility() == View.VISIBLE) {
+//                    goals.setVisibility(View.GONE);
+//                    v.setRotation(180);
+////                    ViewAnimationUtils.setListViewHeightBasedOnChildren(goals);
+//                } else {
+//                    goals.setVisibility(View.VISIBLE);
+//                    v.setRotation(0);
+////                    ViewAnimationUtils.setListViewHeightBasedOnChildren(goals);
+//
+//                }
+//            }
+//        });
 
         goals.setAdapter(new DrawerGoalAdapter(context, android.R.layout.simple_list_item_1, drawerItems.get(position).getGoals(), listener));
         text.setText(getItem(position));
-
         ViewAnimationUtils.setListViewHeightBasedOnChildren(goals);
-
         return convertView;
+    }
+
+    private class DrawerCollapseListener implements View.OnClickListener {
+        private ListView goals;
+        public DrawerCollapseListener(ListView goals) {
+            this.goals = goals;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (goals.getVisibility() == View.VISIBLE) {
+                goals.setVisibility(View.GONE);
+                v.setRotation(180);
+    //                    ViewAnimationUtils.setListViewHeightBasedOnChildren(goals);
+            } else {
+                goals.setVisibility(View.VISIBLE);
+                v.setRotation(0);
+    //                    ViewAnimationUtils.setListViewHeightBasedOnChildren(goals);
+
+            }
+        }
     }
 }

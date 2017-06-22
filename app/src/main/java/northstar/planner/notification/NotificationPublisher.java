@@ -10,9 +10,17 @@ import android.content.Intent;
 
 import org.joda.time.DateTime;
 
+import northstar.planner.PlannerApplication;
+import northstar.planner.utils.NotificationType;
 
 
 public class NotificationPublisher extends BroadcastReceiver {
+
+//    @Inject
+//    PlannerNotificationManager plannerNotificationManager;
+//
+//    @Inject
+//    PlannerSqliteGateway plannerGateway;
 
     public static final String TASK_ID = "task-id";
     public static final String NOTIFICATION_TYPE = "notification-type";
@@ -22,16 +30,16 @@ public class NotificationPublisher extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        ((PlannerApplication) context.getApplicationContext()).getComponent().inject(this);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
 
         Notification notification = intent.getParcelableExtra(NOTIFICATION);
 
         int id = (int) intent.getLongExtra(NOTIFICATION_ID, 0L);
         long taskId = intent.getLongExtra(TASK_ID, 0L);
-        String notificationType = intent.getStringExtra(NOTIFICATION_TYPE);
+        NotificationType notificationType = NotificationType.valueOf(intent.getStringExtra(NOTIFICATION_TYPE));
         long stopTime = intent.getLongExtra(NOTIFICATION_STOP, -1);
 
         long now = new DateTime().getMillis();

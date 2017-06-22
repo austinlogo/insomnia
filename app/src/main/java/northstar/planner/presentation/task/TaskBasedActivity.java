@@ -17,7 +17,6 @@ import northstar.planner.models.Metric;
 import northstar.planner.models.Task;
 import northstar.planner.models.tables.GoalTable;
 import northstar.planner.models.tables.TaskTable;
-import northstar.planner.presentation.BaseActivity;
 import northstar.planner.presentation.BaseFragment;
 import northstar.planner.presentation.goal.AddTaskFragment;
 import northstar.planner.presentation.goal.GoalFragment;
@@ -25,7 +24,7 @@ import northstar.planner.presentation.today.AddOverlayFragment;
 import northstar.planner.presentation.today.FocusFragment;
 
 public abstract class TaskBasedActivity
-        extends BaseActivity
+        extends TaskManagementActivity
         implements AddTaskFragment.AddTaskFragmentListener, GoalFragment.TaskActionListener {
 
     protected abstract void storeNewTask(Task newTask);
@@ -95,7 +94,6 @@ public abstract class TaskBasedActivity
     @Override
     public void addNewTask(Task newTask) {
         hideKeyboard();
-//        setFragmentVisible(mainFragmentLayout);
         storeNewTask(newTask);
     }
 
@@ -117,18 +115,19 @@ public abstract class TaskBasedActivity
     }
 
     @Override
-    public void completeTask(Task t) {
-        Metric updatedMetric = getDao().completeTask(t);
-        mainFragment.updateMetricOnUI(updatedMetric);
-        getDao().updateDependencyOnComplete(t.getId());
-        getPlannerNotificationManager().cancelAllNotificationsForTask(t);
-        updateActivity();
+    public boolean completeTask(Task completedTask) {
+        if (super.completeTask(completedTask)) {
+            Metric updatedMetric = getDao().completeTask(completedTask);
+            mainFragment.updateMetricOnUI(updatedMetric);
+            updateActivity();
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void updateTask(Task updatedTask) {
-        getDao().updateTask(updatedTask);
-        updateActivity();
+        super.updateTask(updatedTask);
     }
 
     public void attachAddOverlayToActivity() {
